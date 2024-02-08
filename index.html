@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside id="sidebar">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <img id="company-logo" src="assets/logo.svg" alt="Missed image reference" style="width: 100px; height: 100px; padding-top: 20px;">
+        </div>
+            B  I  M 
+        <ul id="nav-buttons">
+            <li id="project-button">
+                <span class="material-icons-outlined">maps_home_work</span>
+                <div>Projects</div>
+            </li>
+            <li id="project-details-button">
+                <span class="material-icons-outlined">camera_indoor</span>
+                <div>Single project</div>
+            </li>
+            <li id="users-button">
+                <span class="material-icons-outlined">person</span>
+                <div>Users</div>
+            </li>
+            <li id="info-button">
+                <span class="material-icons-outlined">info</span>
+                <div>Info</div>
+            </li>
+        </ul>
+    </aside>
+    <main id="main-page">
+        <div id="project-main-page" class="page" style="display: none;">
+            <header id="project-header">
+                <h2>Projects</h2>
+                <div id="header-right">
+                    <span id="upload" class="material-icons-outlined">upload</span>
+                    <button id="new-project-button">
+                        <span class="material-icons-outlined">add</span>
+                        <div>New Project</div>
+                    </button>
+                </div>
+            </header>
+            <div class="card-list" style="flex-grow: 1; overflow: auto; padding: 5px;">
+                <div class="project-list">
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: brown; border-radius: 5px; padding: 15px;">CR</p>
+                            <div>
+                                <h2>Casa Rampazzo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Treviso, Cal Maggiore</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 1.000.000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(10, 117, 0); border-radius: 5px; padding: 15px;">PS</p>
+                            <div>
+                                <h2>Palastadio</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Conegliano, Via Stadio, 1</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 3.532.738</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card eiffel">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(165, 155, 42); border-radius: 5px; padding: 15px;">TE</p>
+                            <div>
+                                <h2>Tour Eiffel</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Paris, France</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 7.000.000</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Progress</p>
+                                <p>85%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card colosseo">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(117, 0, 86); border-radius: 5px; padding: 15px;">C</p>
+                            <div>
+                                <h2>Colosseo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Rome, Italy</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Architect</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>Not estimated</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: brown; border-radius: 5px; padding: 15px;">CR</p>
+                            <div>
+                                <h2>Casa Rampazzo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Treviso, Cal Maggiore</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 1.000.000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(10, 117, 0); border-radius: 5px; padding: 15px;">PS</p>
+                            <div>
+                                <h2>Palastadio</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Conegliano, Via Stadio, 1</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 3.532.738</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card eiffel">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(165, 155, 42); border-radius: 5px; padding: 15px;">TE</p>
+                            <div>
+                                <h2>Tour Eiffel</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Paris, France</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 7.000.000</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Progress</p>
+                                <p>85%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card colosseo">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(117, 0, 86); border-radius: 5px; padding: 15px;">C</p>
+                            <div>
+                                <h2>Colosseo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Rome, Italy</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Architect</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>Not estimated</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: brown; border-radius: 5px; padding: 15px;">CR</p>
+                            <div>
+                                <h2>Casa Rampazzo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Treviso, Cal Maggiore</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 1.000.000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(10, 117, 0); border-radius: 5px; padding: 15px;">PS</p>
+                            <div>
+                                <h2>Palastadio</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Conegliano, Via Stadio, 1</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 3.532.738</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card eiffel">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(165, 155, 42); border-radius: 5px; padding: 15px;">TE</p>
+                            <div>
+                                <h2>Tour Eiffel</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Paris, France</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 7.000.000</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Progress</p>
+                                <p>85%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card colosseo">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(117, 0, 86); border-radius: 5px; padding: 15px;">C</p>
+                            <div>
+                                <h2>Colosseo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Rome, Italy</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Architect</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>Not estimated</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: brown; border-radius: 5px; padding: 15px;">CR</p>
+                            <div>
+                                <h2>Casa Rampazzo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Treviso, Cal Maggiore</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 1.000.000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(10, 117, 0); border-radius: 5px; padding: 15px;">PS</p>
+                            <div>
+                                <h2>Palastadio</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Conegliano, Via Stadio, 1</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 3.532.738</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card eiffel">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(165, 155, 42); border-radius: 5px; padding: 15px;">TE</p>
+                            <div>
+                                <h2>Tour Eiffel</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Paris, France</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Engineer</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>€ 7.000.000</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Progress</p>
+                                <p>85%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card colosseo">
+                        <div class="cards-header">
+                            <p style="background-color: rgb(117, 0, 86); border-radius: 5px; padding: 15px;">C</p>
+                            <div>
+                                <h2>Colosseo</h2>
+                                <h4 style="color: rgb(172, 172, 172);">Building located in Rome, Italy</h4>
+                            </div>
+                        </div>
+                        <div class="cards-content">
+                            <div class="cards-property">
+                                <p class="cards-categories">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Role</p>
+                                <p>Architect</p>
+                            </div>
+                            <div class="cards-property">
+                                <p class="cards-categories">Cost</p>
+                                <p>Not estimated</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="single-project-page" class="page" style="display: none;">
+            <header class="single-project-page-spaces">
+                <h1>Hospital Center</h1>
+                <h4 style="color: rgb(115, 115, 115);">Description of the project</h4>
+            </header>
+            <div class="main-page-content">
+                <div id="sx-bar" class="single-project-page-spaces" style="padding: 0; background-color: transparent; gap: 10px;">
+                    <div class="single-project-page-spaces dash-card" style="margin: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="background-color: brown; border-radius: 10px; padding: 15px; font-size: 24px;">
+                                CR
+                            </p>
+                            <button id="edit-button">Edit</button>
+                        </div>
+                        <div style="border-bottom: 1px solid white; padding-bottom: 5px;">
+                            <h3>Hospital Center</h3>
+                            <p>Description</p>
+                        </div>
+                        <div id="details">
+                            <div>
+                                <p style="color: dimgray;">Status</p>
+                                <p>Active</p>
+                            </div>
+                            <div>
+                                <p style="color: dimgray;">Cost</p>
+                                <p>€ 2.400.500</p>
+                            </div>                            <div>
+                                <p style="color: dimgray;">Role</p>
+                                <p>Architect</p>
+                            </div>                            <div>
+                                <p style="color: dimgray;">Finish Date</p>
+                                <p>2023-05-10</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="color: dimgray; margin-bottom: 5px;">Progress bar</p>
+                            <div class="loading-bar-container">
+                                <div class="loading-bar">80%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-project-page-spaces todo-list" style="flex-grow: 1; margin: 0; row-gap: 20px;">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <h2>To-Do</h2>
+                            <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                <span id="search" class="material-icons-outlined">search</span>
+                                <textarea maxlength="20" class="search-bar" cols="25" rows="1" placeholder="Search by name (max 20 ch)"></textarea>
+                                <span id="add" class="material-icons-outlined">add</span>
+                            </div>
+                        </div>
+                        <div class="card-list" style="overflow-y: auto; height: 100px; display: flex; flex-direction: column; row-gap: 20px; flex-grow: 1;">
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the first thing to do on this project.
+                                    <br>Second line of first thing.
+                                    <br>Third line.
+                                    <br>Fourth line.
+                                    <br>Fifth line.
+                                </div>
+                                <div>
+                                    Fri, 20 ago
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the second thing to do on this project
+                                </div>
+                                <div>
+                                    Thu, 12 feb
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the first thing to do on this project.
+                                    <br>Second line of first thing.
+                                    <br>Third line.
+                                    <br>Fourth line.
+                                    <br>Fifth line.
+                                </div>
+                                <div>
+                                    Fri, 20 ago
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the second thing to do on this project
+                                </div>
+                                <div>
+                                    Thu, 12 feb
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the first thing to do on this project.
+                                    <br>Second line of first thing.
+                                    <br>Third line.
+                                    <br>Fourth line.
+                                    <br>Fifth line.
+                                </div>
+                                <div>
+                                    Fri, 20 ago
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the second thing to do on this project
+                                </div>
+                                <div>
+                                    Thu, 12 feb
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the second thing to do on this project
+                                </div>
+                                <div>
+                                    Thu, 12 feb
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the first thing to do on this project.
+                                    <br>Second line of first thing.
+                                    <br>Third line.
+                                    <br>Fourth line.
+                                    <br>Fifth line.
+                                </div>
+                                <div>
+                                    Fri, 20 ago
+                                </div>
+                            </div>
+                            <div class="to-do-card">
+                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
+                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
+                                    This is the second thing to do on this project
+                                </div>
+                                <div>
+                                    Thu, 12 feb
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="viewer" class="single-project-page-spaces">
+                    Viewer [coming ...]
+                </div>
+            </div>
+        </div>
+        <div id="users-page" class="page">
+            <dialog id="new-user-modal">
+                <div id="new-user-dialog">
+                    <form id="new-user-form">
+                        <h2>New User</h2>
+                        <div class="input-list">
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">badge</span>
+                                    Name
+                                </label>
+                                <input id="category-name" type="text" name="name">
+                                <div style="font-size: 15px; font-style: italic; padding: 5px;">Insert name and surname</div>
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">alternate_email</span>
+                                    E-mail
+                                </label>
+                                <input name="email" type="text">
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">engineering</span>
+                                    Role
+                                </label>
+                                <select name="role">
+                                    <option>Engineer</option>
+                                    <option>Architect</option>
+                                    <option>BIM manager</option>
+                                    <option>BIM coordinator</option>
+                                    <option>BIM specialist</option>
+                                </select>
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">more_horiz</span>
+                                    Other informations
+                                </label>
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">menu</span>
+                                    Self description
+                                </label>
+                                <textarea name="selfDescription" cols="30" rows="5" placeholder=" Introduct yourself (max 300 characters)..." style="resize: none;" maxlength="300"></textarea>
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">transgender</span>
+                                    Gender
+                                </label>
+                                <fieldset style="display: flex; flex-direction: row; gap: 25px;">
+                                    <label>
+                                    <input name="gender" type="radio" name="item1" value="Male"> Male
+                                    </label>
+                                    <label>
+                                    <input name="gender" type="radio" name="item2" value="Female"> Female
+                                    </label>
+                                    <label>
+                                    <input name="gender" type="radio" name="item3" value="Other"> Other
+                                    </label>
+                                </fieldset>
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">event</span>
+                                    Birthday date
+                                </label>
+                                <input name="birthday" type="date" class="date">
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">home</span>
+                                    Address
+                                </label>
+                                <input name="address" type="address">
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">business</span>
+                                    Company name
+                                </label>
+                                <input name="companyName" type="text">
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button type="button" id="button-form-cancel" class="button-form-cancel">Cancel</button>
+                            <button type="submit" id="button-form-accept" class="button-form-accept">Accept</button>
+                        </div>
+                    </form>
+                    <div id="new-user-error-tab" style="display: none;"></div>
+                </div>
+            </dialog>
+            <dialog id="error-used-names-import">
+            </dialog>
+            <header id="users-page-header">
+                <div style="gap: 10px; margin-bottom: 0px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                    <span class="material-icons-outlined" style="color: gray; font-size: 40px;">person</span>
+                    <h1 id="manageUsersTitle" style="font-family: Roboto; color: gray;">Manage Users (default value)</h1>
+                </div>
+                <div id="users-page-addbar">
+                    <button id="new-user-button">
+                        <span id="add" class="material-icons-outlined user-buttons" style="background-color: transparent; padding: 0px;">person_add_alt</span>
+                        <h3>New User</h3>
+                    </button>
+                    <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                        <span id="user-upload" class="material-icons-outlined user-buttons">upload</span>
+                        <span id="download" class="material-icons-outlined user-buttons">download</span>
+                        <div style="width: 10px;"></div>
+                        <textarea style="margin: 0;" maxlength="20" class="search-bar" cols="40" rows="1" placeholder="Search by name (max 20 ch)"></textarea>
+                        <span id="search" class="material-icons-outlined user-buttons">search</span>
+                    </div>
+                </div>
+                <div id="meanAge" style="padding: 20px;">
+                    <div>
+                        Users mean age test: 26 years
+                        <h3 style="font-weight: normal;"></h3>
+                    </div>
+                </div>
+            </header>
+            <div id="users-page-content">
+                <div style="display: grid; grid-template-columns: 50px 300px 400px 1fr 50px; margin-left: 30px; gap: 20px; padding: 5px; margin-right: 15px;">
+                    <h3 style="color: gray;"></h3>
+                    <h3 style="color: gray;">Name</h3>
+                    <h3 style="color: gray;">E-mail</h3>
+                    <h3 style="color: gray;">Role</h3>
+                    <span id="compact_all" class="material-icons-outlined user-buttons" style="display: none; text-align: center;">expand_less</span>
+                    <span id="expand_all" class="material-icons-outlined user-buttons" style="text-align: center;">expand_more</span>
+                </div>
+                <ul class="card-list" id="users-list">
+                </ul>
+            </div>
+        </div>
+    </main>
+    <script type="module" src="src/index.ts"></script>
+</body>
+</html>
