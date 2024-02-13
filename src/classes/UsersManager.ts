@@ -27,7 +27,7 @@ export class UsersManager {
         const usersNameList = this.list.map((user) => {return user.name})
         const nameInUse = usersNameList.includes(data.name)
         if (nameInUse){
-            throw new Error(`A user with the name "${data.name}" already exists`)
+            throw new Error(`A user with the name "${data.name}" already exists.`)
         }
 
         user.ui.addEventListener('click', () => {
@@ -146,7 +146,7 @@ export class UsersManager {
                 }
             if (usedNames) {
                 //alert(`These names are already in use:\n${usedNames.join('\n')}.\nThese users will not be imported`)
-                const d = document.getElementById('error-used-names-import') as HTMLDialogElement
+                const d = document.getElementById('error-import-user') as HTMLDialogElement
                 d.innerHTML = `
                     <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
                     <div style="white-space:pre-line; padding: 20px;">These names are already in use:\n

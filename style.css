@@ -27,7 +27,8 @@
 }
 *::-webkit-scrollbar-track {
     background-color: transparent; /* Set the color of the scrollbar track */
-}  
+}
+
 button{
     padding-right: 10px;
     padding-left: 10px;
@@ -53,36 +54,6 @@ button span{
 button div{
     grid-area: nome;
     text-align: center;
-}
-.button-form-accept{
-    padding-right: 20px;
-    padding-left: 20px;
-    height: 40px;
-    font-size: 16px;
-    background-color: var(--primary);
-    color: var(--text);
-    border-radius: 100px;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.button-form-cancel{
-    padding-right: 20px;
-    padding-left: 20px;
-    height: 40px;
-    font-size: 16px;
-    border-radius: 100px;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.button-form-cancel:hover{
-    background-color: var(--hover);
-    cursor: pointer;
 }
 body{
     display: grid;
@@ -150,35 +121,13 @@ body{
 #project-main-page{
     display:flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 10px;
     background-color: var(--background);
     border-radius: 10px;
     margin: 10px;
 }
 
 /*Header styles*/
-
-#project-header{
-    padding: 5px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-#header-right{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-#header-right #upload{
-    margin: 10px;
-    border-radius: 100px;
-    padding: 10px;
-}
-#header-right #upload:hover{
-    background-color: var(--hover);
-    cursor: pointer;
-}
 
 /* Cards styles */
 .project-list{
@@ -245,18 +194,18 @@ dialog::backdrop{
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(3px);
 }
-#new-user-dialog{
+#new-user-dialog, #new-project-dialog{
     display: flex;
     flex-direction: row;
 }
-#error-used-names-import{
+.error-import{
     background-color: rgba(255, 0, 0, 0.45);
     color: white;
     padding: 0px;
     border-radius: 20px;
     border: 2px solid black;
 }
-#new-user-error-tab{
+#new-user-error-tab, #new-project-error-tab{
     padding: 20px;
     margin: 10px;
     border-radius: 10px;
@@ -413,11 +362,11 @@ fieldset input:focus {
     cursor: pointer;
     border: 1px solid black;
 }
-.user-buttons{
+.generic-buttons{
     padding: 10px;
     border-radius: 100px;
 }
-.user-buttons:hover{
+.generic-buttons:hover{
     background-color: var(--hover);
     cursor: pointer;
 }
@@ -434,7 +383,7 @@ fieldset input:focus {
     display: flex;
     flex-direction: column;
 }
-#users-page > header{
+header{
     padding: 20px;
     margin-bottom: 0px;
     justify-content: center;
@@ -445,7 +394,7 @@ fieldset input:focus {
     justify-content: space-between;
     margin-top: 10px;
 }
-#users-page button{
+button{
     background-color: transparent;
     gap: 10px;
     display: flex;
@@ -453,7 +402,7 @@ fieldset input:focus {
     padding: 20px;
     justify-content: center;
 }
-#users-page button:hover{
+button:hover{
     background-color: var(--hover);
 }
 #users-page-content{
@@ -467,9 +416,6 @@ fieldset input:focus {
     flex-direction: column;
     flex-grow: 1;
     overflow: auto;
-    margin-left: 30px;
-    margin-right: 10px;
-    padding-right: 10px;
     row-gap: 10px;
 }
 #users-page li #user-compact{
@@ -508,6 +454,7 @@ fieldset input:focus {
     flex-direction: column;
     row-gap: 10px;
 }
-
-
-
+.card-list{
+    margin-right: 30px;
+    margin-left: 30px;
+}

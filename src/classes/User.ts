@@ -30,7 +30,6 @@ export class User implements IUser{
 
     //internal class properties
     ui: HTMLLIElement
-    UI_type: string
     progressProfile: number = 35
     id: string
 
@@ -132,31 +131,6 @@ export class User implements IUser{
         }
         if (id == 'user-card-expanded-id'){
             this.templateUI_compactUser()
-        }
-    }
-}
-
-//Modal class
-export class toggleModal{
-    m
-    //constructor
-    constructor (id: string){
-        this.m = document.getElementById(id)
-    }
-    //method to show modal
-    showModal (){
-        if (this.m && this.m instanceof HTMLDialogElement) {
-            this.m.showModal()     
-        } else {
-            console.warn('New user modal was not found')
-        }
-    }
-    //method to close modal
-    closeModal (){
-        if (this.m && this.m instanceof HTMLDialogElement) {
-            this.m.close()
-        } else {
-            console.warn('New user modal was not found')
         }
     }
 }
