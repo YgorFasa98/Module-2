@@ -269,10 +269,10 @@ form input:hover, textarea:hover, select:hover, fieldset:hover{
 form input:focus, textarea:focus, select:focus{
     outline: 1px solid white;
 }
-fieldset input:hover {
+fieldset input:hover, form #color:hover {
     outline: none;
 }
-fieldset input:focus {
+fieldset input:focus, form #color:focus {
     outline: none;
 }
 
@@ -290,7 +290,7 @@ fieldset input:focus {
 }
 #single-project-page > .main-page-content{
     display: grid;
-    grid-template-columns: 3fr 7fr;
+    grid-template-columns: 30% 70%;
     height: 100%;
 }
 .single-project-page-spaces{
@@ -323,22 +323,24 @@ fieldset input:focus {
     gap: 20px;
 }
 #details{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    align-items: start;
+    word-wrap: break-word;
 }
 .loading-bar-container {
     width: 100%;
     background-color: #eee;
-    height: 30px;
+    height: 20px;
     border-radius: 100px;
     overflow: hidden;
 }
 .loading-bar {
+    display: flex;
     width: 80%; /* Set the width to the desired static progress percentage */
     height: 100%;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
     line-height: 30px;
     background-color: #4caf50; /* Set the color of the loading bar */
 }

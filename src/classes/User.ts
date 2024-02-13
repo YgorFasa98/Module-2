@@ -4,6 +4,7 @@ export type role = 'Engineer' | 'Architect' | 'BIM manager' | 'BIM coordinator' 
 export type gender = 'Male' | 'Female' | 'Other'
 
 export interface IUser {
+    type: string
     name: string 
     email: string
     role: role
@@ -18,6 +19,7 @@ export interface IUser {
 //User class
 export class User implements IUser{
     //interface properties
+    type: string = 'user'
     name: string
     email: string
     role: role

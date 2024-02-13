@@ -4,6 +4,8 @@ export class ProjectsManager {
     list: Project[] = []
     ui: HTMLDivElement
     defaultProject: IProject = { //default Project data
+        type: 'project',
+        color: 'brown',
         acronym: 'SFH',
         name: 'Single Family House',
         address: 'None',
@@ -40,12 +42,7 @@ export class ProjectsManager {
         }
 
         project.ui.addEventListener('click', () => {
-            const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
-            const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
-            
-            pageProjects.style.display = ""
-            pageSingleProject.style.display = "none"
-            //aggiungere per andare nella pagina del progetto singolo
+            this.setProjectDetails(project)
         })
 
         this.ui.append(project.ui)
@@ -53,6 +50,36 @@ export class ProjectsManager {
 
         this.setUI_projectsCount()
         return project
+    }
+
+    setProjectDetails (project:Project) {
+        const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
+        const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
+        pageProjects.style.display = "none"
+        pageSingleProject.style.display = ""
+
+        const title_name = pageSingleProject.querySelector("[data-project-details-info='title-name']") as HTMLElement
+        const title_address = pageSingleProject.querySelector("[data-project-details-info='title-address']") as HTMLElement
+        const name = pageSingleProject.querySelector("[data-project-details-info='name']") as HTMLElement
+        const address = pageSingleProject.querySelector("[data-project-details-info='address']") as HTMLElement
+        const acronym = pageSingleProject.querySelector("[data-project-details-info='acronym']") as HTMLElement
+        const company = pageSingleProject.querySelector("[data-project-details-info='company']") as HTMLElement
+        const projectType = pageSingleProject.querySelector("[data-project-details-info='project-type']") as HTMLElement
+        const status = pageSingleProject.querySelector("[data-project-details-info='status']") as HTMLElement
+        const cost = pageSingleProject.querySelector("[data-project-details-info='cost']") as HTMLElement
+        const progress = pageSingleProject.querySelector("[data-project-details-info='progress']") as HTMLElement
+        
+        if (title_name && title_address && name && address && acronym && company && projectType && status && cost && progress){
+        title_name.textContent = name.textContent = project.name
+        title_address.textContent = address.textContent = project.address
+        acronym.textContent = project.acronym
+        company.textContent = project.companyName
+        projectType.textContent = project.projectType
+        status.textContent = project.status
+        cost.textContent = `${project.cost as unknown as string} €`
+        progress.textContent = `${project.progress as unknown as string}%`
+        progress.style.width = `${project.progress as unknown as string}%`
+        }
     }
 
     setUI_projectsCount(){
@@ -115,12 +142,21 @@ export class ProjectsManager {
             const projects: IProject[] = JSON.parse(json as string)
             const usedNames = new Array()
             for (const project of projects)
-                try {
-                    this.newProject(project)
-                } catch (error) {
-                    usedNames.push(project.name)
+                if (project.type == 'project') {
+                    try {
+                        this.newProject(project)
+                    } catch (error) {
+                        usedNames.push(project.name)
+                    }
                 }
-            if (usedNames) {
+            if (usedNames.length == 0) {
+                const d = document.getElementById('error-import-project') as HTMLDialogElement
+                d.innerHTML = `
+                    <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
+                    <div style="white-space:pre-line; padding: 20px;">You are not importing a projects file.</div>
+                    <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
+                d.showModal()
+            }else{
                 //alert(`These names are already in use:\n${usedNames.join('\n')}.\nThese projects will not be imported`)
                 const d = document.getElementById('error-import-project') as HTMLDialogElement
                 d.innerHTML = `

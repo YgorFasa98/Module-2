@@ -3,6 +3,8 @@ import {v4 as uuidv4} from 'uuid'
 export type status = 'Active' | 'Not started' | 'Completed' | 'Stopped' | 'Dismissed'
 
 export interface IProject {
+    type: string
+    color: string
     acronym: string
     name: string
     address: string
@@ -15,6 +17,8 @@ export interface IProject {
 
 //User class
 export class Project implements IProject{
+    type: string = 'project'
+    color: string = 'brown'
     acronym: string
     name: string
     address: string
@@ -46,7 +50,7 @@ export class Project implements IProject{
         this.ui.className = "project-card"
         this.ui.innerHTML = `
         <div class="cards-header">
-            <p style="background-color: brown; border-radius: 5px; padding: 15px;">${this.acronym}</p>
+            <p style="background-color: ${this.color}; border-radius: 5px; padding: 15px;">${this.acronym}</p>
             <div>
                 <h2>${this.name}</h2>
                 <h4 style="color: rgb(172, 172, 172);">${this.address}</h4>
