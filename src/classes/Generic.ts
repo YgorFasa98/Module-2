@@ -1,6 +1,6 @@
 import {IUser} from './User'
 import { UsersManager } from './UsersManager'
-//ciao
+//ciao modifica 2
 //Modal class
 export class toggleModal{
     m
