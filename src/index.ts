@@ -84,6 +84,7 @@ if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existan
             const formData = new FormData(newUserForm)
             e.preventDefault()
             const userData: U.IUser = { //store data in this dictionary
+                type: "user" as string,
                 name: formData.get('name') as string,
                 email: formData.get('email') as string,
                 role: formData.get('role') as U.role,
@@ -128,6 +129,8 @@ if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the e
             const formData = new FormData(newProjectForm)
             e.preventDefault()
             const projectData: P.IProject = { //store data in this dictionary
+                type: 'project',
+                color: formData.get('color') as string,
                 name: formData.get('name') as string,
                 address: formData.get('address') as string,
                 companyName: formData.get('companyName') as string,
@@ -186,8 +189,9 @@ if (menuProjectsButton && menuUsersButton && menuSingleProjectButton && expandAl
 } else {console.warn("Menu button was not found")}
 
 //Progress bar slider value update
-const slider = document.getElementById('progress-bar');
-const output = document.querySelector('output[for="progress-bar"]');
-slider.addEventListener('input', function() {
-  output.textContent = slider.value;
-});
+const slider = document.getElementById('progress-bar') as any
+const output = document.querySelector('output[for="progress-bar"]')
+if (slider && output){
+    slider.addEventListener('input', function() {
+    output.textContent = slider.value;
+    })}

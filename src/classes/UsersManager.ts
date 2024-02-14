@@ -4,6 +4,7 @@ export class UsersManager {
     list: User[] = []
     ui: HTMLElement
     defaultUser: IUser = { //default user data
+        type: "user",
         name: 'Ygor Fasanella',
         email: 'ygor.fasanella@unipd.it',
         role: 'BIM manager',
@@ -137,15 +138,23 @@ export class UsersManager {
             const users: IUser[] = JSON.parse(json as string)
             const usedNames = new Array()
             for (const user of users)
-                try {
-                    if (user.birthday==null) {user.birthday = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
-                    else {user.birthday = new Date(user.birthday)} //needs to recreate the date from the string, although it create an error
-                    this.newUser(user)
-                } catch (error) {
-                    usedNames.push(user.name)
+                if (user.type=='user') {
+                    try {
+                        if (user.birthday==null) {user.birthday = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
+                        else {user.birthday = new Date(user.birthday)} //needs to recreate the date from the string, although it create an error
+                        this.newUser(user)
+                    } catch (error) {
+                        usedNames.push(user.name)
+                    }
                 }
-            if (usedNames) {
-                //alert(`These names are already in use:\n${usedNames.join('\n')}.\nThese users will not be imported`)
+            if (usedNames.length==0) {
+                const d = document.getElementById('error-import-user') as HTMLDialogElement
+                d.innerHTML = `
+                    <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
+                    <div style="white-space:pre-line; padding: 20px;">You are not importing a users file.</div>
+                    <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
+                d.showModal()
+            }else{
                 const d = document.getElementById('error-import-user') as HTMLDialogElement
                 d.innerHTML = `
                     <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>

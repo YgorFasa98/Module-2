@@ -45,8 +45,11 @@
                                     <span class="material-symbols-outlined">abc</span>
                                     Acronym
                                 </label>
-                                <textarea name="acronym" cols="30" rows="1" style="resize: none;" maxlength="3"></textarea>
-                                <div style="font-size: 15px; font-style: italic; padding: 5px;">Insert an abbreviation of project's name (max 3 letters, i.e.: SFH)</div>
+                                <div style="display: grid; grid-template-columns: 1fr 60px; align-items: center;">
+                                    <textarea name="acronym" cols="30" rows="1" style="resize: none;" maxlength="4"></textarea>
+                                    <input id="color" name="color" type="color" value="#931f1f" style="background-color: transparent; padding: 0px; margin-left: 10px; height: 50px;">
+                                </div>
+                                <div style="font-size: 15px; font-style: italic; padding: 5px;">Insert an abbreviation of project's name (max 4 characters, i.e.: SFH)</div>
                             </div>
                             <div class="field-container">
                                 <label class="field-title">
@@ -136,7 +139,7 @@
                     </div>
                 </div>
             </header>
-            <div class="card-list" style="flex-grow: 1; overflow: auto; margin-top: 30px;">
+            <div class="card-list" style="flex-grow: 1; overflow: auto; margin-top: 30px; padding: 5px;">
                 <div class="project-list" id="project-list">
                     <div class="project-card eiffel">
                         <div class="cards-header">
@@ -193,42 +196,44 @@
         </div>
         <div id="single-project-page" class="page" style="display: none;">
             <header class="single-project-page-spaces">
-                <h1>Hospital Center</h1>
-                <h4 style="color: rgb(115, 115, 115);">Description of the project</h4>
+                <h1 data-project-details-info="title-name">Hospital Center</h1>
+                <h4 style="color: rgb(115, 115, 115);" data-project-details-info="title-address">Address of the project</h4>
             </header>
             <div class="main-page-content">
                 <div id="sx-bar" class="single-project-page-spaces" style="padding: 0; background-color: transparent; gap: 10px;">
                     <div class="single-project-page-spaces dash-card" style="margin: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <p style="background-color: brown; border-radius: 10px; padding: 15px; font-size: 24px;">
+                            <p data-project-details-info="acronym" style="background-color: brown; border-radius: 10px; padding: 15px; font-size: 24px;">
                                 CR
                             </p>
                             <button id="edit-button">Edit</button>
                         </div>
                         <div style="border-bottom: 1px solid white; padding-bottom: 5px;">
-                            <h3>Hospital Center</h3>
-                            <p>Description</p>
+                            <h3 data-project-details-info="name">Hospital Center</h3>
+                            <p data-project-details-info="address">Address</p>
                         </div>
                         <div id="details">
-                            <div>
+                            <div style="margin-left: 5px; margin-right: 5px;">
+                                <p style="color: dimgray;">Company name</p>
+                                <p data-project-details-info="company">XXX</p>
+                            </div>
+                            <div style="margin-left: 5px; margin-right: 5px;">
+                                <p style="color: dimgray;">Project type</p>
+                                <p data-project-details-info="project-type">XXX</p>
+                            </div>
+                            <div style="margin-left: 5px; margin-right: 5px;">
                                 <p style="color: dimgray;">Status</p>
-                                <p>Active</p>
+                                <p data-project-details-info="status">XXX</p>
+                            </div>
+                            <div style="margin-left: 5px; margin-right: 5px;">
+                                <p style="color: dimgray;">Cost</p>
+                                <p data-project-details-info="cost">€ XXX</p>
+                            </div>
                             </div>
                             <div>
-                                <p style="color: dimgray;">Cost</p>
-                                <p>€ 2.400.500</p>
-                            </div>                            <div>
-                                <p style="color: dimgray;">Role</p>
-                                <p>Architect</p>
-                            </div>                            <div>
-                                <p style="color: dimgray;">Finish Date</p>
-                                <p>2023-05-10</p>
-                            </div>
-                        </div>
-                        <div>
                             <p style="color: dimgray; margin-bottom: 5px;">Progress bar</p>
                             <div class="loading-bar-container">
-                                <div class="loading-bar">80%</div>
+                                <div data-project-details-info="progress" class="loading-bar">1%</div>
                             </div>
                         </div>
                     </div>
@@ -241,7 +246,7 @@
                                 <span id="add" class="material-icons-outlined">add</span>
                             </div>
                         </div>
-                        <div class="card-list" style="overflow-y: auto; height: 100px; display: flex; flex-direction: column; row-gap: 20px; flex-grow: 1;">
+                        <div class="card-list" style="margin: 0px; overflow-y: auto; height: 100px; display: flex; flex-direction: column; row-gap: 20px; flex-grow: 1;">
                             <div class="to-do-card">
                                 <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
                                     <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>

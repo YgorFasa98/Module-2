@@ -4,6 +4,7 @@ export type role = 'Engineer' | 'Architect' | 'BIM manager' | 'BIM coordinator' 
 export type gender = 'Male' | 'Female' | 'Other'
 
 export interface IUser {
+    type: string
     name: string 
     email: string
     role: role
@@ -18,6 +19,7 @@ export interface IUser {
 //User class
 export class User implements IUser{
     //interface properties
+    type: string = 'user'
     name: string
     email: string
     role: role
@@ -30,7 +32,6 @@ export class User implements IUser{
 
     //internal class properties
     ui: HTMLLIElement
-    progressProfile: number = 35
     id: string
 
     constructor(data: IUser, expanded: boolean = false) {
@@ -103,12 +104,6 @@ export class User implements IUser{
             <div style="display: grid; grid-template-columns: 250px 1fr; padding-right: 20px;">
                 <p style="color: gray;">Company name</p>
                 <p>${this.companyName}</p>
-            </div>
-            <div style="display: grid; grid-template-columns: 250px 1fr; padding-right: 20px; align-items: center;">
-                <p style="color: gray;">Profile progress</p>
-                <div class="loading-bar-container" style="height: 10px;">
-                    <div class="loading-bar" style="background-color: gray; width: ${this.progressProfile*100};"></div>
-                </div>
             </div>
         </div>`
     }
