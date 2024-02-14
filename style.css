@@ -358,6 +358,7 @@ fieldset input:focus, form #color:focus {
     align-items: center;
     justify-content: space-between;
     margin-right: 10px;
+    border: 1px solid transparent;
 }
 .to-do-card:hover{
     background-color: var(--hover);

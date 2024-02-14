@@ -52,7 +52,7 @@ export class ProjectsManager {
         return project
     }
 
-    setProjectDetails (project:Project) {
+    private setProjectDetails (project:Project) {
         const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
         const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
         pageProjects.style.display = "none"
