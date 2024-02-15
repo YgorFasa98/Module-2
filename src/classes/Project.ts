@@ -18,7 +18,7 @@ export interface IProject {
 //User class
 export class Project implements IProject{
     type: string = 'project'
-    color: string = 'brown'
+    color: string = '#931f1f'
     acronym: string
     name: string
     address: string

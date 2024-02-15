@@ -1,20 +1,22 @@
 import {IProject, Project} from './Project'
+import { toggleModal } from './Generic'
 
 export class ProjectsManager {
     list: Project[] = []
     ui: HTMLDivElement
     defaultProject: IProject = { //default Project data
         type: 'project',
-        color: 'brown',
+        color: '#931f1f',
         acronym: 'SFH',
         name: 'Single Family House',
         address: 'None',
-        status: 'Not started',
-        cost: 0,
+        status: 'Completed',
+        cost: 1000,
         progress: 100,
         companyName: 'University of Padua',
         projectType: 'Master degree thesis'
     }
+    oldProject: Project
 
     constructor(container:HTMLDivElement){
         this.ui = container
@@ -22,23 +24,24 @@ export class ProjectsManager {
         this.setUI_projectsCount()
     }
 
-    newProject(data: IProject){
+    newProject(data: IProject,operation:string='new'){
         const project = new Project(data)
         const projectsNameList = this.list.map((project) => {return project.name})
         const nameInUse = projectsNameList.includes(data.name)
+        const nameLength = data.name.length < 5
         const projectsAcronymList = this.list.map((project) => {return project.acronym})
         const acronymInUse = projectsAcronymList.includes(data.acronym)
         
-        if (nameInUse && acronymInUse){
-            throw new Error(`
-            A project with the name "${data.name}" already exists.
-            A project with the acronym "${data.acronym}" already exists.`)
-        }
-        if (nameInUse){
-            throw new Error(`A project with the name "${data.name}" already exists.`)
-        }
-        if (acronymInUse){
-            throw new Error(`A project with the acronym "${data.acronym}" already exists.`)
+        if (operation=='update'){}
+        else {
+            if (nameInUse || nameLength || acronymInUse){
+                const errName = nameInUse ? `<br><br>- A project with the name "${data.name}" already exists.` : ''
+                const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
+                const errAcronym = acronymInUse ? `<br><br>- A project with the acronym "${data.acronym}" already exists.` : ''
+                const errors = [errName,errNameLength,errAcronym]
+                const joinedErrors = errors.join('')
+                throw new Error(`\n${joinedErrors}`)
+            }
         }
 
         project.ui.addEventListener('click', () => {
@@ -52,7 +55,7 @@ export class ProjectsManager {
         return project
     }
 
-    private setProjectDetails (project:Project) {
+    setProjectDetails (project:Project) {
         const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
         const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
         pageProjects.style.display = "none"
@@ -80,6 +83,22 @@ export class ProjectsManager {
         progress.textContent = `${project.progress as unknown as string}%`
         progress.style.width = `${project.progress as unknown as string}%`
         }
+
+        const editProjectButton = document.getElementById('edit-button')
+        const editProjectModal = new toggleModal('edit-project-modal')
+        const editProjectForm = document.getElementById("edit-project-form") //form element
+
+        if (editProjectButton && editProjectForm && editProjectModal) {
+            editProjectButton.addEventListener('click', () => {  //show modal of edit project
+                const keys = ['acronym','color','name','projectType','address','companyName','status','cost','progress','progress-output']
+                for (const key of keys){
+                    const k = editProjectForm.querySelector(`[name=${key}]`) as any
+                    k.value = key=='progress-output' ? project.progress : project[key]
+                }
+                editProjectModal.showModal()
+                this.oldProject = project
+            })
+        } else {console.warn("Edit project button was not found")}
     }
 
     setUI_projectsCount(){
@@ -113,12 +132,27 @@ export class ProjectsManager {
         this.list = remaining
     }
 
-    setUI_error(err:Error,disp:string,category:string='none'){
-        const ui_errorNewProject = document.getElementById('new-project-error-tab') as HTMLElement
-        ui_errorNewProject.style.display = disp
-        ui_errorNewProject.innerHTML = `
-        <h2>WARNING !</h2>
-        <h3 style="font-weight: normal; margin-top: 10px">${err}</h3>`
+    updateProject (data:IProject) {
+        this.deleteProject(this.oldProject.id)
+        const proj = new Project(data)
+        this.newProject(proj,'update')
+        this.setProjectDetails(proj)
+    }
+
+    setUI_error(err:Error,disp:string,page:string){
+        if (page=='new'){
+            const ui_error = document.getElementById('new-project-error-tab') as HTMLElement
+            ui_error.style.display = disp
+            ui_error.innerHTML = `
+            <h2>WARNING !</h2>
+            <h3 style="font-weight: normal; margin-top: 10px">${err}</h3>`
+        }else if(page=='edit'){
+            const ui_error = document.getElementById('edit-project-error-tab') as HTMLElement
+            ui_error.style.display = disp
+            ui_error.innerHTML = `
+            <h2>WARNING !</h2>
+            <h3 style="font-weight: normal; margin-top: 10px">${err}</h3>`
+        }
     }
 
     importFromJSON (){
@@ -148,15 +182,15 @@ export class ProjectsManager {
                     } catch (error) {
                         usedNames.push(project.name)
                     }
+                }else{
+                    const d = document.getElementById('error-import-project') as HTMLDialogElement
+                    d.innerHTML = `
+                        <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
+                        <div style="white-space:pre-line; padding: 20px;">You are not importing a projects file.</div>
+                        <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
+                    d.showModal()
                 }
-            if (usedNames.length == 0) {
-                const d = document.getElementById('error-import-project') as HTMLDialogElement
-                d.innerHTML = `
-                    <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
-                    <div style="white-space:pre-line; padding: 20px;">You are not importing a projects file.</div>
-                    <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
-                d.showModal()
-            }else{
+            if (usedNames.length > 0) {
                 //alert(`These names are already in use:\n${usedNames.join('\n')}.\nThese projects will not be imported`)
                 const d = document.getElementById('error-import-project') as HTMLDialogElement
                 d.innerHTML = `

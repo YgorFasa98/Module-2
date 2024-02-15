@@ -1,6 +1,6 @@
 import {IUser} from './User'
 import { UsersManager } from './UsersManager'
-//ciao modifica 3
+
 //Modal class
 export class toggleModal{
     m
@@ -23,6 +23,13 @@ export class toggleModal{
         } else {
             console.warn('New user modal was not found')
         }
+    }
+    preventEsc(){
+        this.m.addEventListener('keydown', (e) => {
+            if (e.key ==='Escape'){
+                e.preventDefault()
+            }
+        })
     }
 }
 

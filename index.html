@@ -46,7 +46,7 @@
                                     Acronym
                                 </label>
                                 <div style="display: grid; grid-template-columns: 1fr 60px; align-items: center;">
-                                    <textarea name="acronym" cols="30" rows="1" style="resize: none;" maxlength="4"></textarea>
+                                    <input name="acronym" cols="30" rows="1" style="resize: none;" maxlength="4">
                                     <input id="color" name="color" type="color" value="#931f1f" style="background-color: transparent; padding: 0px; margin-left: 10px; height: 50px;">
                                 </div>
                                 <div style="font-size: 15px; font-style: italic; padding: 5px;">Insert an abbreviation of project's name (max 4 characters, i.e.: SFH)</div>
@@ -86,7 +86,7 @@
                                 </label>
                                 <select name="status">
                                     <option>Active</option>
-                                    <option>Not Started</option>
+                                    <option>Not started</option>
                                     <option>Completed</option>
                                     <option>Stopped</option>
                                     <option>Dismissed</option>
@@ -105,8 +105,8 @@
                                     Progress
                                 </label>
                                 <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
-                                    <input id="progress-bar" name="progress" type="range" min="0" max="100" value="50" style="width: 85%; height: 18px;">
-                                    <p style="margin-right: 10px;"><output id="progress-value" for="progress-bar">50</output> %</p>
+                                    <input class="progress-bar" name="progress" type="range" min="0" max="100" value="50" style="width: 85%; height: 18px;">
+                                    <p style="margin-right: 10px;"><output class="progress-value" for="progress-bar">50</output> %</p>
                                 </div>
                             </div>
                         </div>
@@ -195,6 +195,88 @@
             </div>
         </div>
         <div id="single-project-page" class="page" style="display: none;">
+            <dialog id="edit-project-modal">
+                <div id="edit-project-dialog">
+                    <form id="edit-project-form">
+                        <h2>Edit Project</h2>
+                        <div class="input-list">
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-symbols-outlined">abc</span>
+                                    Acronym
+                                </label>
+                                <div style="display: grid; grid-template-columns: 1fr 60px; align-items: center;">
+                                    <input name="acronym" cols="30" rows="1" style="resize: none;" maxlength="4">
+                                    <input name="color" id="color" type="color" value="#931f1f" style="background-color: transparent; padding: 0px; margin-left: 10px; height: 50px;">
+                                </div>
+                                <div style="font-size: 15px; font-style: italic; padding: 5px;">Insert an abbreviation of project's name (max 4 characters, i.e.: SFH)</div>
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-symbols-outlined form-icons">location_away</span>
+                                    Project name
+                                </label>
+                                <input name="name" type="text">
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">home_work</span>
+                                    Project type
+                                </label>
+                                <input name="projectType" type="text">
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">home</span>
+                                    Address
+                                </label>
+                                <input name="address" type="address">
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">business</span>
+                                    Company name
+                                </label>
+                                <input name="companyName" type="text">
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">update</span>
+                                    Status
+                                </label>
+                                <select name="status">
+                                    <option>Active</option>
+                                    <option>Not started</option>
+                                    <option selected>Completed</option>
+                                    <option>Stopped</option>
+                                    <option>Dismissed</option>
+                                </select>
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">euro</span>
+                                    Total cost
+                                </label>
+                                <input name="cost" type="number" value="0">
+                            </div>
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">rotate_right</span>
+                                    Progress
+                                </label>
+                                <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                                    <input class="progress-bar" name="progress" type="range" min="0" max="100" value="50" style="width: 85%; height: 18px;">
+                                    <p style="margin-right: 10px;"><output name="progress-output" class="progress-value" for="progress-bar">50</output> %</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" id="button-editproject-form-save" class="generic-buttons">Save</button>
+                        </div>
+                    </form>
+                    <div id="edit-project-error-tab" style="display: none;"></div>
+                </div>
+            </dialog>
             <header class="single-project-page-spaces">
                 <h1 data-project-details-info="title-name">Hospital Center</h1>
                 <h4 style="color: rgb(115, 115, 115);" data-project-details-info="title-address">Address of the project</h4>
@@ -246,82 +328,7 @@
                                 <span id="add" class="material-icons-outlined">add</span>
                             </div>
                         </div>
-                        <div class="card-list" style="margin: 0px; overflow-y: auto; height: 100px; display: flex; flex-direction: column; row-gap: 20px; flex-grow: 1;">
-                            <div class="to-do-card">
-                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
-                                    This is the first thing to do on this project.
-                                    <br>Second line of first thing.
-                                    <br>Third line.
-                                    <br>Fourth line.
-                                    <br>Fifth line.
-                                </div>
-                                <div>
-                                    Fri, 20 ago
-                                </div>
-                            </div>
-                            <div class="to-do-card">
-                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
-                                    This is the second thing to do on this project
-                                </div>
-                                <div>
-                                    Thu, 12 feb
-                                </div>
-                            </div>
-                            <div class="to-do-card">
-                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
-                                    This is the first thing to do on this project.
-                                    <br>Second line of first thing.
-                                    <br>Third line.
-                                    <br>Fourth line.
-                                    <br>Fifth line.
-                                </div>
-                                <div>
-                                    Fri, 20 ago
-                                </div>
-                            </div>
-                            <div class="to-do-card">
-                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
-                                    This is the second thing to do on this project
-                                </div>
-                                <div>
-                                    Thu, 12 feb
-                                </div>
-                            </div>
-                            <div class="to-do-card">
-                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
-                                    This is the first thing to do on this project.
-                                    <br>Second line of first thing.
-                                    <br>Third line.
-                                    <br>Fourth line.
-                                    <br>Fifth line.
-                                </div>
-                                <div>
-                                    Fri, 20 ago
-                                </div>
-                            </div>
-                            <div class="to-do-card">
-                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
-                                    This is the second thing to do on this project
-                                </div>
-                                <div>
-                                    Thu, 12 feb
-                                </div>
-                            </div>
-                            <div class="to-do-card">
-                                <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-                                    <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
-                                    This is the second thing to do on this project
-                                </div>
-                                <div>
-                                    Thu, 12 feb
-                                </div>
-                            </div>
+                        <div id="todo-card-list" class="card-list" style="margin: 0px; overflow-y: auto; height: 100px; display: flex; flex-direction: column; row-gap: 20px; flex-grow: 1;">
                             <div class="to-do-card">
                                 <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
                                     <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>

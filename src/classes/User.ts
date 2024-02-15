@@ -25,7 +25,7 @@ export class User implements IUser{
     role: role
     selfDescription: string
     gender: gender
-    birthday: Date
+    birthday: Date = new Date('1-1-1901')
     address: string
     companyName: string
     userImage: string = 'assets/genericUser.jpg'
@@ -42,21 +42,10 @@ export class User implements IUser{
         for (const key in data) {
             this[key] = data[key]
         }
-        //this.name = data.name
-        //this.email = data.email
-        //this.role = data.role
-        //this.selfDescription = data.selfDescription
-        //this.gender = data.gender
-        //this.birthday = data.birthday
-        //this.address = data.address
-        //this.companyName = data.companyName
-        //this.userImage = data.userImage
 
         //method invoked for card UI
         if (expanded) {this.createUI_expandedUser()}
         else {this.createUI_compactUser()}
-        //this.setUI_expandedUser()
-        //this.setUI_compactUser()
     }
 
     //template for user UI cards

@@ -4,8 +4,8 @@ import { toggleModal, exportToJSON } from './classes/Generic'
 import { UsersManager } from './classes/UsersManager'
 import { ProjectsManager } from './classes/ProjectsManager'
 
-//PROJECTS PAGE EVENTS
 
+//PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
 const projectsManager = new ProjectsManager(projectsListUI) //new instance of users manager class
 
@@ -56,7 +56,7 @@ if (newProjectButton && newProjectModal) {
     newProjectButton.addEventListener('click', () => {  //show modal of new user
         newProjectModal.showModal()
     })
-} else {console.warn("New user button was not found")}
+} else {console.warn("New project button was not found")}
 
 if (expandAllButton && compactAllButton) {
     expandAllButton.addEventListener('click', () => { //events of expand button
@@ -144,9 +144,9 @@ if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the e
                 const project = projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
                 newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
                 newProjectForm.reset() //resent the fields of the form
-                projectsManager.setUI_error(new Error(''),"none") //display the UI of error
+                projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
             } catch (err) {
-                projectsManager.setUI_error(err,"")
+                projectsManager.setUI_error(err,"",'new')
             }
         }) //end of event
 
@@ -154,11 +154,63 @@ if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the e
             e.preventDefault()
             newProjectModal.closeModal() //close the form
             newProjectForm.reset()
-            projectsManager.setUI_error(new Error(''),"none")
+            projectsManager.setUI_error(new Error(''),"none",'new')
         })
 
     } else {console.warn("Bottons of form not founded")}
 } else {console.warn("New project form was not found")}
+
+//Progress bar slider value update
+const sliders = document.getElementsByClassName('progress-bar') as any
+const values = document.getElementsByClassName('progress-value') as any
+if (sliders[0] && values[0]){
+    sliders[0].addEventListener('input', function() {
+        values[0].textContent = sliders[0].value;
+    })}
+if (sliders[1] && values[1]){
+    sliders[1].addEventListener('input', function() {
+        values[1].textContent = sliders[1].value;
+    })}
+
+//EDIT PROJECT FORM INPUT EVENTS
+//form elements
+const editProjectFormSave = document.getElementById("button-editproject-form-save") //accept button
+const editProjectForm = document.getElementById("edit-project-form") //form element
+const editProjectModal = new toggleModal('edit-project-modal')
+//form events
+if (editProjectModal){
+    //editProjectModal.preventEsc()
+    if (editProjectForm && editProjectForm instanceof HTMLFormElement) { //check the existance of user form
+        if (editProjectFormSave) { //check the esistance of accept and cancel button
+            editProjectFormSave.addEventListener('click', (e) => { //event click on accept button
+                const formData = new FormData(editProjectForm)
+                e.preventDefault()
+                const projectData: P.IProject = { //store data in this dictionary
+                    type: 'project',
+                    color: formData.get('color') as string,
+                    name: formData.get('name') as string,
+                    address: formData.get('address') as string,
+                    companyName: formData.get('companyName') as string,
+                    acronym: formData.get('acronym') as string,
+                    status: formData.get('status') as P.status,
+                    cost: formData.get('cost') as unknown as number,
+                    progress: formData.get('progress') as unknown as number,
+                    projectType: formData.get('projectType') as string,
+                }
+                try {
+                    projectsManager.updateProject(projectData)
+                    editProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
+                    editProjectForm.reset() //resent the fields of the form
+                    projectsManager.setUI_error(new Error(''),"none",'edit') //display the UI of error
+                } catch (err) {
+                    projectsManager.setUI_error(err,"",'edit')
+                }
+            }) //end of event
+
+        } else {console.warn("Buttons of form not founded")}
+    } else {console.warn("Edit project form was not found")}
+}
+
 
 //SIDEBAR EVENTS
 //sidebar buttons
@@ -188,10 +240,3 @@ if (menuProjectsButton && menuUsersButton && menuSingleProjectButton && expandAl
     })
 } else {console.warn("Menu button was not found")}
 
-//Progress bar slider value update
-const slider = document.getElementById('progress-bar') as any
-const output = document.querySelector('output[for="progress-bar"]')
-if (slider && output){
-    slider.addEventListener('input', function() {
-    output.textContent = slider.value;
-    })}

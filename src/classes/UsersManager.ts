@@ -30,6 +30,9 @@ export class UsersManager {
         if (nameInUse){
             throw new Error(`A user with the name "${data.name}" already exists.`)
         }
+        if (isNaN(user.birthday as unknown as number)) {
+            user.birthday = new Date('1-1-1801')
+        }
 
         user.ui.addEventListener('click', () => {
             user.changeUI(user.ui.id)
