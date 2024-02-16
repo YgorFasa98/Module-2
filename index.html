@@ -14,14 +14,10 @@
             <img id="company-logo" src="assets/logo.svg" alt="Missed image reference" style="width: 100px; height: 100px; padding-top: 20px;">
         </div>
             B  I  M 
-        <ul id="nav-buttons">
+        <ul class="nav-buttons" id="nav-buttons-home">
             <li id="project-button">
                 <span class="material-icons-outlined">maps_home_work</span>
-                <div>Projects</div>
-            </li>
-            <li id="project-details-button">
-                <span class="material-icons-outlined">camera_indoor</span>
-                <div>Single project</div>
+                <div>Projects Home</div>
             </li>
             <li id="users-button">
                 <span class="material-icons-outlined">person</span>
@@ -30,6 +26,14 @@
             <li id="info-button">
                 <span class="material-icons-outlined">info</span>
                 <div>Info</div>
+            </li>
+        </ul>
+        <ul class="nav-buttons" id="nav-buttons-projects" style="display: none; border-top: 2px solid gray; padding-top: 15px;">
+            <li id="list-projects-button" style="margin-left: 5px; justify-content: space-between;" value="expanded">
+                <span class="material-icons-outlined">menu</span>
+                <div>List of projects</div>
+                <span id="compact_all_projects" class="material-icons-outlined" style="text-align: center;">expand_less</span>
+                <span id="expand_all_projects" class="material-icons-outlined" style="display: none; text-align: center;">expand_more</span>
             </li>
         </ul>
     </aside>
@@ -141,7 +145,7 @@
             </header>
             <div class="card-list" style="flex-grow: 1; overflow: auto; margin-top: 30px; padding: 5px;">
                 <div class="project-list" id="project-list">
-                    <div class="project-card eiffel">
+                <!--<div class="project-card eiffel">
                         <div class="cards-header">
                             <p style="background-color: rgb(165, 155, 42); border-radius: 5px; padding: 15px;">TE</p>
                             <div>
@@ -190,7 +194,7 @@
                                 <p>Not estimated</p>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -277,6 +281,65 @@
                     <div id="edit-project-error-tab" style="display: none;"></div>
                 </div>
             </dialog>
+            <dialog id="new-todo-modal">
+                <div id="new-todo-dialog">
+                    <form id="new-todo-form">
+                        <h2>New To-Do</h2>
+                        <div class="input-list">
+                            <div class="field-container">
+                                <label class="field-title">
+                                    <span class="material-symbols-outlined form-icons">location_away</span>
+                                    Title
+                                </label>
+                                <input name="title" type="text">
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">menu</span>
+                                    Description
+                                </label>
+                                <textarea name="description" cols="30" rows="5" placeholder=" Introduct yourself (max 300 characters)..." style="resize: none;" maxlength="300"></textarea>
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">event</span>
+                                    Expire date
+                                </label>
+                                <input name="expiredate" type="date" class="date">
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">update</span>
+                                    Status
+                                </label>
+                                <select name="status">
+                                    <option>Active</option>
+                                    <option>Pause</option>
+                                    <option>Resolved</option>
+                                    <option>Closed</option>
+                                </select>
+                            </div>
+                            <div class="field-container" style="margin-left: 25px;">
+                                <label class="field-title">
+                                    <span class="material-icons-outlined form-icons">update</span>
+                                    Priority
+                                </label>
+                                <select name="priority">
+                                    <option>Low</option>
+                                    <option>Medium</option>
+                                    <option>High</option>
+                                    <option>Very high</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button type="button" id="button-todo-form-cancel" class="generic-buttons">Cancel</button>
+                            <button type="submit" id="button-todo-form-accept" class="generic-buttons">Accept</button>
+                        </div>
+                    </form>
+                    <div id="new-project-error-tab" style="display: none;"></div>
+                </div>
+            </dialog>
             <header class="single-project-page-spaces">
                 <h1 data-project-details-info="title-name">Hospital Center</h1>
                 <h4 style="color: rgb(115, 115, 115);" data-project-details-info="title-address">Address of the project</h4>
@@ -323,9 +386,9 @@
                         <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
                             <h2>To-Do</h2>
                             <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                <span id="search" class="material-icons-outlined">search</span>
+                                <span id="todo-search" class="material-icons-outlined generic-buttons">search</span>
                                 <textarea maxlength="20" class="search-bar" cols="25" rows="1" placeholder="Search by name (max 20 ch)"></textarea>
-                                <span id="add" class="material-icons-outlined">add</span>
+                                <span id="todo-add" class="material-icons-outlined generic-buttons">add</span>
                             </div>
                         </div>
                         <div id="todo-card-list" class="card-list" style="margin: 0px; overflow-y: auto; height: 100px; display: flex; flex-direction: column; row-gap: 20px; flex-grow: 1;">
@@ -333,10 +396,7 @@
                                 <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
                                     <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">construction</span>
                                     This is the first thing to do on this project.
-                                    <br>Second line of first thing.
-                                    <br>Third line.
-                                    <br>Fourth line.
-                                    <br>Fifth line.
+                                    <br>Second line of first thing.This is the first thing to do on this project.
                                 </div>
                                 <div>
                                     Fri, 20 ago

@@ -7,12 +7,21 @@ import { ProjectsManager } from './classes/ProjectsManager'
 
 //PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
-const projectsManager = new ProjectsManager(projectsListUI) //new instance of users manager class
+const projectsListUI_buttons = document.getElementById('nav-buttons-projects') as HTMLUListElement
+const projectsTodoList = document.getElementById('todo-card-list') as HTMLDivElement
+const projectsManager = new ProjectsManager(projectsListUI, projectsListUI_buttons, projectsTodoList) //new instance of users manager class
+const newProjectButton = document.getElementById("new-project-button") //new user button
+const newProjectModal = new toggleModal('new-project-modal') //new user modal
+
+if (newProjectButton && newProjectModal) {
+    newProjectButton.addEventListener('click', () => {  //show modal of new project
+        newProjectModal.showModal()
+    })
+} else {console.warn("New project button was not found")}
 
 //USERS PAGE EVENTS
 //buttons
 const newUserButton = document.getElementById("new-user-button") //new user button
-const newProjectButton = document.getElementById("new-project-button") //new user button
 const downloadButtonUser = document.getElementById("user-download") //download button
 const uploadButtonUser = document.getElementById("user-upload") //upload button
 const downloadButtonProject = document.getElementById("project-download") //download button
@@ -25,7 +34,6 @@ const usersListUI = document.getElementById("users-list") as HTMLUListElement //
 const usersManager = new UsersManager(usersListUI) //new instance of users manager class
 //modal
 const newUserModal = new toggleModal('new-user-modal') //new user modal
-const newProjectModal = new toggleModal('new-project-modal') //new user modal
 
 //event click on users page buttons
 if (downloadButtonUser && downloadButtonProject) {
@@ -51,12 +59,6 @@ if (newUserButton && newUserModal) {
         newUserModal.showModal()
     })
 } else {console.warn("New user button was not found")}
-
-if (newProjectButton && newProjectModal) {
-    newProjectButton.addEventListener('click', () => {  //show modal of new user
-        newProjectModal.showModal()
-    })
-} else {console.warn("New project button was not found")}
 
 if (expandAllButton && compactAllButton) {
     expandAllButton.addEventListener('click', () => { //events of expand button
@@ -115,6 +117,38 @@ if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existan
     } else {console.warn("Bottons of form not founded")}
 } else {console.warn("New user form was not found")}
 
+//PROJECT DETAILS PAGE
+//TO-DO
+const todoAddButton = document.getElementById('todo-add') as HTMLElement
+const newTodoModal = new toggleModal('new-todo-modal')
+const todoFormAccept = document.getElementById("button-todo-form-accept") //accept button
+const todoFormCancel = document.getElementById("button-todo-form-cancel") //cancel button
+const newTodoForm = document.getElementById("new-todo-form") //form element
+if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoForm instanceof HTMLFormElement){
+    todoAddButton.addEventListener('click', () => {
+        newTodoModal.showModal()
+    })
+    todoFormAccept.addEventListener('click', (e) => {
+        const formData = new FormData(newTodoForm)
+        e.preventDefault()
+        const todoData: P.ITodo = {
+            title: formData.get('title') as string,
+            description: formData.get('description') as string,
+            expiredate: new Date (formData.get('expiredate') as string),
+            status: formData.get('status') as P.statusTodo,
+            priority: formData.get('priority') as P.priority,
+        }
+        try {
+            const todo = new P.ToDo(todoData)
+            projectsManager.newTodo(todo)
+            newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
+            newTodoForm.reset() //resent the fields of the form
+            //projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
+        } catch (err) {
+            //projectsManager.setUI_error(err,"",'new')
+        }
+    })
+}
 
 //PROJECT FORM INPUT EVENTS
 //form elements
@@ -214,29 +248,49 @@ if (editProjectModal){
 
 //SIDEBAR EVENTS
 //sidebar buttons
-const menuProjectsButton = document.getElementById("project-button") //project button sidebar
-const menuUsersButton = document.getElementById("users-button") //users button sidebar
-const menuSingleProjectButton = document.getElementById("project-details-button") //info button sidebar
+const menuProjectsButton = document.getElementById("project-button") as HTMLElement //project button sidebar
+const menuUsersButton = document.getElementById("users-button") as HTMLElement //users button sidebar
+const projectDetailsButtons = document.getElementById('nav-buttons-projects') as HTMLElement
+const listProjectsButton = document.getElementById('list-projects-button') as HTMLElement
+const compact_all_projects = document.getElementById('compact_all_projects') as HTMLElement
+const expand_all_projects = document.getElementById('expand_all_projects') as HTMLElement
+const singleProjectButtons = document.getElementsByClassName('single-project-button')
 //pages to open
 const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
 const pageUsers = document.getElementById('users-page') as HTMLElement //users page
 const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
 
-if (menuProjectsButton && menuUsersButton && menuSingleProjectButton && expandAllButton) {
+if (menuProjectsButton && menuUsersButton && expandAllButton) {
     menuProjectsButton.addEventListener('click', () => {  //events of project button
         pageProjects.style.display = ""
         pageUsers.style.display = "none"
         pageSingleProject.style.display = "none"
+        projectDetailsButtons.style.display = "none"
     })
     menuUsersButton.addEventListener('click', () => { //events of users button
         pageProjects.style.display = "none"
         pageUsers.style.display = ""
         pageSingleProject.style.display = "none"
+        projectDetailsButtons.style.display = "none"
     })
-    menuSingleProjectButton.addEventListener('click', () => { //events of info button
-        pageProjects.style.display = "none"
-        pageUsers.style.display = "none"
-        pageSingleProject.style.display = ""
+    listProjectsButton.addEventListener('click', () => { //events of info button
+        if (listProjectsButton.getAttribute('value') == 'expanded'){
+            for (const button of singleProjectButtons){
+                const b = button as HTMLElement
+                b.style.display = 'none'
+                listProjectsButton.setAttribute('value','compact')
+            }
+            compact_all_projects.style.display = 'none'
+            expand_all_projects.style.display = ''
+        }else if (listProjectsButton.getAttribute('value') == 'compact'){
+            for (const button of singleProjectButtons){
+                const b = button as HTMLElement
+                b.style.display = ''
+                listProjectsButton.setAttribute('value','expanded')
+                compact_all_projects.style.display = ''
+                expand_all_projects.style.display = 'none'
+            }
+        }
     })
 } else {console.warn("Menu button was not found")}
 

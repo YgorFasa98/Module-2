@@ -1,9 +1,11 @@
-import {IProject, Project} from './Project'
+import {IProject, ITodo, Project, ToDo} from './Project'
 import { toggleModal } from './Generic'
 
 export class ProjectsManager {
     list: Project[] = []
     ui: HTMLDivElement
+    uiButtons: HTMLUListElement
+    uiTodo: HTMLDivElement
     defaultProject: IProject = { //default Project data
         type: 'project',
         color: '#931f1f',
@@ -17,9 +19,12 @@ export class ProjectsManager {
         projectType: 'Master degree thesis'
     }
     oldProject: Project
+    oldTodo: ToDo[]
 
-    constructor(container:HTMLDivElement){
+    constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
         this.ui = container
+        this.uiButtons = containerButtons
+        this.uiTodo = containerTodo
         this.newProject(this.defaultProject)
         this.setUI_projectsCount()
     }
@@ -47,8 +52,12 @@ export class ProjectsManager {
         project.ui.addEventListener('click', () => {
             this.setProjectDetails(project)
         })
+        project.uiButtons.addEventListener('click', () => {
+            this.setProjectDetails(project)
+        })
 
         this.ui.append(project.ui)
+        this.uiButtons.append(project.uiButtons)
         this.list.push(project)
 
         this.setUI_projectsCount()
@@ -58,8 +67,10 @@ export class ProjectsManager {
     setProjectDetails (project:Project) {
         const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
         const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
+        const projectDetailsButtons = document.getElementById('nav-buttons-projects') as HTMLElement
         pageProjects.style.display = "none"
         pageSingleProject.style.display = ""
+        projectDetailsButtons.style.display = ""
 
         const title_name = pageSingleProject.querySelector("[data-project-details-info='title-name']") as HTMLElement
         const title_address = pageSingleProject.querySelector("[data-project-details-info='title-address']") as HTMLElement
@@ -76,6 +87,7 @@ export class ProjectsManager {
         title_name.textContent = name.textContent = project.name
         title_address.textContent = address.textContent = project.address
         acronym.textContent = project.acronym
+        acronym.style.backgroundColor = project.color
         company.textContent = project.companyName
         projectType.textContent = project.projectType
         status.textContent = project.status
@@ -99,6 +111,14 @@ export class ProjectsManager {
                 this.oldProject = project
             })
         } else {console.warn("Edit project button was not found")}
+
+        const todoAddButton = document.getElementById('todo-add') as HTMLElement
+        if (todoAddButton){
+            todoAddButton.addEventListener('click', () => {
+                this.oldTodo = project.todo
+            })
+        }
+        //non mettere qui la creazione della ui delle todo se no crasha tutto
     }
 
     setUI_projectsCount(){
@@ -126,6 +146,7 @@ export class ProjectsManager {
         const project = this.getProject(id)
         if (!project) {return}
         project.ui.remove()
+        project.uiButtons.remove()
         const remaining = this.list.filter((project) => {
             return project.id !== id
         })
@@ -137,6 +158,12 @@ export class ProjectsManager {
         const proj = new Project(data)
         this.newProject(proj,'update')
         this.setProjectDetails(proj)
+    }
+
+    newTodo (data:ITodo){
+        const todo = new ToDo(data)
+        this.oldTodo.push(todo)
+        this.uiTodo.append(todo.uiTodo)
     }
 
     setUI_error(err:Error,disp:string,page:string){

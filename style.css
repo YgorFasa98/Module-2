@@ -82,34 +82,56 @@ body{
     height: 200px;
     margin: 10px;
 }
-#nav-buttons{
+.nav-buttons{
     color: var(--text);
     padding: 0px;
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
     display: flex;
     flex-direction: column;
     row-gap: 15px;
     font-size: 18px;
 }
-#nav-buttons li{
+.nav-buttons li{
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
     display: grid;
-    grid-template-columns: 30px 1fr;
+    grid-template-columns: 40px 1fr;
     grid-template-areas: 'icona nome';
 }
-#nav-buttons li span{
+.nav-buttons li span{
     grid-area: icona;
     text-align: center;
 }
-#nav-buttons li div{
+.nav-buttons li div{
     grid-area: nome;
     text-align: center;
 }
-#nav-buttons li:hover{
+.nav-buttons li:hover{
     background-color: var(--hover);
+}
+#nav-buttons-projects{
+    row-gap: 5px;
+}
+#nav-buttons-projects li{
+    display: flex;
+    flex-direction: row;
+    margin-left: 10px;
+    padding: 5px;
+}
+#nav-buttons-projects li div{
+    text-align: left;
+    margin-left: 10px;
+}
+.single-project-button p{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    border-radius: 10px; 
+    padding: 5px; 
+    font-size: 12px;
 }
 
 /* Content area styles */
@@ -358,12 +380,12 @@ fieldset input:focus, form #color:focus {
     align-items: center;
     justify-content: space-between;
     margin-right: 10px;
-    border: 1px solid transparent;
+    border: 1.5px solid transparent;
 }
 .to-do-card:hover{
     background-color: var(--hover);
     cursor: pointer;
-    border: 1px solid black;
+    border: 1.5px solid black;
 }
 .generic-buttons{
     padding: 10px;
