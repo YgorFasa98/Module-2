@@ -16,10 +16,10 @@ export class ProjectsManager {
         cost: 1000,
         progress: 100,
         companyName: 'University of Padua',
-        projectType: 'Master degree thesis'
+        projectType: 'Master degree thesis',
+        todoList: []
     }
     oldProject: Project
-    oldTodo: ToDo[]
 
     constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
         this.ui = container
@@ -37,8 +37,12 @@ export class ProjectsManager {
         const projectsAcronymList = this.list.map((project) => {return project.acronym})
         const acronymInUse = projectsAcronymList.includes(data.acronym)
         
-        if (operation=='update'){}
-        else {
+        if (operation=='update'){
+            if (nameLength){
+                const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
+                throw new Error(`\n${errNameLength}`)
+            }
+        } else {
             if (nameInUse || nameLength || acronymInUse){
                 const errName = nameInUse ? `<br><br>- A project with the name "${data.name}" already exists.` : ''
                 const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
@@ -65,6 +69,7 @@ export class ProjectsManager {
     }
 
     setProjectDetails (project:Project) {
+        //pages visibility to show project details page
         const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
         const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
         const projectDetailsButtons = document.getElementById('nav-buttons-projects') as HTMLElement
@@ -72,6 +77,7 @@ export class ProjectsManager {
         pageSingleProject.style.display = ""
         projectDetailsButtons.style.display = ""
 
+        //update container to show the details of the selected project
         const title_name = pageSingleProject.querySelector("[data-project-details-info='title-name']") as HTMLElement
         const title_address = pageSingleProject.querySelector("[data-project-details-info='title-address']") as HTMLElement
         const name = pageSingleProject.querySelector("[data-project-details-info='name']") as HTMLElement
@@ -96,6 +102,7 @@ export class ProjectsManager {
         progress.style.width = `${project.progress as unknown as string}%`
         }
 
+        //set to the edit button the current project previously selected in the main page
         const editProjectButton = document.getElementById('edit-button')
         const editProjectModal = new toggleModal('edit-project-modal')
         const editProjectForm = document.getElementById("edit-project-form") //form element
@@ -103,22 +110,28 @@ export class ProjectsManager {
         if (editProjectButton && editProjectForm && editProjectModal) {
             editProjectButton.addEventListener('click', () => {  //show modal of edit project
                 const keys = ['acronym','color','name','projectType','address','companyName','status','cost','progress','progress-output']
-                for (const key of keys){
+                for (const key of keys){ //pre-compile del form with the infos of the opened project
                     const k = editProjectForm.querySelector(`[name=${key}]`) as any
                     k.value = key=='progress-output' ? project.progress : project[key]
                 }
-                editProjectModal.showModal()
-                this.oldProject = project
+                editProjectModal.showModal() //show the form
+                this.oldProject = project //set the active project as old to delete it
             })
         } else {console.warn("Edit project button was not found")}
 
         const todoAddButton = document.getElementById('todo-add') as HTMLElement
         if (todoAddButton){
             todoAddButton.addEventListener('click', () => {
-                this.oldTodo = project.todo
+                this.oldProject = project
             })
         }
-        //non mettere qui la creazione della ui delle todo se no crasha tutto
+
+        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
+        projectTodoCardsContainer.innerHTML = ''
+        for (const todo of project.todoList){
+            const todoCard = new ToDo(todo)
+            projectTodoCardsContainer.append(todoCard.uiTodo)
+        }
     }
 
     setUI_projectsCount(){
@@ -154,16 +167,18 @@ export class ProjectsManager {
     }
 
     updateProject (data:IProject) {
-        this.deleteProject(this.oldProject.id)
         const proj = new Project(data)
+        proj.todoList = this.oldProject.todoList
+        this.deleteProject(this.oldProject.id)
         this.newProject(proj,'update')
         this.setProjectDetails(proj)
     }
 
-    newTodo (data:ITodo){
-        const todo = new ToDo(data)
-        this.oldTodo.push(todo)
-        this.uiTodo.append(todo.uiTodo)
+    updateTodo (data:ITodo){
+        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
+        const todoFly = new ToDo(data)
+        projectTodoCardsContainer.append(todoFly.uiTodo)
+        this.oldProject.newTodo(data)
     }
 
     setUI_error(err:Error,disp:string,page:string){
@@ -201,10 +216,15 @@ export class ProjectsManager {
             const json = reader.result
             if (!json) {return}
             const projects: IProject[] = JSON.parse(json as string)
+            console.log(projects)
             const usedNames = new Array()
             for (const project of projects)
                 if (project.type == 'project') {
                     try {
+                        for (const todo of project.todoList){
+                            if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
+                            else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
+                        }
                         this.newProject(project)
                     } catch (error) {
                         usedNames.push(project.name)

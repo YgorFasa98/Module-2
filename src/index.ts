@@ -4,7 +4,6 @@ import { toggleModal, exportToJSON } from './classes/Generic'
 import { UsersManager } from './classes/UsersManager'
 import { ProjectsManager } from './classes/ProjectsManager'
 
-
 //PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
 const projectsListUI_buttons = document.getElementById('nav-buttons-projects') as HTMLUListElement
@@ -118,37 +117,17 @@ if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existan
 } else {console.warn("New user form was not found")}
 
 //PROJECT DETAILS PAGE
-//TO-DO
-const todoAddButton = document.getElementById('todo-add') as HTMLElement
-const newTodoModal = new toggleModal('new-todo-modal')
-const todoFormAccept = document.getElementById("button-todo-form-accept") //accept button
-const todoFormCancel = document.getElementById("button-todo-form-cancel") //cancel button
-const newTodoForm = document.getElementById("new-todo-form") //form element
-if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoForm instanceof HTMLFormElement){
-    todoAddButton.addEventListener('click', () => {
-        newTodoModal.showModal()
-    })
-    todoFormAccept.addEventListener('click', (e) => {
-        const formData = new FormData(newTodoForm)
-        e.preventDefault()
-        const todoData: P.ITodo = {
-            title: formData.get('title') as string,
-            description: formData.get('description') as string,
-            expiredate: new Date (formData.get('expiredate') as string),
-            status: formData.get('status') as P.statusTodo,
-            priority: formData.get('priority') as P.priority,
-        }
-        try {
-            const todo = new P.ToDo(todoData)
-            projectsManager.newTodo(todo)
-            newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
-            newTodoForm.reset() //resent the fields of the form
-            //projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
-        } catch (err) {
-            //projectsManager.setUI_error(err,"",'new')
-        }
-    })
-}
+//Progress bar slider value update
+const sliders = document.getElementsByClassName('progress-bar') as any
+const values = document.getElementsByClassName('progress-value') as any
+if (sliders[0] && values[0]){
+    sliders[0].addEventListener('input', function() {
+        values[0].textContent = sliders[0].value;
+    })}
+if (sliders[1] && values[1]){
+    sliders[1].addEventListener('input', function() {
+        values[1].textContent = sliders[1].value;
+    })}
 
 //PROJECT FORM INPUT EVENTS
 //form elements
@@ -173,11 +152,13 @@ if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the e
                 cost: formData.get('cost') as unknown as number,
                 progress: formData.get('progress') as unknown as number,
                 projectType: formData.get('projectType') as string,
+                todoList: []
             }
             try {
                 const project = projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
                 newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
                 newProjectForm.reset() //resent the fields of the form
+                values[0].textContent = values[1].textContent = '50'
                 projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
             } catch (err) {
                 projectsManager.setUI_error(err,"",'new')
@@ -193,18 +174,6 @@ if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the e
 
     } else {console.warn("Bottons of form not founded")}
 } else {console.warn("New project form was not found")}
-
-//Progress bar slider value update
-const sliders = document.getElementsByClassName('progress-bar') as any
-const values = document.getElementsByClassName('progress-value') as any
-if (sliders[0] && values[0]){
-    sliders[0].addEventListener('input', function() {
-        values[0].textContent = sliders[0].value;
-    })}
-if (sliders[1] && values[1]){
-    sliders[1].addEventListener('input', function() {
-        values[1].textContent = sliders[1].value;
-    })}
 
 //EDIT PROJECT FORM INPUT EVENTS
 //form elements
@@ -230,6 +199,7 @@ if (editProjectModal){
                     cost: formData.get('cost') as unknown as number,
                     progress: formData.get('progress') as unknown as number,
                     projectType: formData.get('projectType') as string,
+                    todoList: []
                 }
                 try {
                     projectsManager.updateProject(projectData)
@@ -244,6 +214,40 @@ if (editProjectModal){
         } else {console.warn("Buttons of form not founded")}
     } else {console.warn("Edit project form was not found")}
 }
+
+//TO-DO
+const todoAddButton = document.getElementById('todo-add') as HTMLElement
+const newTodoModal = new toggleModal('new-todo-modal')
+const todoFormAccept = document.getElementById("button-todo-form-accept") //accept button
+const todoFormCancel = document.getElementById("button-todo-form-cancel") //cancel button
+const newTodoForm = document.getElementById("new-todo-form") //form element
+if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoForm instanceof HTMLFormElement){
+    todoAddButton.addEventListener('click', () => {
+        newTodoModal.showModal()
+    })
+    todoFormAccept.addEventListener('click', (e) => {
+        const formData = new FormData(newTodoForm)
+        e.preventDefault()
+        const todoData: P.ITodo = {
+            title: formData.get('title') as string,
+            description: formData.get('description') as string,
+            expiredate: new Date (formData.get('expiredate') as string),
+            status: formData.get('status') as P.statusTodo,
+            priority: formData.get('priority') as P.priority,
+        }
+        try {
+            //const todo = new P.ToDo(todoData)
+            projectsManager.updateTodo(todoData)
+            newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
+            newTodoForm.reset() //resent the fields of the form
+            projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
+        } catch (err) {
+            console.log(err)
+            //projectsManager.setUI_error(err,"",'new')
+        }
+    })
+}
+
 
 
 //SIDEBAR EVENTS

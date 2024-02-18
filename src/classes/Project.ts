@@ -15,6 +15,7 @@ export interface IProject {
     progress: number
     companyName: string
     projectType: string
+    todoList: ToDo[]
 }
 
 export interface ITodo{
@@ -90,14 +91,13 @@ export class Project implements IProject{
     progress: number
     companyName: string
     projectType: string
+    todoList: ToDo[] = []
 
     //internal class properties
     ui: HTMLDivElement
     uiButtons: HTMLLIElement
     uiTodo: HTMLDivElement
     id: string
-
-    todo: ToDo[] = []
 
     constructor(data: IProject) {
         this.id = uuidv4()
@@ -107,6 +107,11 @@ export class Project implements IProject{
         }
         //method invoked for card UI
         this.createUI()
+    }
+
+    newTodo(data:ITodo){
+        const todo = new ToDo(data)
+        this.todoList.push(todo)
     }
 
     //template for user UI cards
