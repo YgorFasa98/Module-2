@@ -150,7 +150,7 @@ export class ProjectsManager {
 
     getProjectByName (name:string) {
         const project = this.list.find((project) => {
-            project.name === name
+            return project.name === name
         }) 
         return project
     }
@@ -172,6 +172,13 @@ export class ProjectsManager {
         this.deleteProject(this.oldProject.id)
         this.newProject(proj,'update')
         this.setProjectDetails(proj)
+    }
+
+    updateProjectFromImport(data:IProject){
+        const importedProject = new Project(data)
+        const oldProject = this.getProjectByName(data.name)
+        if (oldProject) {this.deleteProject(oldProject.id)}
+        this.newProject(importedProject,'update')
     }
 
     updateTodo (data:ITodo){
@@ -227,6 +234,7 @@ export class ProjectsManager {
                         }
                         this.newProject(project)
                     } catch (error) {
+                        this.updateProjectFromImport(project)
                         usedNames.push(project.name)
                     }
                 }else{
@@ -242,9 +250,9 @@ export class ProjectsManager {
                 const d = document.getElementById('error-import-project') as HTMLDialogElement
                 d.innerHTML = `
                     <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
-                    <div style="white-space:pre-line; padding: 20px;">These names are already in use:\n
+                    <div style="white-space:pre-line; padding: 20px;">These projects already exist:\n
                     - ${usedNames.join('\n- ')}
-                    \nThese projects will not be imported.
+                    \nThese projects will be updated.
                     </div>
                     <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
                 d.showModal()

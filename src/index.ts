@@ -248,8 +248,6 @@ if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoF
     })
 }
 
-
-
 //SIDEBAR EVENTS
 //sidebar buttons
 const menuProjectsButton = document.getElementById("project-button") as HTMLElement //project button sidebar
