@@ -1,4 +1,4 @@
-import {IProject, ITodo, Project, ToDo} from './Project'
+import {IProject, ITodo, Project, ToDo, priority, status, statusTodo} from './Project'
 import { toggleModal } from './Generic'
 
 export class ProjectsManager {
@@ -20,6 +20,7 @@ export class ProjectsManager {
         todoList: []
     }
     oldProject: Project
+    oldTodo: ToDo
 
     constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
         this.ui = container
@@ -126,11 +127,17 @@ export class ProjectsManager {
             })
         }
 
+        //forse qui va cambiata la creazione della UI perche cosi non è legata al project 
+        //perchè modificando le todo importate ne crea di nuove invece di modificare le vecchie
         const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
         projectTodoCardsContainer.innerHTML = ''
         for (const todo of project.todoList){
-            const todoCard = new ToDo(todo)
-            projectTodoCardsContainer.append(todoCard.uiTodo)
+            const todoFly = new ToDo(todo)
+            todoFly.uiTodo.addEventListener('click',() => {
+                this.oldProject = project
+                this.oldTodo = todoFly
+            })
+            projectTodoCardsContainer.append(todoFly.uiTodo)           
         }
     }
 
@@ -181,11 +188,24 @@ export class ProjectsManager {
         this.newProject(importedProject,'update')
     }
 
-    updateTodo (data:ITodo){
+    updateTodo(statusNew:statusTodo,priorityNew:priority){
+        const todoData: ITodo = {
+            status: statusNew,
+            priority: priorityNew,
+            title: this.oldTodo.title,
+            description: this.oldTodo.description,
+            expiredate: this.oldTodo.expiredate
+        }
+        this.oldProject.deleteTodo(this.oldTodo.id)
+        this.oldProject.newTodo(todoData)
+        this.setProjectDetails(this.oldProject)       
+    }
+
+    newTodo (data:ITodo){
         const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
-        const todoFly = new ToDo(data)
+        const todoFly = this.oldProject.newTodo(data)
         projectTodoCardsContainer.append(todoFly.uiTodo)
-        this.oldProject.newTodo(data)
+        this.setProjectDetails(this.oldProject)
     }
 
     setUI_error(err:Error,disp:string,page:string){

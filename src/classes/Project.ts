@@ -1,4 +1,5 @@
 import {v4 as uuidv4} from 'uuid'
+import { toggleModal } from './Generic'
 
 export type status = 'Active' | 'Not started' | 'Completed' | 'Stopped' | 'Dismissed'
 export type statusTodo = 'Active' | 'Pause' | 'Resolved' | 'Closed'
@@ -37,10 +38,12 @@ export class ToDo implements ITodo{
     colorStatus: string = '#931f1f'
     symbolStatus: string
     colorPriority: string = '#931f1f'
-
+    id: string
     uiTodo: HTMLElement
+    oldTodo: ToDo
 
     constructor(data:ITodo){
+        this.id = uuidv4()
         for (const key in data) {
             this[key] = data[key]
         }
@@ -62,7 +65,7 @@ export class ToDo implements ITodo{
         this.uiTodo.style.backgroundColor = this.colorPriority
         this.uiTodo.innerHTML = `
         <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-            <span id="construction" class="material-icons-outlined" style="background-color: gray; border-radius: 5px; padding: 10px;">${this.symbolStatus}</span>
+            <span id="construction" class="material-icons-outlined" style="background-color: var(--background); border-radius: 5px; padding: 10px;">${this.symbolStatus}</span>
             <div style="display:flex; flex-direction:column;">
                 <h3>${this.title}</h3>
                 <h4 style="margin-right:10px;">${this.description}</h4>
@@ -76,6 +79,17 @@ export class ToDo implements ITodo{
         if (this.uiTodo && this.uiTodo instanceof HTMLElement) {return}
         this.uiTodo = document.createElement("div")
         this.templateUI()
+        this.uiTodo.addEventListener('click', () => {            
+            const updateTodoModal = new toggleModal('edit-todo-modal')
+            const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
+            const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
+            const priorityForm = (updateTodoForm.querySelector(`[name=priority]`) as any)
+            if (updateTodoForm && updateTodoModal){
+                statusForm.value = this.status
+                priorityForm.value = this.priority
+                updateTodoModal.showModal()
+            }
+        })
     }
 }
 
@@ -112,6 +126,22 @@ export class Project implements IProject{
     newTodo(data:ITodo){
         const todo = new ToDo(data)
         this.todoList.push(todo)
+        return todo
+    }
+    getTodo (TodoId:string) {
+        const todo = this.todoList.find((todo) => {
+            return todo.id === TodoId
+        })
+        return todo
+    }
+    deleteTodo (TodoId:string){
+        const todo = this.getTodo(TodoId)
+        if (!todo){return}
+        todo.uiTodo.remove()
+        const remaining = this.todoList.filter((todo) => {
+            return todo.id !== TodoId
+        })
+        this.todoList = remaining
     }
 
     //template for user UI cards

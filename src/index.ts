@@ -237,7 +237,7 @@ if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoF
         }
         try {
             //const todo = new P.ToDo(todoData)
-            projectsManager.updateTodo(todoData)
+            projectsManager.newTodo(todoData)
             newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
             newTodoForm.reset() //resent the fields of the form
             projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
@@ -245,6 +245,29 @@ if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoF
             console.log(err)
             //projectsManager.setUI_error(err,"",'new')
         }
+    })
+    todoFormCancel.addEventListener('click', (e) => {
+        e.preventDefault()
+        newTodoModal.closeModal() //close the form
+        newTodoForm.reset()
+        projectsManager.setUI_error(new Error(''),"none",'new')
+    })
+}
+
+const updateTodoModal = new toggleModal('edit-todo-modal')
+const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
+const updateTodoAccept = document.getElementById('edit-todo-form-accept')
+if (updateTodoAccept){
+    updateTodoAccept.addEventListener('click', (e) => {
+        const formData = new FormData(updateTodoForm)
+        e.preventDefault()
+        const newData = {
+            status: formData.get('status') as P.statusTodo,
+            priority: formData.get('priority') as P.priority
+        }
+        projectsManager.updateTodo(newData.status,newData.priority)
+        updateTodoForm.reset()
+        updateTodoModal.closeModal()
     })
 }
 
