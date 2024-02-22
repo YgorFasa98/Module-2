@@ -1,8 +1,10 @@
 import * as U from './classes/User'
 import * as P from './classes/Project'
-import { toggleModal, exportToJSON } from './classes/Generic'
+import * as T from './classes/Todo'
 import { UsersManager } from './classes/UsersManager'
 import { ProjectsManager } from './classes/ProjectsManager'
+import { TodoManager } from './classes/TodoManager'
+import { toggleModal, exportToJSON } from './classes/Generic'
 
 //PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
@@ -228,15 +230,15 @@ if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoF
     todoFormAccept.addEventListener('click', (e) => {
         const formData = new FormData(newTodoForm)
         e.preventDefault()
-        const todoData: P.ITodo = {
+        const todoData: T.ITodo = {
             title: formData.get('title') as string,
             description: formData.get('description') as string,
             expiredate: new Date (formData.get('expiredate') as string),
-            status: formData.get('status') as P.statusTodo,
-            priority: formData.get('priority') as P.priority,
+            status: formData.get('status') as T.statusTodo,
+            priority: formData.get('priority') as T.priorityTodo,
         }
         try {
-            //const todo = new P.ToDo(todoData)
+            //const todo = new T.ToDo(todoData)
             projectsManager.newTodo(todoData)
             newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
             newTodoForm.reset() //resent the fields of the form
@@ -254,7 +256,7 @@ if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoF
     })
 }
 
-const updateTodoModal = new toggleModal('edit-todo-modal')
+/*const updateTodoModal = new toggleModal('edit-todo-modal')
 const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
 const updateTodoAccept = document.getElementById('edit-todo-form-accept')
 if (updateTodoAccept){
@@ -269,7 +271,7 @@ if (updateTodoAccept){
         updateTodoForm.reset()
         updateTodoModal.closeModal()
     })
-}
+}*/
 
 //SIDEBAR EVENTS
 //sidebar buttons

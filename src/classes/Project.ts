@@ -1,9 +1,8 @@
 import {v4 as uuidv4} from 'uuid'
 import { toggleModal } from './Generic'
+import { ToDo } from './Todo'
 
 export type status = 'Active' | 'Not started' | 'Completed' | 'Stopped' | 'Dismissed'
-export type statusTodo = 'Active' | 'Pause' | 'Resolved' | 'Closed'
-export type priority = 'Low' | 'Medium' | 'High' | 'Very high'
 
 export interface IProject {
     type: string
@@ -17,80 +16,6 @@ export interface IProject {
     companyName: string
     projectType: string
     todoList: ToDo[]
-}
-
-export interface ITodo{
-    title: string
-    description: string
-    expiredate: Date
-    status: statusTodo
-    priority: priority
-}
-
-//Todo class
-export class ToDo implements ITodo{
-    title: string
-    description: string
-    expiredate: Date
-    status: statusTodo
-    priority: priority
-
-    colorStatus: string = '#931f1f'
-    symbolStatus: string
-    colorPriority: string = '#931f1f'
-    id: string
-    uiTodo: HTMLElement
-    oldTodo: ToDo
-
-    constructor(data:ITodo){
-        this.id = uuidv4()
-        for (const key in data) {
-            this[key] = data[key]
-        }
-        this.createUI()
-    }
-
-    templateUI(){
-        if (this.priority=='Low'){this.colorPriority='#a9c167'}
-        else if (this.priority=='Medium'){this.colorPriority='#ffe45c'}
-        else if (this.priority=='High'){this.colorPriority='#dd994b'}
-        else if (this.priority=='Very high'){this.colorPriority='#b83232'}
-
-        if (this.status=='Active'){this.colorStatus='#ff0000'; this.symbolStatus='priority_high'}
-        else if (this.status=='Closed'){this.colorStatus='#a0a0a0'; this.colorPriority='#a0a0a0'; this.symbolStatus='close'}
-        else if (this.status=='Pause'){this.colorStatus='#ffff00'; this.symbolStatus='pause'}
-        else if (this.status=='Resolved'){this.colorStatus='#009900'; this.symbolStatus='done'}
-
-        this.uiTodo.className = 'to-do-card'
-        this.uiTodo.style.backgroundColor = this.colorPriority
-        this.uiTodo.innerHTML = `
-        <div style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
-            <span id="construction" class="material-icons-outlined" style="background-color: var(--background); border-radius: 5px; padding: 10px;">${this.symbolStatus}</span>
-            <div style="display:flex; flex-direction:column;">
-                <h3>${this.title}</h3>
-                <h4 style="margin-right:10px;">${this.description}</h4>
-            </div>
-        </div>
-        <div>
-            ${this.expiredate.toLocaleDateString('en-UK',{day: '2-digit',month: 'short',year: 'numeric' })}
-        </div>`
-    }
-    createUI(){
-        if (this.uiTodo && this.uiTodo instanceof HTMLElement) {return}
-        this.uiTodo = document.createElement("div")
-        this.templateUI()
-        this.uiTodo.addEventListener('click', () => {            
-            const updateTodoModal = new toggleModal('edit-todo-modal')
-            const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
-            const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
-            const priorityForm = (updateTodoForm.querySelector(`[name=priority]`) as any)
-            if (updateTodoForm && updateTodoModal){
-                statusForm.value = this.status
-                priorityForm.value = this.priority
-                updateTodoModal.showModal()
-            }
-        })
-    }
 }
 
 //Project class
@@ -121,27 +46,6 @@ export class Project implements IProject{
         }
         //method invoked for card UI
         this.createUI()
-    }
-
-    newTodo(data:ITodo){
-        const todo = new ToDo(data)
-        this.todoList.push(todo)
-        return todo
-    }
-    getTodo (TodoId:string) {
-        const todo = this.todoList.find((todo) => {
-            return todo.id === TodoId
-        })
-        return todo
-    }
-    deleteTodo (TodoId:string){
-        const todo = this.getTodo(TodoId)
-        if (!todo){return}
-        todo.uiTodo.remove()
-        const remaining = this.todoList.filter((todo) => {
-            return todo.id !== TodoId
-        })
-        this.todoList = remaining
     }
 
     //template for user UI cards

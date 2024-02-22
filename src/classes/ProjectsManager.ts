@@ -1,4 +1,4 @@
-import {IProject, ITodo, Project, ToDo, priority, status, statusTodo} from './Project'
+import { IProject, Project, status } from './Project'
 import { toggleModal } from './Generic'
 
 export class ProjectsManager {
@@ -20,7 +20,7 @@ export class ProjectsManager {
         todoList: []
     }
     oldProject: Project
-    oldTodo: ToDo
+    clickedProject: Project
 
     constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
         this.ui = container
@@ -55,10 +55,10 @@ export class ProjectsManager {
         }
 
         project.ui.addEventListener('click', () => {
-            this.setProjectDetails(project)
+            this.clickedProject = this.setProjectDetails(project)
         })
         project.uiButtons.addEventListener('click', () => {
-            this.setProjectDetails(project)
+            this.clickedProject = this.setProjectDetails(project)
         })
 
         this.ui.append(project.ui)
@@ -129,7 +129,7 @@ export class ProjectsManager {
 
         //forse qui va cambiata la creazione della UI perche cosi non è legata al project 
         //perchè modificando le todo importate ne crea di nuove invece di modificare le vecchie
-        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
+        /*const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
         projectTodoCardsContainer.innerHTML = ''
         for (const todo of project.todoList){
             const todoFly = new ToDo(todo)
@@ -138,7 +138,8 @@ export class ProjectsManager {
                 this.oldTodo = todoFly
             })
             projectTodoCardsContainer.append(todoFly.uiTodo)           
-        }
+        }*/
+        return project
     }
 
     setUI_projectsCount(){
@@ -188,26 +189,6 @@ export class ProjectsManager {
         this.newProject(importedProject,'update')
     }
 
-    updateTodo(statusNew:statusTodo,priorityNew:priority){
-        const todoData: ITodo = {
-            status: statusNew,
-            priority: priorityNew,
-            title: this.oldTodo.title,
-            description: this.oldTodo.description,
-            expiredate: this.oldTodo.expiredate
-        }
-        this.oldProject.deleteTodo(this.oldTodo.id)
-        this.oldProject.newTodo(todoData)
-        this.setProjectDetails(this.oldProject)       
-    }
-
-    newTodo (data:ITodo){
-        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
-        const todoFly = this.oldProject.newTodo(data)
-        projectTodoCardsContainer.append(todoFly.uiTodo)
-        this.setProjectDetails(this.oldProject)
-    }
-
     setUI_error(err:Error,disp:string,page:string){
         if (page=='new'){
             const ui_error = document.getElementById('new-project-error-tab') as HTMLElement
@@ -248,11 +229,13 @@ export class ProjectsManager {
             for (const project of projects)
                 if (project.type == 'project') {
                     try {
+                        const pr = this.newProject(project)
                         for (const todo of project.todoList){
                             if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
                             else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
+                            //pr.newTodo(todo)
                         }
-                        this.newProject(project)
+
                     } catch (error) {
                         this.updateProjectFromImport(project)
                         usedNames.push(project.name)
