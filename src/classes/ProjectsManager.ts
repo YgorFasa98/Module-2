@@ -1,5 +1,6 @@
 import { IProject, Project, status } from './Project'
 import { toggleModal } from './Generic'
+import { ITodo, ToDo, priorityTodo, statusTodo } from './Todo'
 
 export class ProjectsManager {
     list: Project[] = []
@@ -129,16 +130,17 @@ export class ProjectsManager {
 
         //forse qui va cambiata la creazione della UI perche cosi non è legata al project 
         //perchè modificando le todo importate ne crea di nuove invece di modificare le vecchie
-        /*const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
+        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
         projectTodoCardsContainer.innerHTML = ''
         for (const todo of project.todoList){
             const todoFly = new ToDo(todo)
-            todoFly.uiTodo.addEventListener('click',() => {
+            //QUESTO NON VA MESSO PERCHè PERCHè è SEMPRE CLICCATO PRIMA IL PROJECT E QUINDI SI CREA SEMPRE GIà IL THIS.OLDPROJECT
+            /*todoFly.ui.addEventListener('click',() => {
                 this.oldProject = project
                 this.oldTodo = todoFly
-            })
-            projectTodoCardsContainer.append(todoFly.uiTodo)           
-        }*/
+            })*/
+            projectTodoCardsContainer.append(todoFly.ui)           
+        }
         return project
     }
 
@@ -175,18 +177,16 @@ export class ProjectsManager {
     }
 
     updateProject (data:IProject) {
-        const proj = new Project(data)
-        proj.todoList = this.oldProject.todoList
+        data.todoList = this.oldProject.todoList
         this.deleteProject(this.oldProject.id)
-        this.newProject(proj,'update')
-        this.setProjectDetails(proj)
+        const project = this.newProject(data,'update')
+        this.setProjectDetails(project)
     }
 
     updateProjectFromImport(data:IProject){
-        const importedProject = new Project(data)
-        const oldProject = this.getProjectByName(data.name)
-        if (oldProject) {this.deleteProject(oldProject.id)}
-        this.newProject(importedProject,'update')
+        const exProject = this.getProjectByName(data.name)
+        if (exProject) {this.deleteProject(exProject.id)}
+        this.newProject(data,'update')
     }
 
     setUI_error(err:Error,disp:string,page:string){
@@ -261,5 +261,37 @@ export class ProjectsManager {
                 d.showModal()
             }
         })
+    }
+
+//TODO
+    oldTodo: ToDo
+
+    newTodo(data:ITodo){
+        const todo = new ToDo(data)
+        this.oldProject.todoList.push(todo)
+        todo.ui.addEventListener('click', () => {            
+            const updateTodoModal = new toggleModal('edit-todo-modal')
+            const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
+            const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
+            const priorityForm = (updateTodoForm.querySelector(`[name=priority]`) as any)
+            if (updateTodoForm && updateTodoModal){
+                statusForm.value = todo.status
+                priorityForm.value = todo.priority
+                this.oldTodo = todo
+                updateTodoModal.showModal()
+            }
+        })
+        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
+        projectTodoCardsContainer.append(todo.ui)
+    }
+    
+    updateTodo(newStatus:statusTodo,newPriority:priorityTodo){
+        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
+        projectTodoCardsContainer.removeChild(this.oldTodo.ui)
+        this.oldTodo.status = newStatus
+        this.oldTodo.priority = newPriority
+        console.log(this.oldTodo)
+        const newUI = this.oldTodo.templateUI()
+        projectTodoCardsContainer.append(newUI)
     }
 }

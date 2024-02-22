@@ -25,7 +25,6 @@ export class ToDo implements ITodo{
     colorPriority: string = '#931f1f'
     id: string
     ui: HTMLElement
-    oldTodo: ToDo
 
     constructor(data:ITodo){
         this.id = uuidv4()
@@ -59,21 +58,12 @@ export class ToDo implements ITodo{
         <div>
             ${this.expiredate.toLocaleDateString('en-UK',{day: '2-digit',month: 'short',year: 'numeric' })}
         </div>`
+        return this.ui
     }
     createUI(){
         if (this.ui && this.ui instanceof HTMLElement) {return}
         this.ui = document.createElement("div")
         this.templateUI()
-        this.ui.addEventListener('click', () => {            
-            const updateTodoModal = new toggleModal('edit-todo-modal')
-            const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
-            const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
-            const priorityForm = (updateTodoForm.querySelector(`[name=priority]`) as any)
-            if (updateTodoForm && updateTodoModal){
-                statusForm.value = this.status
-                priorityForm.value = this.priority
-                updateTodoModal.showModal()
-            }
-        })
+        return this.ui
     }
 }

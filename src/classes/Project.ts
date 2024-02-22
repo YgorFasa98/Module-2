@@ -35,7 +35,6 @@ export class Project implements IProject{
     //internal class properties
     ui: HTMLDivElement
     uiButtons: HTMLLIElement
-    uiTodo: HTMLDivElement
     id: string
 
     constructor(data: IProject) {

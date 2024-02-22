@@ -14,6 +14,7 @@ export class TodoManager {
     }
 
     constructor (containerTodo:HTMLDivElement){ //selezionare il container
+        containerTodo.innerHTML = ''
         this.ui = containerTodo
         this.newTodo(this.defaultTodo)
     }

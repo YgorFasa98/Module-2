@@ -256,7 +256,7 @@ if (todoAddButton && todoFormAccept && todoFormCancel && newTodoForm && newTodoF
     })
 }
 
-/*const updateTodoModal = new toggleModal('edit-todo-modal')
+const updateTodoModal = new toggleModal('edit-todo-modal')
 const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
 const updateTodoAccept = document.getElementById('edit-todo-form-accept')
 if (updateTodoAccept){
@@ -264,14 +264,14 @@ if (updateTodoAccept){
         const formData = new FormData(updateTodoForm)
         e.preventDefault()
         const newData = {
-            status: formData.get('status') as P.statusTodo,
-            priority: formData.get('priority') as P.priority
+            status: formData.get('status') as T.statusTodo,
+            priority: formData.get('priority') as T.priorityTodo
         }
         projectsManager.updateTodo(newData.status,newData.priority)
         updateTodoForm.reset()
         updateTodoModal.closeModal()
     })
-}*/
+}
 
 //SIDEBAR EVENTS
 //sidebar buttons
