@@ -3,7 +3,6 @@ import * as P from './classes/Project'
 import * as T from './classes/Todo'
 import { UsersManager } from './classes/UsersManager'
 import { ProjectsManager } from './classes/ProjectsManager'
-import { TodoManager } from './classes/TodoManager'
 import { toggleModal, exportToJSON } from './classes/Generic'
 
 //PROJECTS PAGE EVENTS

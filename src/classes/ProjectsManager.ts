@@ -205,7 +205,7 @@ export class ProjectsManager {
     newTodo(data:ITodo){
         const todo = new ToDo(data)
         this.oldProject.todoList.push(todo)
-        todo.ui.addEventListener('click', () => {            
+        /*todo.ui.addEventListener('click', () => {            
             const updateTodoModal = new toggleModal('edit-todo-modal')
             const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
             const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
@@ -215,6 +215,56 @@ export class ProjectsManager {
                 priorityForm.value = todo.priority
                 this.oldTodo = todo
                 updateTodoModal.showModal()
+            }
+        })*/
+        todo.ui.addEventListener('mouseover', () => {
+            const deleteButton = todo.ui.querySelector(`[id=deletetodo]`) as HTMLElement
+            const editButton = todo.ui.querySelector(`[id=edittodo]`) as HTMLElement
+            const text = todo.ui.querySelector(`[id=text]`) as HTMLElement
+            const date = todo.ui.querySelector(`[id=date]`) as HTMLElement
+            const construction = todo.ui.querySelector(`[id=construction]`) as HTMLElement
+            const infos = todo.ui.querySelector(`[id=infos]`) as HTMLElement
+            todo.ui.style.justifyContent = 'center'
+            todo.ui.style.gap = '10px'
+            if (deleteButton && editButton) {
+                //construction.style.display = 'none'
+                //text.style.display = 'none'
+                date.style.display = 'none'
+                infos.style.display = 'none'
+                deleteButton.style.display = ''
+                editButton.style.display = ''
+                deleteButton.addEventListener('click',()=>{
+                    this.oldTodo = todo
+                })
+                editButton.addEventListener('click',()=>{
+                    const updateTodoModal = new toggleModal('edit-todo-modal')
+                    const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
+                    const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
+                    const priorityForm = (updateTodoForm.querySelector(`[name=priority]`) as any)
+                    if (updateTodoForm && updateTodoModal){
+                        statusForm.value = todo.status
+                        priorityForm.value = todo.priority
+                        this.oldTodo = todo
+                        updateTodoModal.showModal()
+                    }
+                })
+            }
+        })
+        todo.ui.addEventListener('mouseleave', () => {
+            const deleteButton = todo.ui.querySelector(`[id=deletetodo]`) as HTMLElement
+            const editButton = todo.ui.querySelector(`[id=edittodo]`) as HTMLElement
+            const text = todo.ui.querySelector(`[id=text]`) as HTMLElement
+            const date = todo.ui.querySelector(`[id=date]`) as HTMLElement
+            const construction = todo.ui.querySelector(`[id=construction]`) as HTMLElement
+            const infos = todo.ui.querySelector(`[id=infos]`) as HTMLElement
+            todo.ui.style.justifyContent = 'space-between'
+            if (deleteButton && editButton) {
+                deleteButton.style.display = 'none'
+                editButton.style.display = 'none'
+                //text.style.display = ''
+                date.style.display = ''
+                //construction.style.display = ''
+                infos.style.display = ''
             }
         })
         const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
