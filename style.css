@@ -155,7 +155,7 @@ body{
 .project-list{
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
 }
 .project-card{
     outline: 1.5px solid rgb(0, 0, 0);
@@ -171,7 +171,7 @@ body{
 }
 .cards-header{
     padding: 15px;
-    height: 60px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: start;
