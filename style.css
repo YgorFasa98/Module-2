@@ -387,6 +387,14 @@ fieldset input:focus, form #color:focus {
     cursor: pointer;
     border: 1.5px solid black;
 }
+.edittodo{
+    border: 2px solid transparent;
+}
+.edittodo:hover{
+    background-color: var(--hover);
+    cursor: pointer;
+    border: 2px solid black;
+}
 .generic-buttons{
     padding: 10px;
     border-radius: 100px;

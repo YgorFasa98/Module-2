@@ -48,8 +48,8 @@ export class ToDo implements ITodo{
         this.ui.className = 'to-do-card'
         this.ui.style.backgroundColor = this.colorPriority
         this.ui.innerHTML = `
-        <span id="deletetodo" class="material-icons-outlined" style="display: none; background-color: var(--background); border-radius: 5px; padding: 10px;">delete</span>
-        <span id="edittodo" class="material-icons-outlined" style="display: none; background-color: var(--background); border-radius: 5px; padding: 10px;">edit</span>
+        <span id="deletetodo" class="material-icons-outlined edittodo" style="display: none; background-color: var(--background); border-radius: 5px; padding: 10px;">delete</span>
+        <span id="edittodo" class="material-icons-outlined edittodo" style="display: none; background-color: var(--background); border-radius: 5px; padding: 10px;">edit</span>
         <div id="infos" style="display: flex; gap: 15px; flex-direction: row; align-items: center;">
             <span id="construction" class="material-icons-outlined" style="background-color: var(--background); border-radius: 5px; padding: 10px;">${this.symbolStatus}</span>
             <div id="text" style="display:flex; flex-direction:column;">
