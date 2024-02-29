@@ -60,9 +60,11 @@ export class ProjectsManager {
 
         project.ui.addEventListener('click', () => {
             this.setProjectDetails(project)
+            this.oldProject = project
         })
         project.uiButtons.addEventListener('click', () => {
             this.setProjectDetails(project)
+            this.oldProject = project
         })
 
         this.ui.append(project.ui)
@@ -220,22 +222,16 @@ export class ProjectsManager {
         todo.ui.addEventListener('mouseover', () => {
             const deleteButton = todo.ui.querySelector(`[id=deletetodo]`) as HTMLElement
             const editButton = todo.ui.querySelector(`[id=edittodo]`) as HTMLElement
-            const text = todo.ui.querySelector(`[id=text]`) as HTMLElement
             const date = todo.ui.querySelector(`[id=date]`) as HTMLElement
-            const construction = todo.ui.querySelector(`[id=construction]`) as HTMLElement
             const infos = todo.ui.querySelector(`[id=infos]`) as HTMLElement
             todo.ui.style.justifyContent = 'center'
             todo.ui.style.gap = '10px'
             if (deleteButton && editButton) {
-                //construction.style.display = 'none'
-                //text.style.display = 'none'
                 date.style.display = 'none'
                 infos.style.display = 'none'
                 deleteButton.style.display = ''
                 editButton.style.display = ''
-                deleteButton.addEventListener('click',()=>{
-                    this.oldTodo = todo
-                })
+
                 editButton.addEventListener('click',()=>{
                     const updateTodoModal = new toggleModal('edit-todo-modal')
                     const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
@@ -248,23 +244,23 @@ export class ProjectsManager {
                         updateTodoModal.showModal()
                     }
                 })
+                deleteButton.addEventListener('click',()=>{
+                    this.oldTodo = todo
+                    this.deleteTodo()
+                })
             }
         })
         todo.ui.addEventListener('mouseleave', () => {
             const deleteButton = todo.ui.querySelector(`[id=deletetodo]`) as HTMLElement
             const editButton = todo.ui.querySelector(`[id=edittodo]`) as HTMLElement
-            const text = todo.ui.querySelector(`[id=text]`) as HTMLElement
             const date = todo.ui.querySelector(`[id=date]`) as HTMLElement
-            const construction = todo.ui.querySelector(`[id=construction]`) as HTMLElement
             const infos = todo.ui.querySelector(`[id=infos]`) as HTMLElement
             todo.ui.style.justifyContent = 'space-between'
             if (deleteButton && editButton) {
                 deleteButton.style.display = 'none'
                 editButton.style.display = 'none'
-                //text.style.display = ''
                 date.style.display = ''
-                //construction.style.display = ''
-                infos.style.display = ''
+                infos.style.display = 'flex'
             }
         })
         const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
@@ -276,9 +272,18 @@ export class ProjectsManager {
         projectTodoCardsContainer.removeChild(this.oldTodo.ui)
         this.oldTodo.status = newStatus
         this.oldTodo.priority = newPriority
-        console.log(this.oldTodo)
         const newUI = this.oldTodo.templateUI()
         projectTodoCardsContainer.append(newUI)
+    }
+
+    deleteTodo(){
+        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
+        //projectTodoCardsContainer.removeChild(this.oldTodo.ui)
+        const remaining = this.oldProject.todoList.filter((todo) => {
+            return todo.id !== this.oldTodo.id
+        })
+        this.oldProject.todoList = remaining
+        this.setProjectDetails(this.oldProject)
     }
 
     //IMPORT JSON
