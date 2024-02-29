@@ -207,18 +207,6 @@ export class ProjectsManager {
     newTodo(data:ITodo){
         const todo = new ToDo(data)
         this.oldProject.todoList.push(todo)
-        /*todo.ui.addEventListener('click', () => {            
-            const updateTodoModal = new toggleModal('edit-todo-modal')
-            const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
-            const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
-            const priorityForm = (updateTodoForm.querySelector(`[name=priority]`) as any)
-            if (updateTodoForm && updateTodoModal){
-                statusForm.value = todo.status
-                priorityForm.value = todo.priority
-                this.oldTodo = todo
-                updateTodoModal.showModal()
-            }
-        })*/
         todo.ui.addEventListener('mouseover', () => {
             const deleteButton = todo.ui.querySelector(`[id=deletetodo]`) as HTMLElement
             const editButton = todo.ui.querySelector(`[id=edittodo]`) as HTMLElement
