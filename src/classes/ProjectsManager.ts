@@ -29,7 +29,11 @@ export class ProjectsManager {
         this.ui = container
         this.uiButtons = containerButtons
         this.uiTodo = containerTodo
-        this.newProject(this.defaultProject)
+        //this.newProject(this.defaultProject)
+        //#region TO REMOVE (programmatically enters the default project)
+        const defProject = this.newProject(this.defaultProject)
+        defProject.ui.click()
+        //#endregion
         this.setUI_projectsCount()
     }
 

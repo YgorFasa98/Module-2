@@ -4,8 +4,9 @@ import * as T from './classes/Todo'
 import { UsersManager } from './classes/UsersManager'
 import { ProjectsManager } from './classes/ProjectsManager'
 import { toggleModal, exportToJSON } from './classes/Generic'
+import * as THREE from "three"
 
-//PROJECTS PAGE EVENTS
+//#region PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
 const projectsListUI_buttons = document.getElementById('nav-buttons-projects') as HTMLUListElement
 const projectsTodoList = document.getElementById('todo-card-list') as HTMLDivElement
@@ -18,8 +19,9 @@ if (newProjectButton && newProjectModal) {
         newProjectModal.showModal()
     })
 } else {console.warn("New project button was not found")}
+//#endregion
 
-//USERS PAGE EVENTS
+//#region USERS PAGE EVENTS
 //buttons
 const newUserButton = document.getElementById("new-user-button") //new user button
 const downloadButtonUser = document.getElementById("user-download") //download button
@@ -72,8 +74,9 @@ if (expandAllButton && compactAllButton) {
         compactAllButton.style.display = 'none'
     })
 } else {console.warn("Expand/Compact all button was not found")}
+//#endregion
 
-//USER FORM INPUT EVENTS
+//#region USER FORM INPUT EVENTS
 //form elements
 const userFormAccept = document.getElementById("button-user-form-accept") //accept button
 const userFormCancel = document.getElementById("button-user-form-cancel") //cancel button
@@ -116,8 +119,9 @@ if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existan
 
     } else {console.warn("Bottons of form not founded")}
 } else {console.warn("New user form was not found")}
+//#endregion
 
-//PROJECT DETAILS PAGE
+//#region PROJECT DETAILS PAGE
 //Progress bar slider value update
 const sliders = document.getElementsByClassName('progress-bar') as any
 const values = document.getElementsByClassName('progress-value') as any
@@ -129,8 +133,9 @@ if (sliders[1] && values[1]){
     sliders[1].addEventListener('input', function() {
         values[1].textContent = sliders[1].value;
     })}
+//#endregion
 
-//PROJECT FORM INPUT EVENTS
+//#region PROJECT FORM INPUT EVENTS
 //form elements
 const projectFormAccept = document.getElementById("button-project-form-accept") //accept button
 const projectFormCancel = document.getElementById("button-project-form-cancel") //cancel button
@@ -175,8 +180,9 @@ if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the e
 
     } else {console.warn("Bottons of form not founded")}
 } else {console.warn("New project form was not found")}
+//#endregion
 
-//EDIT PROJECT FORM INPUT EVENTS
+//#region EDIT PROJECT FORM INPUT EVENTS
 //form elements
 const editProjectFormSave = document.getElementById("button-editproject-form-save") //accept button
 const editProjectForm = document.getElementById("edit-project-form") //form element
@@ -215,8 +221,9 @@ if (editProjectModal){
         } else {console.warn("Buttons of form not founded")}
     } else {console.warn("Edit project form was not found")}
 }
+//#endregion
 
-//TO-DO
+//#region TO-DO
 const todoAddButton = document.getElementById('todo-add') as HTMLElement
 const newTodoModal = new toggleModal('new-todo-modal')
 const todoFormAccept = document.getElementById("button-todo-form-accept") //accept button
@@ -271,8 +278,9 @@ if (updateTodoAccept){
         updateTodoModal.closeModal()
     })
 }
+//#endregion
 
-//SIDEBAR EVENTS
+//#region SIDEBAR EVENTS
 //sidebar buttons
 const menuProjectsButton = document.getElementById("project-button") as HTMLElement //project button sidebar
 const menuUsersButton = document.getElementById("users-button") as HTMLElement //users button sidebar
@@ -319,4 +327,35 @@ if (menuProjectsButton && menuUsersButton && expandAllButton) {
         }
     })
 } else {console.warn("Menu button was not found")}
+//#endregion
 
+//#region ThreeJS VIEWER
+
+//scene
+const scene = new THREE.Scene()
+//camera
+const viewerContainer = document.getElementById('viewer-container') as HTMLElement
+const viewerContainerDimensions = viewerContainer.getBoundingClientRect()
+const aspectRatio = viewerContainerDimensions.width / viewerContainerDimensions.height
+const camera = new THREE.PerspectiveCamera(75,aspectRatio)
+camera.position.z = 5
+//renderer
+const renderer = new THREE.WebGLRenderer()
+viewerContainer.append(renderer.domElement)
+renderer.setSize(viewerContainerDimensions.width-40,viewerContainerDimensions.height-40)
+//geometry and mesh
+const boxGeometry = new THREE.BoxGeometry()
+const material = new THREE.MeshStandardMaterial()
+const cube = new THREE.Mesh(boxGeometry,material)
+//lights
+const ambientLight = new THREE.AmbientLight()
+const directionalLight = new THREE.DirectionalLight()
+//visualization of geometry in the scene
+scene.add(cube, ambientLight, directionalLight)
+renderer.render(scene, camera)
+
+
+
+
+
+//#endregion
