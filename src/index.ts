@@ -5,6 +5,7 @@ import { UsersManager } from './classes/UsersManager'
 import { ProjectsManager } from './classes/ProjectsManager'
 import { toggleModal, exportToJSON } from './classes/Generic'
 import * as THREE from "three"
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 
 //#region PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
@@ -338,24 +339,33 @@ const viewerContainer = document.getElementById('viewer-container') as HTMLEleme
 const viewerContainerDimensions = viewerContainer.getBoundingClientRect()
 const aspectRatio = viewerContainerDimensions.width / viewerContainerDimensions.height
 const camera = new THREE.PerspectiveCamera(75,aspectRatio)
-camera.position.z = 5
+camera.position.z = 10
 //renderer
 const renderer = new THREE.WebGLRenderer()
 viewerContainer.append(renderer.domElement)
-renderer.setSize(viewerContainerDimensions.width-40,viewerContainerDimensions.height-40)
+renderer.setSize(viewerContainerDimensions.width,viewerContainerDimensions.height)
 //geometry and mesh
 const boxGeometry = new THREE.BoxGeometry()
+const torusGeometry = new THREE.TorusGeometry()
 const material = new THREE.MeshStandardMaterial()
 const cube = new THREE.Mesh(boxGeometry,material)
+const torus = new THREE.Mesh(torusGeometry,material)
+torus.position.z = 2
 //lights
 const ambientLight = new THREE.AmbientLight()
+ambientLight.intensity = 0.4
 const directionalLight = new THREE.DirectionalLight()
 //visualization of geometry in the scene
-scene.add(cube, ambientLight, directionalLight)
-renderer.render(scene, camera)
+scene.add(cube, torus, ambientLight, directionalLight)
 
+const cameraControls = new OrbitControls(camera, viewerContainer)
 
+function renderScene() {
+    renderer.render(scene, camera)
+    requestAnimationFrame(renderScene)
+}
 
+renderScene()
 
 
 //#endregion
