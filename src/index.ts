@@ -334,37 +334,59 @@ if (menuProjectsButton && menuUsersButton && expandAllButton) {
 
 //scene
 const scene = new THREE.Scene()
-//camera
+
+//viewer container
 const viewerContainer = document.getElementById('viewer-container') as HTMLElement
-const viewerContainerDimensions = viewerContainer.getBoundingClientRect()
-const aspectRatio = viewerContainerDimensions.width / viewerContainerDimensions.height
-const camera = new THREE.PerspectiveCamera(75,aspectRatio)
+
+//camera
+const camera = new THREE.PerspectiveCamera(75)
 camera.position.z = 10
+
 //renderer
-const renderer = new THREE.WebGLRenderer()
+const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true})
 viewerContainer.append(renderer.domElement)
-renderer.setSize(viewerContainerDimensions.width,viewerContainerDimensions.height)
+
+//resize viewer container dinamically
+function resizeViewer(){ //function to resize the renderer and the camera
+    const viewerContainerDimensions = viewerContainer.getBoundingClientRect()
+    renderer.setSize(viewerContainerDimensions.width,viewerContainerDimensions.height)
+    const aspectRatio = viewerContainerDimensions.width / viewerContainerDimensions.height
+    camera.aspect = aspectRatio
+    camera.updateProjectionMatrix()
+}
+
+resizeViewer() //first call of the function to set the elements the first time
+
+window.addEventListener('resize', resizeViewer) //listener to call the function each time the window gets resized
+
 //geometry and mesh
 const boxGeometry = new THREE.BoxGeometry()
 const torusGeometry = new THREE.TorusGeometry()
 const material = new THREE.MeshStandardMaterial()
+
+material.color = new THREE.Color('red')
+material.transparent = true
+material.opacity = 0.5
+material.wireframe = true
+
 const cube = new THREE.Mesh(boxGeometry,material)
 const torus = new THREE.Mesh(torusGeometry,material)
 torus.position.z = 2
+
 //lights
 const ambientLight = new THREE.AmbientLight()
-ambientLight.intensity = 0.4
+ambientLight.intensity = 0.3
 const directionalLight = new THREE.DirectionalLight()
+
 //visualization of geometry in the scene
 scene.add(cube, torus, ambientLight, directionalLight)
 
+//allow user ot move the camera in the scene
 const cameraControls = new OrbitControls(camera, viewerContainer)
-
 function renderScene() {
     renderer.render(scene, camera)
     requestAnimationFrame(renderScene)
 }
-
 renderScene()
 
 
