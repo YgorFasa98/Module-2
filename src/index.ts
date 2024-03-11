@@ -6,6 +6,7 @@ import { ProjectsManager } from './classes/ProjectsManager'
 import { toggleModal, exportToJSON } from './classes/Generic'
 import * as THREE from "three"
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
+import {GUI} from "three/examples/jsm/libs/lil-gui.module.min"
 
 //#region PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
@@ -367,7 +368,7 @@ const material = new THREE.MeshStandardMaterial()
 material.color = new THREE.Color('red')
 material.transparent = true
 material.opacity = 0.5
-material.wireframe = true
+material.wireframe = false
 
 const cube = new THREE.Mesh(boxGeometry,material)
 const torus = new THREE.Mesh(torusGeometry,material)
@@ -389,5 +390,46 @@ function renderScene() {
 }
 renderScene()
 
+//HELPERS: axes, grid, controls panel
+const axes = new THREE.AxesHelper() //axes
+const grid = new THREE.GridHelper() //grid
+grid.material.transparent = true
+grid.material.opacity = 0.4
+grid.material.color = new THREE.Color('#ffffff')
+const lightHelper = new THREE.DirectionalLightHelper(directionalLight,0.1) //directional light helper
+
+scene.add(axes,grid,lightHelper)
+
+const gui = new GUI() //controls panel
+
+const cubeControls = gui.addFolder('Cube') //cube control
+cubeControls.add(cube.position, 'x', -10, 10, 1).name('X')
+cubeControls.add(cube.position, 'y', -10, 10, 1).name('Y')
+cubeControls.add(cube.position, 'z', -10, 10, 1).name('Z')
+cubeControls.add(cube, 'visible').name('Visibility')
+
+const torusControls = gui.addFolder('Torus')  //torus control
+torusControls.add(torus.position, 'x', -10, 10, 1).name('X')
+torusControls.add(torus.position, 'y', -10, 10, 1).name('Y')
+torusControls.add(torus.position, 'z', -10, 10, 1).name('Z')
+torusControls.add(torus, 'visible').name('Visibility')
+
+const materialControls = gui.addFolder('Material')  //material control
+materialControls.add(cube.material, 'transparent').name('Transparency')
+materialControls.add(cube.material, 'wireframe').name('Wireframe')
+materialControls.add(cube.material, 'opacity', 0, 1, 0.1)
+materialControls.addColor(cube.material, 'color').name('Color')
+
+const gridControls = gui.addFolder('Grid') //grid control
+gridControls.add(grid.material, 'transparent').name('Transparency')
+gridControls.add(grid.material, 'opacity', 0, 1, 0.1)
+gridControls.addColor(grid.material, 'color').name('Color')
+
+const lightsControls = gui.addFolder('Lights') //lights control
+lightsControls.add(lightHelper.light.position, 'x', -10, 10, 1).name('X')
+lightsControls.add(lightHelper.light.position, 'y', -10, 10, 1).name('Y')
+lightsControls.add(lightHelper.light.position, 'z', -10, 10, 1).name('Z')
+lightsControls.add(lightHelper.light, 'intensity', -1, 10, 0.1).name('Intensity')
+lightsControls.addColor(lightHelper.light, 'color').name('Color')
 
 //#endregion
