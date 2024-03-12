@@ -7,6 +7,8 @@ import { toggleModal, exportToJSON } from './classes/Generic'
 import * as THREE from "three"
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 import {GUI} from "three/examples/jsm/libs/lil-gui.module.min"
+import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader"
+import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader"
 
 //#region PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
@@ -415,14 +417,14 @@ torusControls.add(torus.position, 'z', -10, 10, 1).name('Z')
 torusControls.add(torus, 'visible').name('Visibility')
 
 const materialControls = gui.addFolder('Material')  //material control
-materialControls.add(cube.material, 'transparent').name('Transparency')
-materialControls.add(cube.material, 'wireframe').name('Wireframe')
-materialControls.add(cube.material, 'opacity', 0, 1, 0.1)
-materialControls.addColor(cube.material, 'color').name('Color')
+materialControls.add(material, 'transparent').name('Transparency')
+materialControls.add(material, 'wireframe').name('Wireframe')
+materialControls.add(material, 'opacity', 0, 1, 0.1).name('Opacity')
+materialControls.addColor(material, 'color').name('Color')
 
 const gridControls = gui.addFolder('Grid') //grid control
 gridControls.add(grid.material, 'transparent').name('Transparency')
-gridControls.add(grid.material, 'opacity', 0, 1, 0.1)
+gridControls.add(grid.material, 'opacity', 0, 1, 0.1).name('Opacity')
 gridControls.addColor(grid.material, 'color').name('Color')
 
 const lightsControls = gui.addFolder('Lights') //lights control
@@ -431,5 +433,15 @@ lightsControls.add(lightHelper.light.position, 'y', -10, 10, 1).name('Y')
 lightsControls.add(lightHelper.light.position, 'z', -10, 10, 1).name('Z')
 lightsControls.add(lightHelper.light, 'intensity', -1, 10, 0.1).name('Intensity')
 lightsControls.addColor(lightHelper.light, 'color').name('Color')
+
+
+//EXTERNAL GEOMETRY
+const objLoader = new OBJLoader()
+const mtlLoader = new MTLLoader()
+
+const gear = objLoader.load("../assets/")
+
+
+
 
 //#endregion
