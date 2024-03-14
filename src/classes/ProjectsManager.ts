@@ -33,6 +33,10 @@ export class ProjectsManager {
         this.uiTodo = containerTodo
         //this.newProject(this.defaultProject)
         //#region TO REMOVE (programmatically enters the default project)
+        //This is needed because i don't set any event to load the viewer after the project card gets clicked
+        //if the page is loaded in the home page infact the dom doesn't find the viewer container because it is hidden
+        //so it's possible to show the viewer but I have before to resize the window
+        //I have to find a way to do it automatically when the project ui card gets clicked
         const defProject = this.newProject(this.defaultProject)
         defProject.ui.click()
         //#endregion
@@ -70,6 +74,7 @@ export class ProjectsManager {
         })
         project.uiButtons.addEventListener('click', () => {
             this.setProjectDetails(project)
+            
             this.oldProject = project
         })
 

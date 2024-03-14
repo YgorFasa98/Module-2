@@ -359,7 +359,6 @@ function resizeViewer(){ //function to resize the renderer and the camera
 }
 
 resizeViewer() //first call of the function to set the elements the first time
-
 window.addEventListener('resize', resizeViewer) //listener to call the function each time the window gets resized
 
 //geometry and mesh
@@ -380,7 +379,7 @@ torus.position.z = 2
 const ambientLight = new THREE.AmbientLight()
 ambientLight.intensity = 0.3
 const directionalLight = new THREE.DirectionalLight()
-const spotLight = new THREE.SpotLight('#ffffff',3)
+const spotLight = new THREE.SpotLight('#ffffff',3,10,0.4)
 spotLight.position.y = 5
 
 //visualization of geometry in the scene
@@ -477,6 +476,5 @@ if (uploadGltfButton){
         newControls.add(meshUploaded.mesh.position, 'z', -10, 10, 1).name('Z')
     })
 }
-
 
 //#endregion
