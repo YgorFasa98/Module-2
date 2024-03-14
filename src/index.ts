@@ -380,9 +380,11 @@ torus.position.z = 2
 const ambientLight = new THREE.AmbientLight()
 ambientLight.intensity = 0.3
 const directionalLight = new THREE.DirectionalLight()
+const spotLight = new THREE.SpotLight('#ffffff',3)
+spotLight.position.y = 5
 
 //visualization of geometry in the scene
-scene.add(cube, torus, ambientLight, directionalLight)
+scene.add(cube, torus, ambientLight, directionalLight, spotLight)
 
 //allow user ot move the camera in the scene
 const cameraControls = new OrbitControls(camera, viewerContainer)
@@ -398,23 +400,27 @@ const grid = new THREE.GridHelper() //grid
 grid.material.transparent = true
 grid.material.opacity = 0.4
 grid.material.color = new THREE.Color('#ffffff')
-const lightHelper = new THREE.DirectionalLightHelper(directionalLight,0.1) //directional light helper
+const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight,0.1) //directional light helper
+const spotLightHelper = new THREE.SpotLightHelper(spotLight,0.1) //spot light helper
 
-scene.add(axes,grid,lightHelper)
+scene.add(axes,grid,directionalLightHelper,spotLightHelper)
 
 const gui = new GUI() //controls panel
 
-const cubeControls = gui.addFolder('Cube') //cube control
+const visibilityControls = gui.addFolder('Visibility')
+visibilityControls.add(cube, 'visible').name('Cube')
+visibilityControls.add(torus, 'visible').name('Torus')
+
+const elementsPosition = gui.addFolder('Elements position')
+const cubeControls = elementsPosition.addFolder('Cube') //cube control
 cubeControls.add(cube.position, 'x', -10, 10, 1).name('X')
 cubeControls.add(cube.position, 'y', -10, 10, 1).name('Y')
 cubeControls.add(cube.position, 'z', -10, 10, 1).name('Z')
-cubeControls.add(cube, 'visible').name('Visibility')
 
-const torusControls = gui.addFolder('Torus')  //torus control
+const torusControls = elementsPosition.addFolder('Torus')  //torus control
 torusControls.add(torus.position, 'x', -10, 10, 1).name('X')
 torusControls.add(torus.position, 'y', -10, 10, 1).name('Y')
 torusControls.add(torus.position, 'z', -10, 10, 1).name('Z')
-torusControls.add(torus, 'visible').name('Visibility')
 
 const materialControls = gui.addFolder('Material')  //material control
 materialControls.add(material, 'transparent').name('Transparency')
@@ -427,21 +433,50 @@ gridControls.add(grid.material, 'transparent').name('Transparency')
 gridControls.add(grid.material, 'opacity', 0, 1, 0.1).name('Opacity')
 gridControls.addColor(grid.material, 'color').name('Color')
 
-const lightsControls = gui.addFolder('Lights') //lights control
-lightsControls.add(lightHelper.light.position, 'x', -10, 10, 1).name('X')
-lightsControls.add(lightHelper.light.position, 'y', -10, 10, 1).name('Y')
-lightsControls.add(lightHelper.light.position, 'z', -10, 10, 1).name('Z')
-lightsControls.add(lightHelper.light, 'intensity', -1, 10, 0.1).name('Intensity')
-lightsControls.addColor(lightHelper.light, 'color').name('Color')
+const directionalLightControls = gui.addFolder('Directional light') //lights control
+directionalLightControls.add(directionalLightHelper.light.position, 'x', -10, 10, 1).name('X')
+directionalLightControls.add(directionalLightHelper.light.position, 'y', -10, 10, 1).name('Y')
+directionalLightControls.add(directionalLightHelper.light.position, 'z', -10, 10, 1).name('Z')
+directionalLightControls.add(directionalLightHelper.light, 'intensity', -1, 10, 0.1).name('Intensity')
+directionalLightControls.addColor(directionalLightHelper.light, 'color').name('Color')
+
+const spotLightControls = gui.addFolder('Spot light') //lights control
+spotLightControls.add(spotLightHelper.light.position, 'x', -10, 10, 1).name('X')
+spotLightControls.add(spotLightHelper.light.position, 'y', -10, 10, 1).name('Y')
+spotLightControls.add(spotLightHelper.light.position, 'z', -10, 10, 1).name('Z')
+spotLightControls.add(spotLightHelper.light, 'intensity', -1, 10, 0.1).name('Intensity')
+spotLightControls.addColor(spotLightHelper.light, 'color').name('Color')
+spotLightControls.add(spotLightHelper.light, 'angle', 0,1,0.01).name('Angle')
 
 
 //EXTERNAL GEOMETRY
-const objLoader = new OBJLoader()
-const mtlLoader = new MTLLoader()
+function LoaderObjMtl(){
+    const objLoader = new OBJLoader()
+    const mtlLoader = new MTLLoader()
 
-const gear = objLoader.load("../assets/")
+    mtlLoader.load("../assets/Gear/Gear1.mtl", (materials) => {
+        materials.preload()
+        objLoader.setMaterials(materials)
+        objLoader.load("../assets/Gear/Gear1.obj", (mesh) => {
+            scene.add(mesh)
+            visibilityControls.add(mesh, 'visible').name('Gear')
+        })    
+    })
+}
+LoaderObjMtl()
 
-
+const uploadGltfButton = document.getElementById("3D-file-upload")
+if (uploadGltfButton){
+    uploadGltfButton.addEventListener('click', async () => {
+        const meshUploaded = await projectsManager.upload3DFile() as any
+        scene.add(meshUploaded.mesh)
+        visibilityControls.add(meshUploaded.mesh,'visible').name(meshUploaded.fileName)
+        const newControls = elementsPosition.addFolder(meshUploaded.fileName)
+        newControls.add(meshUploaded.mesh.position, 'x', -10, 10, 1).name('X')
+        newControls.add(meshUploaded.mesh.position, 'y', -10, 10, 1).name('Y')
+        newControls.add(meshUploaded.mesh.position, 'z', -10, 10, 1).name('Z')
+    })
+}
 
 
 //#endregion

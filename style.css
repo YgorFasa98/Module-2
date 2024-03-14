@@ -324,6 +324,12 @@ fieldset input:focus, form #color:focus {
     display: flex;
     flex-direction: column;
 }
+.viewer-container{
+    display: flex;
+    flex-direction: row;
+    padding: 0px; 
+    min-width: 0;
+}
 #edit-button{
     padding: 20px;
     height: 40px;
@@ -370,6 +376,8 @@ fieldset input:focus, form #color:focus {
     background-color: rgb(43, 43, 70);
     border-radius: 5px;
     resize: none;
+    width: 100%;
+    min-width: 20px;
 }
 .to-do-card{
     border-radius: 5px; 

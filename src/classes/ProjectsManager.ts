@@ -1,6 +1,8 @@
 import { IProject, Project, status } from './Project'
 import { toggleModal } from './Generic'
 import { ITodo, ToDo, priorityTodo, statusTodo } from './Todo'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export class ProjectsManager {
     list: Project[] = []
@@ -295,7 +297,7 @@ export class ProjectsManager {
             const json = reader.result
             if (!json) {return}
             const projects: IProject[] = JSON.parse(json as string)
-            console.log(projects)
+            //console.log(projects)
             const usedNames = new Array()
             for (const project of projects)
                 if (project.type == 'project') {
@@ -337,6 +339,39 @@ export class ProjectsManager {
                     <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
                 d.showModal()
             }
+        })
+    }
+    
+    
+    upload3DFile(){
+        return new Promise((resolve) => {
+            let mesh
+            let fileName: string
+            const input = document.createElement('input') //create an html element tag <input>
+            input.type = 'file' //opens a window to select files from PC
+            input.accept = '.gltf,.obj' //accept only .obj and .gltf files
+            const reader = new FileReader()
+            input.click()
+            input.addEventListener('change', () => {
+                const fileList = input.files
+                if (!fileList) {return}
+                reader.readAsText(fileList[0])
+                fileName = fileList[0].name
+            })
+            reader.addEventListener('load', () => {
+                const importedFile = reader.result
+                if (!importedFile) {return}
+                if (fileName.split('.').pop()=='gltf'){ //gltf file
+                    const gltfLoader = new GLTFLoader()
+                    mesh = gltfLoader.parse(importedFile as string,'',(mesh)=>{
+                        resolve({mesh:mesh.scene, fileName:fileName})
+                    })
+                }else if (fileName.split('.').pop()=='obj'){ //obj file (only geometry not materials)
+                    const objLoader = new OBJLoader()
+                    mesh = objLoader.parse(importedFile as string)
+                    resolve({mesh:mesh, fileName:fileName})
+                }
+            })
         })
     }
 }
