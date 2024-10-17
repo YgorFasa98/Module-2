@@ -479,5 +479,4 @@ if (uploadGltfButton){
     })
 }
 
-//ciao
 //#endregion
