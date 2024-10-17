@@ -9,34 +9,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <aside id="sidebar">
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <img id="company-logo" src="assets/logo.svg" alt="Missed image reference" style="width: 100px; height: 100px; padding-top: 20px;">
-        </div>
-            B  I  M 
-        <ul class="nav-buttons" id="nav-buttons-home">
-            <li id="project-button">
-                <span class="material-icons-outlined">maps_home_work</span>
-                <div>Projects Home</div>
-            </li>
-            <li id="users-button">
-                <span class="material-icons-outlined">person</span>
-                <div>Users</div>
-            </li>
-            <li id="info-button">
-                <span class="material-icons-outlined">info</span>
-                <div>Info</div>
-            </li>
-        </ul>
-        <ul class="nav-buttons" id="nav-buttons-projects" style="display: none; border-top: 2px solid gray; padding-top: 15px;">
-            <li id="list-projects-button" style="margin-left: 5px; justify-content: space-between;" value="expanded">
-                <span class="material-icons-outlined">menu</span>
-                <div>List of projects</div>
-                <span id="compact_all_projects" class="material-icons-outlined" style="text-align: center;">expand_less</span>
-                <span id="expand_all_projects" class="material-icons-outlined" style="display: none; text-align: center;">expand_more</span>
-            </li>
-        </ul>
-    </aside>
+    <div id="app"></div>
     <main id="main-page">
         <div id="project-main-page" class="page" style="display: '';">
             <dialog id="new-project-modal">
@@ -598,6 +571,6 @@
             </div>
         </div>
     </main>
-    <script type="module" src="src/index.ts"></script>
+    <script type="module" src="src/index.tsx"></script>
 </body>
 </html>

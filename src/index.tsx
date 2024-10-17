@@ -1,3 +1,6 @@
+import * as React from 'react'
+import * as ReactDOM from 'react-dom/client'
+import {Sidebar} from './react-components/Sidebar'
 import * as U from './classes/User'
 import * as P from './classes/Project'
 import * as T from './classes/Todo'
@@ -9,6 +12,15 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 import {GUI} from "three/examples/jsm/libs/lil-gui.module.min.js"
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js"
 import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader.js"
+
+//#region REACT COMPONENTS
+const rootElement = document.getElementById('app') as HTMLDivElement
+const appRoot = ReactDOM.createRoot(rootElement)
+appRoot.render(
+    <Sidebar />
+)
+//#endregion
+
 
 //#region PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
