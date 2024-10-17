@@ -26,13 +26,15 @@ export class ProjectsManager {
     //INTERNAL PROPERTIES to manage projects and todos
     oldProject: Project
     oldTodo: ToDo
+    viewerContainer: HTMLElement
 
     constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
         this.ui = container
         this.uiButtons = containerButtons
         this.uiTodo = containerTodo
         //this.newProject(this.defaultProject)
-        //#region TO REMOVE (programmatically enters the default project)
+
+        //#region TO REMOVE (programmatically enters the default project before the viewer is created)
         //This is needed because i don't set any event to load the viewer after the project card gets clicked
         //if the page is loaded in the home page infact the dom doesn't find the viewer container because it is hidden
         //so it's possible to show the viewer but I have before to resize the window
@@ -40,6 +42,7 @@ export class ProjectsManager {
         const defProject = this.newProject(this.defaultProject)
         defProject.ui.click()
         //#endregion
+
         this.setUI_projectsCount()
     }
 
@@ -74,7 +77,6 @@ export class ProjectsManager {
         })
         project.uiButtons.addEventListener('click', () => {
             this.setProjectDetails(project)
-            
             this.oldProject = project
         })
 
@@ -346,7 +348,6 @@ export class ProjectsManager {
             }
         })
     }
-    
     
     upload3DFile(){
         return new Promise((resolve) => {

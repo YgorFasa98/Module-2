@@ -5,10 +5,10 @@ import { UsersManager } from './classes/UsersManager'
 import { ProjectsManager } from './classes/ProjectsManager'
 import { toggleModal, exportToJSON } from './classes/Generic'
 import * as THREE from "three"
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
-import {GUI} from "three/examples/jsm/libs/lil-gui.module.min"
-import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader"
-import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader"
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+import {GUI} from "three/examples/jsm/libs/lil-gui.module.min.js"
+import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js"
+import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader.js"
 
 //#region PROJECTS PAGE EVENTS
 const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
@@ -311,7 +311,7 @@ if (menuProjectsButton && menuUsersButton && expandAllButton) {
         pageSingleProject.style.display = "none"
         projectDetailsButtons.style.display = "none"
     })
-    listProjectsButton.addEventListener('click', () => { //events of info button
+    listProjectsButton.addEventListener('click', () => {
         if (listProjectsButton.getAttribute('value') == 'expanded'){
             for (const button of singleProjectButtons){
                 const b = button as HTMLElement
@@ -334,7 +334,6 @@ if (menuProjectsButton && menuUsersButton && expandAllButton) {
 //#endregion
 
 //#region ThreeJS VIEWER
-
 //scene
 const scene = new THREE.Scene()
 
@@ -462,7 +461,7 @@ function LoaderObjMtl(){
         })    
     })
 }
-LoaderObjMtl()
+//LoaderObjMtl()
 
 const uploadGltfButton = document.getElementById("3D-file-upload")
 if (uploadGltfButton){
@@ -471,10 +470,14 @@ if (uploadGltfButton){
         scene.add(meshUploaded.mesh)
         visibilityControls.add(meshUploaded.mesh,'visible').name(meshUploaded.fileName)
         const newControls = elementsPosition.addFolder(meshUploaded.fileName)
-        newControls.add(meshUploaded.mesh.position, 'x', -10, 10, 1).name('X')
-        newControls.add(meshUploaded.mesh.position, 'y', -10, 10, 1).name('Y')
-        newControls.add(meshUploaded.mesh.position, 'z', -10, 10, 1).name('Z')
+        newControls.add(meshUploaded.mesh.position, 'x', -50, 50, 1).name('X')
+        newControls.add(meshUploaded.mesh.position, 'y', -50, 50, 1).name('Y')
+        newControls.add(meshUploaded.mesh.position, 'z', -50, 50, 1).name('Z')
+        newControls.add(meshUploaded.mesh.rotation, 'x', -10, 10, 0.1).name('RotX')
+        newControls.add(meshUploaded.mesh.rotation, 'y', -10, 10, 0.1).name('RotY')
+        newControls.add(meshUploaded.mesh.rotation, 'z', -10, 10, 0.1).name('RotZ')
     })
 }
 
+//ciao
 //#endregion

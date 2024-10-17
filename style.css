@@ -10,6 +10,7 @@
     --text-title: rgb(4, 0, 255);
     --cardback: rgba(130, 130, 130, 0.85);
     --areatext: rgb(40, 40, 71);
+    --header_height: 100px;
 }
 * {
     margin: 0;
@@ -304,16 +305,21 @@ fieldset input:focus, form #color:focus {
     background-color: transparent;
     border-radius: 10px;
     margin: 5px;
-    display: flex;  
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+#single-project-page > header{
+    height: var(--header_height);
 }
 .page{
     flex-direction: column;
-    flex: 1;
+    flex-grow: 1;
 }
 #single-project-page > .main-page-content{
     display: grid;
     grid-template-columns: 30% 70%;
-    height: 100%;
+    height: calc(100vh - var(--header_height) - 10px);
 }
 .single-project-page-spaces{
     /*background-color: #3042749a;*/
@@ -329,6 +335,7 @@ fieldset input:focus, form #color:focus {
     flex-direction: row;
     padding: 0px; 
     min-width: 0;
+    min-height: 0;
 }
 #edit-button{
     padding: 20px;
