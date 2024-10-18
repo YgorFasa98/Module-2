@@ -1,11 +1,14 @@
 import * as React from 'react'
 
 export function ProjectsPage () {
+<<<<<<< HEAD
   const tipStyle: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: "1fr 60px",
     alignItems: "center"
   }
+=======
+>>>>>>> 4ba046ab74fcdccf0d9ab59508fd1a7d28362f57
     return(
     <div id="project-main-page" className="page" style={{ display: '""' }}>
         <dialog id="new-project-modal">
@@ -19,7 +22,15 @@ export function ProjectsPage () {
                     Acronym
                   </label>
                   <div
+<<<<<<< HEAD
                     style={tipStyle}
+=======
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 60px",
+                      alignItems: "center"
+                    }}
+>>>>>>> 4ba046ab74fcdccf0d9ab59508fd1a7d28362f57
                   >
                     <input
                       name="acronym"
