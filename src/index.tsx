@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
 import {Sidebar} from './react-components/Sidebar'
+import {ProjectsPage} from './react-components/ProjectsPage'
 import * as U from './classes/User'
 import * as P from './classes/Project'
 import * as T from './classes/Todo'
@@ -17,7 +18,10 @@ import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader.js"
 const rootElement = document.getElementById('app') as HTMLDivElement
 const appRoot = ReactDOM.createRoot(rootElement)
 appRoot.render(
+    <>
     <Sidebar />
+    <ProjectsPage />
+    </>
 )
 //#endregion
 

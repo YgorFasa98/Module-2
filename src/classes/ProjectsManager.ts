@@ -1,8 +1,8 @@
 import { IProject, Project, status } from './Project'
 import { toggleModal } from './Generic'
 import { ITodo, ToDo, priorityTodo, statusTodo } from './Todo'
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.ts'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.ts'
 
 export class ProjectsManager {
     list: Project[] = []
