@@ -56,7 +56,7 @@ button div{
     grid-area: nome;
     text-align: center;
 }
-body{
+#app{
     display: grid;
     grid-template-columns: 1.5fr 8fr;
     height: 100vh;
