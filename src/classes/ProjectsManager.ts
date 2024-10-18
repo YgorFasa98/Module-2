@@ -6,9 +6,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class ProjectsManager {
     list: Project[] = []
-    ui: HTMLDivElement
-    uiButtons: HTMLUListElement
-    uiTodo: HTMLDivElement
+    //ui: HTMLDivElement
+    //uiButtons: HTMLUListElement
+    //uiTodo: HTMLDivElement
     defaultProject: IProject = { //default Project data
         type: 'project',
         color: '#931f1f',
@@ -28,10 +28,11 @@ export class ProjectsManager {
     oldTodo: ToDo
     viewerContainer: HTMLElement
 
-    constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
-        this.ui = container
-        this.uiButtons = containerButtons
-        this.uiTodo = containerTodo
+    //constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
+    constructor(){
+        //this.ui = container
+        //this.uiButtons = containerButtons
+        //this.uiTodo = containerTodo
         //this.newProject(this.defaultProject)
 
         //#region TO REMOVE (programmatically enters the default project before the viewer is created)
@@ -40,10 +41,10 @@ export class ProjectsManager {
         //so it's possible to show the viewer but I have before to resize the window
         //I have to find a way to do it automatically when the project ui card gets clicked
         const defProject = this.newProject(this.defaultProject)
-        defProject.ui.click()
+        //defProject.ui.click()
         //#endregion
 
-        this.setUI_projectsCount()
+        //this.setUI_projectsCount()
     }
 
     //NEW PROJECT METHOD
@@ -80,11 +81,11 @@ export class ProjectsManager {
             this.oldProject = project
         })
 
-        this.ui.append(project.ui)
-        this.uiButtons.append(project.uiButtons)
+        //this.ui.append(project.ui)
+        //this.uiButtons.append(project.uiButtons)
         this.list.push(project)
 
-        this.setUI_projectsCount()
+        //this.setUI_projectsCount()
         return project
     }
 

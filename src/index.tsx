@@ -6,7 +6,6 @@ import * as U from './classes/User'
 import * as P from './classes/Project'
 import * as T from './classes/Todo'
 import { UsersManager } from './classes/UsersManager'
-import { ProjectsManager } from './classes/ProjectsManager'
 import { toggleModal, exportToJSON } from './classes/Generic'
 import * as THREE from "three"
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
@@ -27,18 +26,10 @@ appRoot.render(
 
 
 //#region PROJECTS PAGE EVENTS
-const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
-const projectsListUI_buttons = document.getElementById('nav-buttons-projects') as HTMLUListElement
-const projectsTodoList = document.getElementById('todo-card-list') as HTMLDivElement
-const projectsManager = new ProjectsManager(projectsListUI, projectsListUI_buttons, projectsTodoList) //new instance of users manager class
-const newProjectButton = document.getElementById("new-project-button") //new user button
-const newProjectModal = new toggleModal('new-project-modal') //new user modal
-
-if (newProjectButton && newProjectModal) {
-    newProjectButton.addEventListener('click', () => {  //show modal of new project
-        newProjectModal.showModal()
-    })
-} else {console.warn("New project button was not found")}
+//const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
+//const projectsListUI_buttons = document.getElementById('nav-buttons-projects') as HTMLUListElement
+//const projectsTodoList = document.getElementById('todo-card-list') as HTMLDivElement
+//const projectsManager = new ProjectsManager() //new instance of users manager class
 //#endregion
 
 //#region USERS PAGE EVENTS
@@ -153,53 +144,6 @@ if (sliders[1] && values[1]){
     sliders[1].addEventListener('input', function() {
         values[1].textContent = sliders[1].value;
     })}
-//#endregion
-
-//#region PROJECT FORM INPUT EVENTS
-//form elements
-const projectFormAccept = document.getElementById("button-project-form-accept") //accept button
-const projectFormCancel = document.getElementById("button-project-form-cancel") //cancel button
-const newProjectForm = document.getElementById("new-project-form") //form element
-//form events
-if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the existance of user form
-    if (projectFormAccept && projectFormCancel) { //check the esistance of accept and cancel button
-
-        projectFormAccept.addEventListener('click', (e) => { //event click on accept button
-            const formData = new FormData(newProjectForm)
-            e.preventDefault()
-            const projectData: P.IProject = { //store data in this dictionary
-                type: 'project',
-                color: formData.get('color') as string,
-                name: formData.get('name') as string,
-                address: formData.get('address') as string,
-                companyName: formData.get('companyName') as string,
-                acronym: formData.get('acronym') as string,
-                status: formData.get('status') as P.status,
-                cost: formData.get('cost') as unknown as number,
-                progress: formData.get('progress') as unknown as number,
-                projectType: formData.get('projectType') as string,
-                todoList: []
-            }
-            try {
-                const project = projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
-                newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
-                newProjectForm.reset() //resent the fields of the form
-                values[0].textContent = values[1].textContent = '50'
-                projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
-            } catch (err) {
-                projectsManager.setUI_error(err,"",'new')
-            }
-        }) //end of event
-
-        projectFormCancel.addEventListener('click', (e) => { //event click on cancel button
-            e.preventDefault()
-            newProjectModal.closeModal() //close the form
-            newProjectForm.reset()
-            projectsManager.setUI_error(new Error(''),"none",'new')
-        })
-
-    } else {console.warn("Bottons of form not founded")}
-} else {console.warn("New project form was not found")}
 //#endregion
 
 //#region EDIT PROJECT FORM INPUT EVENTS
@@ -460,7 +404,7 @@ spotLightControls.add(spotLightHelper.light.position, 'y', -10, 10, 1).name('Y')
 spotLightControls.add(spotLightHelper.light.position, 'z', -10, 10, 1).name('Z')
 spotLightControls.add(spotLightHelper.light, 'intensity', -1, 10, 0.1).name('Intensity')
 spotLightControls.addColor(spotLightHelper.light, 'color').name('Color')
-spotLightControls.add(spotLightHelper.light, 'angle', 0,1,0.01).name('Angle')
+//spotLightControls.add(spotLightHelper.light, 'angle', 0,1,0.01).name('Angle')
 
 
 //EXTERNAL GEOMETRY
