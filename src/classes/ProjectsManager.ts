@@ -72,14 +72,12 @@ export class ProjectsManager {
             }
         }
 
-        project.ui.addEventListener('click', () => {
-            this.setProjectDetails(project)
-            this.oldProject = project
-        })
+        /*
         project.uiButtons.addEventListener('click', () => {
             this.setProjectDetails(project)
             this.oldProject = project
         })
+            */
 
         //this.ui.append(project.ui)
         //this.uiButtons.append(project.uiButtons)
@@ -90,6 +88,7 @@ export class ProjectsManager {
     }
 
     //METHOD TO SET PROJECT DETAILS PAGE
+    
     setProjectDetails (project:Project) {
         //pages visibility to show project details page
         const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
@@ -155,7 +154,7 @@ export class ProjectsManager {
             })
         }
     }
-
+    
     //METHODS
     setUI_projectsCount(){
         const ui_projectsCount = document.getElementById('ProjectsTitle') as HTMLElement
@@ -180,8 +179,7 @@ export class ProjectsManager {
     deleteProject (id: string) {
         const project = this.getProject(id)
         if (!project) {return}
-        project.ui.remove()
-        project.uiButtons.remove()
+        //project.uiButtons.remove()
         const remaining = this.list.filter((project) => {
             return project.id !== id
         })

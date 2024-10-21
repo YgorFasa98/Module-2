@@ -37,8 +37,6 @@ appRoot.render(
 const newUserButton = document.getElementById("new-user-button") //new user button
 const downloadButtonUser = document.getElementById("user-download") //download button
 const uploadButtonUser = document.getElementById("user-upload") //upload button
-const downloadButtonProject = document.getElementById("project-download") //download button
-const uploadButtonProject = document.getElementById("project-upload") //upload button
 const expandAllButton = document.getElementById('expand_all') //expand all button
 const compactAllButton = document.getElementById('compact_all') //comapct all button
 
@@ -49,21 +47,15 @@ const usersManager = new UsersManager(usersListUI) //new instance of users manag
 const newUserModal = new toggleModal('new-user-modal') //new user modal
 
 //event click on users page buttons
-if (downloadButtonUser && downloadButtonProject) {
+if (downloadButtonUser) {
     downloadButtonUser.addEventListener('click', () => { //download users list as json file
         exportToJSON(usersManager.list,'users_list') //moved the export to json from userManager to generic
     })
-    downloadButtonProject.addEventListener('click', () => { //download users list as json file
-        exportToJSON(projectsManager.list,'projects_list') //moved the export to json from userManager to generic
-    })
 } else {console.warn("Download button was not found")}
 
-if (uploadButtonUser && uploadButtonProject) {
+if (uploadButtonUser) {
     uploadButtonUser.addEventListener('click', () => { //upload json file of users
         usersManager.importFromJSON()
-    })
-    uploadButtonProject.addEventListener('click', () => { //upload json file of users
-        projectsManager.importFromJSON()
     })
 } else {console.warn("Upload button was not found")}
 

@@ -1,12 +1,15 @@
 import * as React from 'react'
-import { toggleModal } from '../classes/Generic'
+import { toggleModal, exportToJSON } from '../classes/Generic'
 import * as P from '../classes/Project'
 import { ProjectsManager } from '../classes/ProjectsManager'
+import { ProjectCard } from './ProjectCard'
 
 export function ProjectsPage () {
 
+  //variables
   const projectsManager = new ProjectsManager()
 
+  //#region FUNCTIONS
   const onNewProjectButtonClick = () => { //little different fron lessons because I implemented the showModal in an external class
     const newProjectModal = new toggleModal('new-project-modal') //new project modal
     if (newProjectModal) {
@@ -59,15 +62,40 @@ export function ProjectsPage () {
   }
 }
 
+  const onDownloadProjectsButtonClick = () =>  {
+    const downloadButtonProject = document.getElementById("project-download") //download button
+    if (downloadButtonProject) {
+      downloadButtonProject.addEventListener('click', () => { //download users list as json file
+          exportToJSON(projectsManager.list,'projects_list') //moved the export to json from userManager to generic
+      })
+  } else {console.warn("Download project button was not found")}
+  }
+
+  const onUploadProjectsButtonClick = () => {
+    const uploadButtonProject = document.getElementById("project-upload") //upload button
+    if (uploadButtonProject) {
+      uploadButtonProject.addEventListener('click', () => { //upload json file of users
+          projectsManager.importFromJSON()
+      })
+  } else {console.warn("Upload project button was not found")}
+  }
+  //#endregion
+
+  //#region STYLES
   //example of tipStyle CSS for React syntax
   const tipStyle: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: "1fr 60px",
     alignItems: "center"
   }
+  //#endregion
 
+  //#region STATES
   const [progress, setProgress] = React.useState(20) //progress-bar of new project form
+  const [projects, setProjects] = React.useState<P.Project[]>(projectsManager.list)
   
+  //#endregion
+
   return(
     <div id="project-main-page" className="page" style={{ display: '""' }}>
       <dialog id="new-project-modal">
@@ -267,12 +295,14 @@ export function ProjectsPage () {
             }}
           >
             <span
+              onClick={onUploadProjectsButtonClick}
               id="project-upload"
               className="material-icons-outlined generic-buttons"
             >
               upload
             </span>
             <span
+              onClick={onDownloadProjectsButtonClick}
               id="project-download"
               className="material-icons-outlined generic-buttons"
             >
@@ -299,6 +329,7 @@ export function ProjectsPage () {
         style={{ flexGrow: 1, overflow: "auto", marginTop: 30, padding: 5 }}
       >
         <div className="project-list" id="project-list">
+          <ProjectCard />
         </div>
       </div>
     </div>      
