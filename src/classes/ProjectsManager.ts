@@ -6,6 +6,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class ProjectsManager {
     list: Project[] = []
+    onProjectCreated = (project: Project) => {} //custom event
+    onProjectDeleted = () => {}
+
+
     //ui: HTMLDivElement
     //uiButtons: HTMLUListElement
     //uiTodo: HTMLDivElement
@@ -82,6 +86,7 @@ export class ProjectsManager {
         //this.ui.append(project.ui)
         //this.uiButtons.append(project.uiButtons)
         this.list.push(project)
+        this.onProjectCreated(project)
 
         //this.setUI_projectsCount()
         return project
@@ -184,6 +189,7 @@ export class ProjectsManager {
             return project.id !== id
         })
         this.list = remaining
+        this.onProjectDeleted()
     }
 
     updateProject (data:IProject) {

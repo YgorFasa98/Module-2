@@ -6,10 +6,21 @@ import { ProjectCard } from './ProjectCard'
 
 export function ProjectsPage () {
 
-  //variables
-  const projectsManager = new ProjectsManager()
+  //#region STATES
+  const [projectsManager] = React.useState(new ProjectsManager())
+  const [progress, setProgress] = React.useState(20) //progress-bar of new project form states update
+  const [projects, setProjects] = React.useState<P.Project[]>(projectsManager.list)
 
-  //#region FUNCTIONS
+  projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])}
+  projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])}
+
+  React.useEffect(() => {
+    console.log('Projects updated', projects)
+  }, [projects])
+
+  //#endregion
+  
+  //#region EVENTS
   const onNewProjectButtonClick = () => { //little different fron lessons because I implemented the showModal in an external class
     const newProjectModal = new toggleModal('new-project-modal') //new project modal
     if (newProjectModal) {
@@ -44,7 +55,7 @@ export function ProjectsPage () {
             newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
             newProjectForm.reset() //reset the fields of the form
             projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
-            console.log(project)
+            //console.log(project)
         } catch (err) {
             projectsManager.setUI_error(err,"",'new')
         }
@@ -88,12 +99,6 @@ export function ProjectsPage () {
     gridTemplateColumns: "1fr 60px",
     alignItems: "center"
   }
-  //#endregion
-
-  //#region STATES
-  const [progress, setProgress] = React.useState(20) //progress-bar of new project form
-  const [projects, setProjects] = React.useState<P.Project[]>(projectsManager.list)
-  
   //#endregion
 
   return(
