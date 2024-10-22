@@ -112,6 +112,10 @@ button div{
 .nav-buttons li:hover{
     background-color: var(--hover);
 }
+.nav-buttons a{
+    color: white;
+    text-decoration: none;
+}
 #nav-buttons-projects{
     row-gap: 5px;
 }
@@ -157,6 +161,10 @@ button div{
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+.project-list a{
+    color: white;
+    text-decoration: none;
 }
 .project-card{
     outline: 1.5px solid rgb(0, 0, 0);

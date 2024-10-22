@@ -1,0 +1,312 @@
+[
+  {
+    "type": "project",
+    "color": "#931f1f",
+    "todoList": [],
+    "id": "40340aea-86e2-4f6d-827f-b081ef50d4e5",
+    "acronym": "SFH",
+    "name": "Single Family House",
+    "address": "None",
+    "status": "Completed",
+    "cost": 1000,
+    "progress": 100,
+    "companyName": "University of Padua",
+    "projectType": "Master degree thesis",
+    "ui": {},
+    "uiButtons": {}
+  },
+  {
+    "type": "project",
+    "color": "#666666",
+    "todoList": [
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#dd994b",
+        "id": "cbf99b99-bda7-44cf-af55-7e93e890e297",
+        "title": "Control concrete cracks on beams",
+        "description": "Beams of second floor need to be controlled if there are cracks after the finish treatment of the concrete.",
+        "expiredate": "2024-03-10T00:00:00.000Z",
+        "status": "Active",
+        "priority": "High",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#ffff00",
+        "colorPriority": "#a9c167",
+        "id": "78d6b59a-336c-480d-a355-bab9acbeb743",
+        "title": "Paint walls office 2",
+        "description": "The walls of office number 2 at the third floor need to be painted in white.",
+        "expiredate": "2024-05-24T00:00:00.000Z",
+        "status": "Pause",
+        "priority": "Low",
+        "ui": {},
+        "symbolStatus": "pause"
+      }
+    ],
+    "id": "fdee4e30-c939-40f5-9d47-c8d756fe9c72",
+    "name": "Example Project 1",
+    "address": "Via Roma 34, Milano, Italy",
+    "companyName": "Bim4All",
+    "acronym": "EXP1",
+    "status": "Stopped",
+    "cost": "1200000",
+    "progress": "62",
+    "projectType": "Commercial building",
+    "ui": {},
+    "uiButtons": {}
+  },
+  {
+    "type": "project",
+    "color": "#990099",
+    "todoList": [
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#dd994b",
+        "id": "12345678-a1b2-c3d4-e5f6-a7b8c9d0e1f2",
+        "title": "Develop Project Proposal",
+        "description": "Prepare a detailed project proposal outlining goals, timeline, and resources needed.",
+        "expiredate": "2024-03-20T00:00:00.000Z",
+        "status": "Active",
+        "priority": "High",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#ffff00",
+        "colorPriority": "#ffe45c",
+        "id": "a0b1c2d3-e4f5-a6b7-c8d9-e0f1a2b3c4d5",
+        "title": "Conduct Stakeholder Meeting",
+        "description": "Organize a meeting with project stakeholders to gather input and feedback.",
+        "expiredate": "2024-04-05T00:00:00.000Z",
+        "status": "Pause",
+        "priority": "Medium",
+        "ui": {},
+        "symbolStatus": "pause"
+      },
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#a9c167",
+        "id": "b4c5d6e7-f8a9-b0c1-d2e3-f4a5b6c7d8e9",
+        "title": "Hire Project Team",
+        "description": "Recruit skilled individuals to form a project team for successful execution.",
+        "expiredate": "2024-05-15T00:00:00.000Z",
+        "status": "Active",
+        "priority": "Low",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      }
+    ],
+    "id": "4d843c35-9eb5-42d0-a442-19eb77f42cf6",
+    "name": "Project Planning",
+    "address": "456 Main Street, Planningville, USA",
+    "companyName": "Strategic Solutions Inc.",
+    "acronym": "PTP",
+    "status": "Dismissed",
+    "cost": "25000",
+    "progress": "62",
+    "projectType": "Strategic Planning",
+    "ui": {},
+    "uiButtons": {}
+  },
+  {
+    "type": "project",
+    "color": "#4285f4",
+    "todoList": [
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#b83232",
+        "id": "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
+        "title": "Install Solar Panels",
+        "description": "Install solar panels on the roof for energy efficiency.",
+        "expiredate": "2024-04-15T00:00:00.000Z",
+        "status": "Active",
+        "priority": "Very high",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#009900",
+        "colorPriority": "#ffe45c",
+        "id": "d7e8f9a0-b1c2-d3e4-f5a6-b7c8d9e0f1a2",
+        "title": "Upgrade HVAC System",
+        "description": "Upgrade the heating, ventilation, and air conditioning system to improve energy efficiency.",
+        "expiredate": "2024-06-30T00:00:00.000Z",
+        "status": "Resolved",
+        "priority": "Medium",
+        "ui": {},
+        "symbolStatus": "done"
+      }
+    ],
+    "id": "1a0d9595-7b4e-4756-9b34-e269db4f360f",
+    "name": "Renewable Energy Project",
+    "address": "123 Green Street, EcoCity, Earth",
+    "companyName": "GreenTech Solutions",
+    "acronym": "REP",
+    "status": "Active",
+    "cost": "50000",
+    "progress": "24",
+    "projectType": "Environmental Sustainability",
+    "ui": {},
+    "uiButtons": {}
+  },
+  {
+    "type": "project",
+    "color": "#0099cc",
+    "todoList": [
+      {
+        "colorStatus": "#009900",
+        "colorPriority": "#dd994b",
+        "id": "98765432-10ab-cdef-1234-567890abcdef",
+        "title": "Implement Security Measures",
+        "description": "Enhance the security infrastructure by implementing the latest measures to protect sensitive data.",
+        "expiredate": "2024-04-30T00:00:00.000Z",
+        "status": "Resolved",
+        "priority": "High",
+        "ui": {},
+        "symbolStatus": "done"
+      }
+    ],
+    "id": "024590f1-79c1-4314-8f5c-1d39374ca8f3",
+    "name": "Information Security Management",
+    "address": "789 Cyber Avenue, Securitopia",
+    "companyName": "SecureTech Solutions",
+    "acronym": "ISM",
+    "status": "Stopped",
+    "cost": "75000",
+    "progress": "40",
+    "projectType": "Information Security",
+    "ui": {},
+    "uiButtons": {}
+  },
+  {
+    "type": "project",
+    "color": "#ffcc00",
+    "todoList": [
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#dd994b",
+        "id": "11111111-2222-3333-4444-555555555555",
+        "title": "Market Research",
+        "description": "Conduct market research to identify trends and customer preferences.",
+        "expiredate": "2024-04-10T00:00:00.000Z",
+        "status": "Active",
+        "priority": "High",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#ffff00",
+        "colorPriority": "#ffe45c",
+        "id": "22222222-3333-4444-5555-666666666666",
+        "title": "Develop Product Prototype",
+        "description": "Create a prototype for the new product based on market research findings.",
+        "expiredate": "2024-04-25T00:00:00.000Z",
+        "status": "Pause",
+        "priority": "Medium",
+        "ui": {},
+        "symbolStatus": "pause"
+      },
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#a9c167",
+        "id": "33333333-4444-5555-6666-777777777777",
+        "title": "Design Marketing Campaign",
+        "description": "Develop a marketing campaign to promote the upcoming product launch.",
+        "expiredate": "2024-05-15T00:00:00.000Z",
+        "status": "Active",
+        "priority": "Low",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#b83232",
+        "id": "44444444-5555-6666-7777-888888888888",
+        "title": "Secure Suppliers",
+        "description": "Establish relationships with reliable suppliers for materials and components.",
+        "expiredate": "2024-06-01T00:00:00.000Z",
+        "status": "Active",
+        "priority": "Very high",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#009900",
+        "colorPriority": "#dd994b",
+        "id": "55555555-6666-7777-8888-999999999999",
+        "title": "Quality Assurance Testing",
+        "description": "Perform rigorous quality testing to ensure the product meets high standards.",
+        "expiredate": "2024-06-20T00:00:00.000Z",
+        "status": "Resolved",
+        "priority": "High",
+        "ui": {},
+        "symbolStatus": "done"
+      },
+      {
+        "colorStatus": "#a0a0a0",
+        "colorPriority": "#a0a0a0",
+        "id": "66666666-7777-8888-9999-000000000000",
+        "title": "Finalize Marketing Materials",
+        "description": "Prepare final marketing materials for print and digital distribution.",
+        "expiredate": "2024-07-05T00:00:00.000Z",
+        "status": "Closed",
+        "priority": "Medium",
+        "ui": {},
+        "symbolStatus": "close"
+      }
+    ],
+    "id": "aaaa1111-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "acronym": "NPL",
+    "name": "New Product Launch",
+    "address": "123 Innovation Street, Productville, USA",
+    "status": "Active",
+    "cost": 150000,
+    "progress": 30,
+    "companyName": "InnovateTech Inc.",
+    "projectType": "Product Development",
+    "ui": {},
+    "uiButtons": {}
+  },
+  {
+    "type": "project",
+    "color": "#66cc99",
+    "todoList": [
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#dd994b",
+        "id": "77777777-8888-9999-0000-111111111111",
+        "title": "Financial Analysis",
+        "description": "Conduct a detailed financial analysis to assess project feasibility.",
+        "expiredate": "2024-03-15T00:00:00.000Z",
+        "status": "Active",
+        "priority": "High",
+        "ui": {},
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#009900",
+        "colorPriority": "#ffe45c",
+        "id": "88888888-9999-0000-1111-222222222222",
+        "title": "Risk Mitigation Strategy",
+        "description": "Develop a strategy to identify and mitigate potential risks associated with the project.",
+        "expiredate": "2024-04-01T00:00:00.000Z",
+        "status": "Resolved",
+        "priority": "Medium",
+        "ui": {},
+        "symbolStatus": "done"
+      }
+    ],
+    "id": "bbbb1111-cccc-dddd-eeee-ffffffffff",
+    "acronym": "FPM",
+    "name": "Financial Planning Module",
+    "address": "456 Finance Avenue, Budgetburg, USA",
+    "status": "Not started",
+    "cost": 50000,
+    "progress": 0,
+    "companyName": "FinanceWise Solutions",
+    "projectType": "Financial Planning",
+    "ui": {},
+    "uiButtons": {}
+  }
+]

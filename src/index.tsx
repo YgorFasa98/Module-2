@@ -1,12 +1,18 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import {Sidebar} from './react-components/Sidebar'
-import {ProjectsPage} from './react-components/ProjectsPage'
+import * as Router from 'react-router-dom'
+
+import { Sidebar } from './react-components/Sidebar'
+import { ProjectsPage } from './react-components/ProjectsPage'
+import { SingleProjectPage } from './react-components/SingleProjectPage'
+import { UsersPage } from './react-components/UsersPage'
+
 import * as U from './classes/User'
 import * as P from './classes/Project'
 import * as T from './classes/Todo'
 import { UsersManager } from './classes/UsersManager'
 import { toggleModal, exportToJSON } from './classes/Generic'
+
 import * as THREE from "three"
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 import {GUI} from "three/examples/jsm/libs/lil-gui.module.min.js"
@@ -18,8 +24,14 @@ const rootElement = document.getElementById('app') as HTMLDivElement
 const appRoot = ReactDOM.createRoot(rootElement)
 appRoot.render(
     <>
-    <Sidebar />
-    <ProjectsPage />
+    <Router.BrowserRouter>
+        <Sidebar />
+        <Router.Routes>
+            <Router.Route path='/home' element={ <ProjectsPage /> } />
+            <Router.Route path='/single-project' element={ <SingleProjectPage /> } />
+            <Router.Route path='/users' element={ <UsersPage /> } />
+        </Router.Routes>
+    </Router.BrowserRouter>
     </>
 )
 //#endregion
@@ -238,7 +250,7 @@ if (updateTodoAccept){
 
 //#region SIDEBAR EVENTS
 //sidebar buttons
-const menuProjectsButton = document.getElementById("project-button") as HTMLElement //project button sidebar
+const menuProjectsButton = document.getElementById("home-button") as HTMLElement //project button sidebar
 const menuUsersButton = document.getElementById("users-button") as HTMLElement //users button sidebar
 const projectDetailsButtons = document.getElementById('nav-buttons-projects') as HTMLElement
 const listProjectsButton = document.getElementById('list-projects-button') as HTMLElement
@@ -285,6 +297,7 @@ if (menuProjectsButton && menuUsersButton && expandAllButton) {
 } else {console.warn("Menu button was not found")}
 //#endregion
 
+/*
 //#region ThreeJS VIEWER
 //scene
 const scene = new THREE.Scene()
@@ -432,3 +445,4 @@ if (uploadGltfButton){
 }
 
 //#endregion
+*/

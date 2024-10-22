@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as Router from 'react-router-dom'
 
 export function Sidebar() {
     return(
@@ -8,14 +9,18 @@ export function Sidebar() {
             </div>
                 B  I  M 
             <ul className="nav-buttons" id="nav-buttons-home">
-                <li id="project-button">
-                    <span className="material-icons-outlined">maps_home_work</span>
-                    <div>Projects Home</div>
-                </li>
-                <li id="users-button">
-                    <span className="material-icons-outlined">person</span>
-                    <div>Users</div>
-                </li>
+                <Router.Link to='/home'>
+                    <li id="home-button">
+                        <span className="material-icons-outlined">maps_home_work</span>
+                        <div>Projects Home</div>
+                    </li>
+                </Router.Link>                
+                <Router.Link to='/users'>
+                    <li id="users-button">
+                        <span className="material-icons-outlined">person</span>
+                        <div>Users</div>
+                    </li>
+                </Router.Link>
                 <li id="info-button">
                     <span className="material-icons-outlined">info</span>
                     <div>Info</div>

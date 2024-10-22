@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as P from '../classes/Project'
+import * as Router from 'react-router-dom'
 
 interface Props {
   project: P.Project
@@ -8,7 +9,8 @@ interface Props {
 export function ProjectCard (props:Props) {
   
   return (
-    <div className = "project-card">
+    <Router.Link to='/single-project'>
+      <div className = "project-card">
         <div className="cards-header">
           <p
             style={{ backgroundColor: props.project.color, borderRadius: 5, padding: 15 }}
@@ -56,6 +58,7 @@ export function ProjectCard (props:Props) {
             </p>
           </div>
         </div>
-      </div>      
+      </div>
+    </Router.Link>    
     )
 }
