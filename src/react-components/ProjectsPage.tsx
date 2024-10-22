@@ -7,12 +7,17 @@ import { ProjectCard } from './ProjectCard'
 export function ProjectsPage () {
 
   //#region STATES
-  const [projectsManager] = React.useState(new ProjectsManager())
   const [progress, setProgress] = React.useState(20) //progress-bar of new project form states update
+  
+  const [projectsManager] = React.useState(new ProjectsManager())
   const [projects, setProjects] = React.useState<P.Project[]>(projectsManager.list)
 
   projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])}
   projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])}
+
+  const ProjectsCards = projects.map((projects) => {
+    return <ProjectCard project={projects} key={projects.id}/>
+  })
 
   React.useEffect(() => {
     console.log('Projects updated', projects)
@@ -333,9 +338,7 @@ export function ProjectsPage () {
         className="card-list"
         style={{ flexGrow: 1, overflow: "auto", marginTop: 30, padding: 5 }}
       >
-        <div className="project-list" id="project-list">
-          <ProjectCard />
-        </div>
+        <div className="project-list" id="project-list">{ProjectsCards}</div>
       </div>
     </div>      
   )

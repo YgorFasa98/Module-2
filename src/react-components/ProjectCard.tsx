@@ -1,20 +1,26 @@
 import * as React from 'react'
+import * as P from '../classes/Project'
 
-export function ProjectCard () {
-    return (
+interface Props {
+  project: P.Project
+}
+
+export function ProjectCard (props:Props) {
+  
+  return (
     <div className = "project-card">
         <div className="cards-header">
           <p
-            style={{ backgroundColor: "${this.color}", borderRadius: 5, padding: 15 }}
+            style={{ backgroundColor: props.project.color, borderRadius: 5, padding: 15 }}
           >
-            DEF_ACR
+            {props.project.acronym}
           </p>
           <div>
             <h2>
-              Default name
+              {props.project.name}
             </h2>
             <h4 style={{ color: "rgb(172, 172, 172)" }}>
-              Default address
+              {props.project.address}
             </h4>
           </div>
         </div>
@@ -22,31 +28,31 @@ export function ProjectCard () {
           <div className="cards-property">
             <p className="cards-categories">Project type</p>
             <p>
-              Default project type
+              {props.project.projectType}
             </p>
           </div>
           <div className="cards-property">
             <p className="cards-categories">Company name</p>
             <p>
-              Default company name
+              {props.project.companyName}
             </p>
           </div>
           <div className="cards-property">
             <p className="cards-categories">Cost</p>
             <p>
-              € Default cost
+              € {props.project.cost}
             </p>
           </div>
           <div className="cards-property">
             <p className="cards-categories">Status</p>
             <p>
-              Default status
+            {props.project.status}
             </p>
           </div>
           <div className="cards-property">
             <p className="cards-categories">Progress</p>
             <p>
-              Default progress %
+            {props.project.progress} %
             </p>
           </div>
         </div>
