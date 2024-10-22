@@ -274,7 +274,7 @@ export function ProjectsPage () {
             house
           </span>
           <h1 id="ProjectsTitle" style={{ fontFamily: "Roboto", color: "gray" }}>
-            Projects (default value)
+            Projects ({projectsManager.list.length})
           </h1>
         </div>
         <div
