@@ -11,6 +11,7 @@
     --cardback: rgba(130, 130, 130, 0.85);
     --areatext: rgb(40, 40, 71);
     --header_height: 100px;
+    --sidebar_width: 350px;
 }
 * {
     margin: 0;
@@ -58,7 +59,7 @@ button div{
 }
 #app{
     display: grid;
-    grid-template-columns: 1.5fr 8fr;
+    grid-template-columns: var(--sidebar_width) 1fr;
     height: 100vh;
     /* background-image: url('./assets/nightsky.png'); */
     /* background-size: cover; */
@@ -313,12 +314,11 @@ fieldset input:focus, form #color:focus {
     background-color: transparent;
     border-radius: 10px;
     margin: 5px;
-    display: flex;
+    display: grid;
+    grid-template-rows: var(--header_height) 1fr;
+    /*display: flex;
     flex-direction: column;
-    flex-grow: 1;
-}
-#single-project-page > header{
-    height: var(--header_height);
+    flex-grow: 1;*/
 }
 .page{
     flex-direction: column;
@@ -327,10 +327,8 @@ fieldset input:focus, form #color:focus {
 #single-project-page > .main-page-content{
     display: grid;
     grid-template-columns: 30% 70%;
-    height: calc(100vh - var(--header_height) - 10px);
 }
 .single-project-page-spaces{
-    /*background-color: #3042749a;*/
     background-color: var(--background);
     padding: 20px;
     border-radius: 10px;

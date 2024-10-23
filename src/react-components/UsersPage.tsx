@@ -2,7 +2,7 @@ import * as React from 'react'
 
 export function UsersPage () {
     return(
-        <div id="users-page" className="page" style={{ display: "none" }}>
+        <div id="users-page" className="page">
             <dialog id="new-user-modal">
                 <div id="new-user-dialog">
                 <form id="new-user-form">
