@@ -7,9 +7,8 @@ interface Props {
 }
 
 export function ProjectCard (props:Props) {
-  
   return (
-    <Router.Link to='/single-project'>
+    <Router.Link to={`/single-project/${props.project.id}`}>
       <div className = "project-card">
         <div className="cards-header">
           <p

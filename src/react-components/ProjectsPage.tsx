@@ -4,16 +4,18 @@ import * as P from '../classes/Project'
 import { ProjectsManager } from '../classes/ProjectsManager'
 import { ProjectCard } from './ProjectCard'
 
-export function ProjectsPage () {
+interface Props {
+    projectsManager: ProjectsManager
+}
+
+export function ProjectsPage (props: Props) {
 
   //#region STATES
   const [progress, setProgress] = React.useState(20) //progress-bar of new project form states update
-  
-  const [projectsManager] = React.useState(new ProjectsManager())
-  const [projects, setProjects] = React.useState<P.Project[]>(projectsManager.list)
+  const [projects, setProjects] = React.useState<P.Project[]>(props.projectsManager.list)
 
-  projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])}
-  projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])}
+  props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
+  props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
 
   const ProjectsCards = projects.map((projects) => {
     return <ProjectCard project={projects} key={projects.id}/>
@@ -56,13 +58,13 @@ export function ProjectsPage () {
             todoList: []
         }
         try {
-            const project = projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
+            const project = props.projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
             newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
             newProjectForm.reset() //reset the fields of the form
-            projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
+            props.projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
             //console.log(project)
         } catch (err) {
-            projectsManager.setUI_error(err,"",'new')
+            props.projectsManager.setUI_error(err,"",'new')
         }
       }
   }
@@ -74,7 +76,7 @@ export function ProjectsPage () {
       e.preventDefault()
       newProjectModal.closeModal() //close the form
       newProjectForm.reset()
-      projectsManager.setUI_error(new Error(''),"none",'new')
+      props.projectsManager.setUI_error(new Error(''),"none",'new')
   }
 }
 
@@ -82,7 +84,7 @@ export function ProjectsPage () {
     const downloadButtonProject = document.getElementById("project-download") //download button
     if (downloadButtonProject) {
       downloadButtonProject.addEventListener('click', () => { //download users list as json file
-          exportToJSON(projectsManager.list,'projects_list') //moved the export to json from userManager to generic
+          exportToJSON(props.projectsManager.list,'projects_list') //moved the export to json from userManager to generic
       })
   } else {console.warn("Download project button was not found")}
   }
@@ -91,7 +93,7 @@ export function ProjectsPage () {
     const uploadButtonProject = document.getElementById("project-upload") //upload button
     if (uploadButtonProject) {
       uploadButtonProject.addEventListener('click', () => { //upload json file of users
-          projectsManager.importFromJSON()
+          props.projectsManager.importFromJSON()
       })
   } else {console.warn("Upload project button was not found")}
   }
@@ -274,7 +276,7 @@ export function ProjectsPage () {
             house
           </span>
           <h1 id="ProjectsTitle" style={{ fontFamily: "Roboto", color: "gray" }}>
-            Projects ({projectsManager.list.length})
+            Projects ({props.projectsManager.list.length})
           </h1>
         </div>
         <div

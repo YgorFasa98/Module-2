@@ -6,6 +6,7 @@ import { Sidebar } from './react-components/Sidebar'
 import { ProjectsPage } from './react-components/ProjectsPage'
 import { SingleProjectPage } from './react-components/SingleProjectPage'
 import { UsersPage } from './react-components/UsersPage'
+import { ProjectsManager } from './classes/ProjectsManager'
 
 import * as U from './classes/User'
 import * as P from './classes/Project'
@@ -19,6 +20,9 @@ import {GUI} from "three/examples/jsm/libs/lil-gui.module.min.js"
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js"
 import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader.js"
 
+
+const projectsManager = new ProjectsManager()
+
 //#region REACT COMPONENTS
 const rootElement = document.getElementById('app') as HTMLDivElement
 const appRoot = ReactDOM.createRoot(rootElement)
@@ -27,8 +31,8 @@ appRoot.render(
     <Router.BrowserRouter>
         <Sidebar />
         <Router.Routes>
-            <Router.Route path='/home' element={ <ProjectsPage /> } />
-            <Router.Route path='/single-project' element={ <SingleProjectPage /> } />
+            <Router.Route path='/home' element={ <ProjectsPage projectsManager={projectsManager} /> } />
+            <Router.Route path='/single-project/:id' element={ <SingleProjectPage projectsManager={projectsManager} /> } />
             <Router.Route path='/users' element={ <UsersPage /> } />
         </Router.Routes>
     </Router.BrowserRouter>
@@ -44,6 +48,8 @@ appRoot.render(
 //const projectsManager = new ProjectsManager() //new instance of users manager class
 //#endregion
 
+
+/*
 //#region USERS PAGE EVENTS
 //buttons
 const newUserButton = document.getElementById("new-user-button") //new user button
