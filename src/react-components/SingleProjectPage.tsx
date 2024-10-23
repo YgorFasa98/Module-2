@@ -1,15 +1,25 @@
 import * as React from 'react'
 import * as Router from 'react-router-dom'
 import { ProjectsManager } from '../classes/ProjectsManager'
+import * as P from '../classes/Project'
 
 interface Props {
     projectsManager: ProjectsManager
 }
 
 export function SingleProjectPage (props:Props) {
-    const routeParams = Router.useParams<{id}>()
-    const project = props.projectsManager.getProject(routeParams.id)
+    const routeParams = Router.useParams<{id: string}>()
+    if(!routeParams.id){
+        alert('ID not found')
+        return (<div id="single-project-page" className="page">ID not found</div>)
+    }
+        
     console.log('This is the project ID: ', routeParams.id)
+    const project = props.projectsManager.getProject(routeParams.id)
+    if (!(project && project instanceof P.Project)){
+        alert('Project not found')
+        return (<div id="single-project-page" className="page">Project not found</div>)
+    }
 
     return(
         <div id="single-project-page" className="page">
@@ -311,43 +321,43 @@ export function SingleProjectPage (props:Props) {
                     <p
                         data-project-details-info="acronym"
                         style={{
-                        backgroundColor: `${project?.color}`,
+                        backgroundColor: `${project.color}`,
                         borderRadius: 10,
                         padding: 15,
                         fontSize: 24
                         }}
                     >
-                        {project?.acronym}
+                        {project.acronym}
                     </p>
                     <button id="edit-button">Edit</button>
                     </div>
                     <div style={{ borderBottom: "1px solid white", paddingBottom: 5 }}>
-                    <h3 data-project-details-info="name">{project?.name}</h3>
-                    <p data-project-details-info="address">{project?.address}</p>
+                    <h3 data-project-details-info="name">{project.name}</h3>
+                    <p data-project-details-info="address">{project.address}</p>
                     </div>
                     <div id="details">
                     <div style={{ marginLeft: 5, marginRight: 5 }}>
                         <p style={{ color: "dimgray" }}>Company</p>
-                        <p data-project-details-info="company">{project?.companyName}</p>
+                        <p data-project-details-info="company">{project.companyName}</p>
                     </div>
                     <div style={{ marginLeft: 5, marginRight: 5 }}>
                         <p style={{ color: "dimgray" }}>Project type</p>
-                        <p data-project-details-info="project-type">{project?.projectType}</p>
+                        <p data-project-details-info="project-type">{project.projectType}</p>
                     </div>
                     <div style={{ marginLeft: 5, marginRight: 5 }}>
                         <p style={{ color: "dimgray" }}>Status</p>
-                        <p data-project-details-info="status">{project?.status}</p>
+                        <p data-project-details-info="status">{project.status}</p>
                     </div>
                     <div style={{ marginLeft: 5, marginRight: 5 }}>
                         <p style={{ color: "dimgray" }}>Cost</p>
-                        <p data-project-details-info="cost">€ {project?.cost}</p>
+                        <p data-project-details-info="cost">€ {project.cost}</p>
                     </div>
                     </div>
                     <div>
                     <p style={{ color: "dimgray", marginBottom: 5 }}>Progress bar</p>
                     <div className="loading-bar-container">
-                        <div data-project-details-info="progress" className="loading-bar" style={{width: `${project?.progress}%`}}>
-                        {project?.progress} %
+                        <div data-project-details-info="progress" className="loading-bar" style={{width: `${project.progress}%`}}>
+                        {project.progress} %
                         </div>
                     </div>
                     </div>
