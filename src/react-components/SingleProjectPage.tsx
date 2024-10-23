@@ -1,15 +1,25 @@
 import * as React from 'react'
 import * as Router from 'react-router-dom'
 import { ProjectsManager } from '../classes/ProjectsManager'
+import * as P from '../classes/Project'
 
 interface Props {
     projectsManager: ProjectsManager
 }
 
 export function SingleProjectPage (props:Props) {
-    const routeParams = Router.useParams<{id}>()
-    const project = props.projectsManager.getProject(routeParams.id)
+    const routeParams = Router.useParams<{id: string}>()
+    if(!routeParams.id){
+        alert('ID not found')
+        return (<div id="single-project-page" className="page">ID not found</div>)
+    }
+        
     console.log('This is the project ID: ', routeParams.id)
+    const project = props.projectsManager.getProject(routeParams.id)
+    if (!(project && project instanceof P.Project)){
+        alert('Project not found')
+        return (<div id="single-project-page" className="page">Project not found</div>)
+    }
 
     return(
         <div id="single-project-page" className="page">
