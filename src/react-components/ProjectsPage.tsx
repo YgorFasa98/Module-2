@@ -80,23 +80,8 @@ export function ProjectsPage (props: Props) {
   }
 }
 
-  const onDownloadProjectsButtonClick = () =>  {
-    const downloadButtonProject = document.getElementById("project-download") //download button
-    if (downloadButtonProject) {
-      downloadButtonProject.addEventListener('click', () => { //download users list as json file
-          exportToJSON(props.projectsManager.list,'projects_list') //moved the export to json from userManager to generic
-      })
-  } else {console.warn("Download project button was not found")}
-  }
-
-  const onUploadProjectsButtonClick = () => {
-    const uploadButtonProject = document.getElementById("project-upload") //upload button
-    if (uploadButtonProject) {
-      uploadButtonProject.addEventListener('click', () => { //upload json file of users
-          props.projectsManager.importFromJSON()
-      })
-  } else {console.warn("Upload project button was not found")}
-  }
+  const onDownloadProjectsButtonClick = () =>  {exportToJSON(props.projectsManager.list,'projects_list')}
+  const onUploadProjectsButtonClick = () => {props.projectsManager.importFromJSON()}
   //#endregion
 
   //#region STYLES

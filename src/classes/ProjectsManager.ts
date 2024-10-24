@@ -34,7 +34,6 @@ export class ProjectsManager {
 
     //constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
     constructor(){
-        //this.ui = container
         //this.uiButtons = containerButtons
         //this.uiTodo = containerTodo
         //this.newProject(this.defaultProject)
@@ -47,8 +46,6 @@ export class ProjectsManager {
         const defProject = this.newProject(this.defaultProject)
         //defProject.ui.click()
         //#endregion
-
-        //this.setUI_projectsCount()
     }
 
     //NEW PROJECT METHOD
@@ -60,20 +57,13 @@ export class ProjectsManager {
         const projectsAcronymList = this.list.map((project) => {return project.acronym})
         const acronymInUse = projectsAcronymList.includes(data.acronym)
         
-        if (operation=='update'){
-            if (nameLength){
-                const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
-                throw new Error(`\n${errNameLength}`)
-            }
-        } else {
-            if (nameInUse || nameLength || acronymInUse){
-                const errName = nameInUse ? `<br><br>- A project with the name "${data.name}" already exists.` : ''
-                const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
-                const errAcronym = acronymInUse ? `<br><br>- A project with the acronym "${data.acronym}" already exists.` : ''
-                const errors = [errName,errNameLength,errAcronym]
-                const joinedErrors = errors.join('')
-                throw new Error(`\n${joinedErrors}`)
-            }
+        if (nameInUse || nameLength || acronymInUse){
+            const errName = nameInUse ? `<br><br>- A project with the name "${data.name}" already exists.` : ''
+            const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
+            const errAcronym = acronymInUse ? `<br><br>- A project with the acronym "${data.acronym}" already exists.` : ''
+            const errors = [errName,errNameLength,errAcronym]
+            const joinedErrors = errors.join('')
+            throw new Error(`\n${joinedErrors}`)
         }
 
         /*
@@ -83,12 +73,10 @@ export class ProjectsManager {
         })
             */
 
-        //this.ui.append(project.ui)
         //this.uiButtons.append(project.uiButtons)
         this.list.push(project)
         this.onProjectCreated(project)
 
-        //this.setUI_projectsCount()
         return project
     }
 
@@ -112,7 +100,6 @@ export class ProjectsManager {
 
 
     //METHOD TO SET PROJECT DETAILS PAGE
-    
     /*setProjectDetails (project:Project) {
         //pages visibility to show project details page
         const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
@@ -211,12 +198,6 @@ export class ProjectsManager {
         this.onProjectDeleted(project)
     }
 
-    updateProjectFromImport(data:IProject){
-        const exProject = this.getProjectByName(data.name)
-        if (exProject) {this.deleteProject(exProject.id)}
-        return this.newProject(data,'update')
-    }
-
     setUI_error(err:Error,disp:string,page:string){
         if (page=='new'){
             const ui_error = document.getElementById('new-project-error-tab') as HTMLElement
@@ -306,6 +287,7 @@ export class ProjectsManager {
 
     //IMPORT JSON
     importFromJSON (){
+        //this import operate through the project ID, so it is possible to have multiple projects with same name, if they have different IDs
         const input = document.createElement('input') //create an html element tag <input>
         input.type = 'file' //in this way opens a window to select files from PC
         input.accept = 'application/json' //accept only json files
@@ -320,28 +302,22 @@ export class ProjectsManager {
         reader.addEventListener("load", () => {
             const json = reader.result
             if (!json) {return}
-            const projects: IProject[] = JSON.parse(json as string)
-            //console.log(projects)
-            const usedNames = new Array()
-            for (const project of projects)
+            const projects: Project[] = JSON.parse(json as string)
+
+            for (const project of projects){
                 if (project.type == 'project') {
+                    const projectsIdList = this.list.map((p) => {return p.id})
+                    const IdInUse = projectsIdList.includes(project.id)
                     const todoList = project.todoList
                     project.todoList = []
-                    try {
-                        this.oldProject = this.newProject(project)
-                        for (const todo of todoList){
-                            if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
-                            else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
-                            this.newTodo(todo)
+                    if (IdInUse) {
+                        this.updateProject(project, project.id)
+                    } else {
+                        try{
+                            this.newProject(project, 'new')
+                        } catch (error) {
+                            console.log('Error during import: ', error)
                         }
-                    } catch (error) {
-                        this.oldProject = this.updateProjectFromImport(project)
-                        for (const todo of todoList){
-                            if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
-                            else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
-                            this.newTodo(todo)
-                        }
-                        usedNames.push(project.name)
                     }
                 }else{
                     const d = document.getElementById('error-import-project') as HTMLDialogElement
@@ -351,6 +327,61 @@ export class ProjectsManager {
                         <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
                     d.showModal()
                 }
+            }
+        })
+    }
+    /*importFromJSON (){
+        const input = document.createElement('input') //create an html element tag <input>
+        input.type = 'file' //in this way opens a window to select files from PC
+        input.accept = 'application/json' //accept only json files
+        const reader = new FileReader()
+        input.click()
+        input.addEventListener('change', () => {
+            const fileList = input.files
+            if (!fileList) {return}
+            reader.readAsText(fileList[0])
+        })
+
+        reader.addEventListener("load", () => {
+            const json = reader.result
+            if (!json) {return}
+            const projects: Project[] = JSON.parse(json as string)
+            const usedNames = new Array()
+            console.log(projects)
+            for (const project of projects){
+                if (project.type == 'project') {
+                    const projectsIdList = this.list.map((p) => {return p.id})
+                    const IdInUse = projectsIdList.includes(project.id)
+                    console.log(IdInUse)
+                    const todoList = project.todoList
+                    project.todoList = []
+                    if (!IdInUse) {
+                        try {
+                            this.newProject(project)
+                            for (const todo of todoList){
+                                if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
+                                else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
+                                this.newTodo(todo)
+                            }
+                        } catch (error) {
+                            this.updateProjectFromImport(project)
+                            for (const todo of todoList){
+                                if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
+                                else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
+                                this.newTodo(todo)
+                            }
+                            usedNames.push(project.name)
+                        }
+                    }
+                }else{
+                    const d = document.getElementById('error-import-project') as HTMLDialogElement
+                    d.innerHTML = `
+                        <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
+                        <div style="white-space:pre-line; padding: 20px;">You are not importing a projects file.</div>
+                        <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
+                    d.showModal()
+                }
+            }
             if (usedNames.length > 0) {
                 //alert(`These names are already in use:\n${usedNames.join('\n')}.\nThese projects will not be imported`)
                 const d = document.getElementById('error-import-project') as HTMLDialogElement
@@ -364,7 +395,8 @@ export class ProjectsManager {
                 d.showModal()
             }
         })
-    }
+        console.log('lista fine import', this.list)
+    }*/
     
     upload3DFile(){
         return new Promise((resolve) => {
