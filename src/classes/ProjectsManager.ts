@@ -9,6 +9,9 @@ export class ProjectsManager {
     onProjectCreated = (project: Project) => {} //custom event
     onProjectDeleted = (project: Project) => {}
     onProjectUpdated = (project: Project) => {}
+    onSidebarButtons = (project: Project) => {}
+    onSidebarButtonsClickFromSingleProjectPage = (project: Project) => {}
+
 
     //ui: HTMLDivElement
     //uiButtons: HTMLUListElement
@@ -76,6 +79,8 @@ export class ProjectsManager {
         //this.uiButtons.append(project.uiButtons)
         this.list.push(project)
         this.onProjectCreated(project)
+        this.onSidebarButtons(project)
+        this.onSidebarButtonsClickFromSingleProjectPage(project)
 
         return project
     }
@@ -95,6 +100,8 @@ export class ProjectsManager {
         project.projectType = data.projectType
         //project.todoList: ToDo[]
         this.onProjectUpdated(project)
+        this.onSidebarButtons(project)
+        this.onSidebarButtonsClickFromSingleProjectPage(project)
         return project
     }
 

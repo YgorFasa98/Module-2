@@ -27,6 +27,7 @@ export function SingleProjectPage (props:Props) {
      //in the new row is needed a new instance of project otherwise: first reason will not enter the effect and do not update the page
      //and then it will be a simple object and won't pass the if statement above
     props.projectsManager.onProjectUpdated = () => {updateProject(new P.Project(p))}
+    props.projectsManager.onSidebarButtonsClickFromSingleProjectPage = () => {updateProject(new P.Project(p))}
 
     const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
 
