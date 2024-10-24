@@ -7,8 +7,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 export class ProjectsManager {
     list: Project[] = []
     onProjectCreated = (project: Project) => {} //custom event
-    onProjectDeleted = () => {}
-
+    onProjectDeleted = (project: Project) => {}
+    onProjectUpdated = (project: Project) => {}
 
     //ui: HTMLDivElement
     //uiButtons: HTMLUListElement
@@ -52,7 +52,7 @@ export class ProjectsManager {
     }
 
     //NEW PROJECT METHOD
-    newProject(data: IProject,operation:string='new'){
+    newProject(data: IProject, operation:string='new'){
         const project = new Project(data)
         const projectsNameList = this.list.map((project) => {return project.name})
         const nameInUse = projectsNameList.includes(data.name)
@@ -92,9 +92,28 @@ export class ProjectsManager {
         return project
     }
 
+    updateProject (data:IProject, id:string) {
+        let project = this.getProject(id)
+        if (!project) {return}
+        project.type = data.type
+        project.color = data.color
+        project.acronym = data.acronym
+        project.name = data.name
+        project.address = data.address
+        project.status = data.status
+        project.cost = data.cost
+        project.progress = data.progress
+        project.companyName = data.companyName
+        project.projectType = data.projectType
+        //project.todoList: ToDo[]
+        this.onProjectUpdated(project)
+        return project
+    }
+
+
     //METHOD TO SET PROJECT DETAILS PAGE
     
-    setProjectDetails (project:Project) {
+    /*setProjectDetails (project:Project) {
         //pages visibility to show project details page
         const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
         const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
@@ -158,7 +177,7 @@ export class ProjectsManager {
                 this.oldProject = project
             })
         }
-    }
+    }*/
     
     //METHODS
     setUI_projectsCount(){
@@ -189,14 +208,7 @@ export class ProjectsManager {
             return project.id !== id
         })
         this.list = remaining
-        this.onProjectDeleted()
-    }
-
-    updateProject (data:IProject) {
-        data.todoList = this.oldProject.todoList
-        this.deleteProject(this.oldProject.id)
-        const project = this.newProject(data,'update')
-        this.setProjectDetails(project)
+        this.onProjectDeleted(project)
     }
 
     updateProjectFromImport(data:IProject){

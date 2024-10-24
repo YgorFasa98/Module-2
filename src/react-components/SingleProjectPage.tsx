@@ -2,6 +2,9 @@ import * as React from 'react'
 import * as Router from 'react-router-dom'
 import { ProjectsManager } from '../classes/ProjectsManager'
 import * as P from '../classes/Project'
+import { toggleModal } from '../classes/Generic'
+import { SingleProjectDetails } from './SingleProjectDetails'
+import { ProgressBar } from './ProgressBar'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -13,13 +16,52 @@ export function SingleProjectPage (props:Props) {
         alert('ID not found')
         return (<div id="single-project-page" className="page">ID not found</div>)
     }
-        
-    console.log('This is the project ID: ', routeParams.id)
-    const project = props.projectsManager.getProject(routeParams.id)
+
+    const p = props.projectsManager.getProject(routeParams.id)
+    if (!p) {return}
+    const [project, updateProject] = React.useState<P.Project>(p)
     if (!(project && project instanceof P.Project)){
         alert('Project not found')
         return (<div id="single-project-page" className="page">Project not found</div>)
     }
+     //in the new row is needed a new instance of project otherwise: first reason will not enter the effect and do not update the page
+     //and then it will be a simple object and won't pass the if statement above
+    props.projectsManager.onProjectUpdated = () => {updateProject(new P.Project(p))}
+
+    const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
+
+    //#region EVENTS
+
+    const onEditProjectFormSaveButtonClick = (e: React.FormEvent) => {
+        const editProjectForm = document.getElementById("edit-project-form") //form element       
+        const editProjectModal = new toggleModal('edit-project-modal')
+        if (editProjectForm && editProjectForm instanceof HTMLFormElement) { //check the existance of user form
+            const formData = new FormData(editProjectForm)
+            e.preventDefault()
+            const projectData: P.IProject = { //store data in this dictionary
+                type: 'project',
+                color: formData.get('color') as string,
+                name: formData.get('name') as string,
+                address: formData.get('address') as string,
+                companyName: formData.get('companyName') as string,
+                acronym: formData.get('acronym') as string,
+                status: formData.get('status') as P.status,
+                cost: formData.get('cost') as unknown as number,
+                progress: formData.get('progress') as unknown as number,
+                projectType: formData.get('projectType') as string,
+                todoList: []
+            }
+            try {
+                props.projectsManager.updateProject(projectData, project.id)
+                editProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
+                editProjectForm.reset() //reset the fields of the form
+                props.projectsManager.setUI_error(new Error(''),"none",'edit') //display the UI of error
+            } catch (err) {
+                props.projectsManager.setUI_error(err,"",'edit')
+            }
+        } else {console.warn("Edit project form was not found")}
+      }
+    //#endregion
 
     return(
         <div id="single-project-page" className="page">
@@ -45,12 +87,13 @@ export function SingleProjectPage (props:Props) {
                             size={30}
                             style={{ resize: "none" }}
                             maxLength={4}
+                            defaultValue={project.acronym}
                         />
                         <input
                             name="color"
                             id="color"
                             type="color"
-                            defaultValue="#931f1f"
+                            defaultValue={project.color}
                             style={{
                             backgroundColor: "transparent",
                             padding: 0,
@@ -71,7 +114,7 @@ export function SingleProjectPage (props:Props) {
                         </span>
                         Project name
                         </label>
-                        <input name="name" type="text" />
+                        <input name="name" type="text"  defaultValue={project.name}/>
                     </div>
                     <div className="field-container">
                         <label className="field-title">
@@ -80,14 +123,14 @@ export function SingleProjectPage (props:Props) {
                         </span>
                         Project type
                         </label>
-                        <input name="projectType" type="text" />
+                        <input name="projectType" type="text"  defaultValue={project.projectType}/>
                     </div>
                     <div className="field-container">
                         <label className="field-title">
                         <span className="material-icons-outlined form-icons">home</span>
                         Address
                         </label>
-                        <input name="address" type="address" />
+                        <input name="address" type="address" defaultValue={project.address}/>
                     </div>
                     <div className="field-container">
                         <label className="field-title">
@@ -96,17 +139,17 @@ export function SingleProjectPage (props:Props) {
                         </span>
                         Company name
                         </label>
-                        <input name="companyName" type="text" />
+                        <input name="companyName" type="text" defaultValue={project.companyName}/>
                     </div>
                     <div className="field-container">
                         <label className="field-title">
                         <span className="material-icons-outlined form-icons">update</span>
                         Status
                         </label>
-                        <select name="status">
+                        <select name="status" defaultValue={project.status}>
                         <option>Active</option>
                         <option>Not started</option>
-                        <option value=''>Completed</option>
+                        <option>Completed</option>
                         <option>Stopped</option>
                         <option>Dismissed</option>
                         </select>
@@ -116,53 +159,19 @@ export function SingleProjectPage (props:Props) {
                         <span className="material-icons-outlined form-icons">euro</span>
                         Total cost
                         </label>
-                        <input name="cost" type="number" defaultValue={0} />
+                        <input name="cost" type="number" defaultValue={project.cost} />
                     </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">
-                            rotate_right
-                        </span>
-                        Progress
-                        </label>
-                        <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between"
-                        }}
-                        >
-                        <input
-                            className="progress-bar"
-                            name="progress"
-                            type="range"
-                            min={0}
-                            max={100}
-                            defaultValue={50}
-                            style={{ width: "85%", height: 18 }}
-                        />
-                        <p style={{ marginRight: 10 }}>
-                            <output
-                            name="progress-output"
-                            className="progress-value"
-                            htmlFor="progress-bar"
-                            >
-                            50
-                            </output>{" "}
-                            %
-                        </p>
-                        </div>
-                    </div>
+                    {ProgressBar(project.progress)}
                     </div>
                     <div className="buttons">
-                    <button
-                        type="submit"
-                        id="button-editproject-form-save"
-                        className="generic-buttons"
-                    >
-                        Save
-                    </button>
+                        <button
+                            onClick={(e) => {onEditProjectFormSaveButtonClick(e)}}
+                            type="submit"
+                            id="button-editproject-form-save"
+                            className="generic-buttons"
+                        >
+                            Save
+                        </button>
                     </div>
                 </form>
                 <div id="edit-project-error-tab" style={{ display: "none" }} />
@@ -307,61 +316,7 @@ export function SingleProjectPage (props:Props) {
                 className="single-project-page-spaces"
                 style={{ padding: 0, backgroundColor: "transparent", gap: 10 }}
                 >
-                <div
-                    className="single-project-page-spaces dash-card"
-                    style={{ margin: 0 }}
-                >
-                    <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                    }}
-                    >
-                    <p
-                        data-project-details-info="acronym"
-                        style={{
-                        backgroundColor: `${project.color}`,
-                        borderRadius: 10,
-                        padding: 15,
-                        fontSize: 24
-                        }}
-                    >
-                        {project.acronym}
-                    </p>
-                    <button id="edit-button">Edit</button>
-                    </div>
-                    <div style={{ borderBottom: "1px solid white", paddingBottom: 5 }}>
-                    <h3 data-project-details-info="name">{project.name}</h3>
-                    <p data-project-details-info="address">{project.address}</p>
-                    </div>
-                    <div id="details">
-                    <div style={{ marginLeft: 5, marginRight: 5 }}>
-                        <p style={{ color: "dimgray" }}>Company</p>
-                        <p data-project-details-info="company">{project.companyName}</p>
-                    </div>
-                    <div style={{ marginLeft: 5, marginRight: 5 }}>
-                        <p style={{ color: "dimgray" }}>Project type</p>
-                        <p data-project-details-info="project-type">{project.projectType}</p>
-                    </div>
-                    <div style={{ marginLeft: 5, marginRight: 5 }}>
-                        <p style={{ color: "dimgray" }}>Status</p>
-                        <p data-project-details-info="status">{project.status}</p>
-                    </div>
-                    <div style={{ marginLeft: 5, marginRight: 5 }}>
-                        <p style={{ color: "dimgray" }}>Cost</p>
-                        <p data-project-details-info="cost">€ {project.cost}</p>
-                    </div>
-                    </div>
-                    <div>
-                    <p style={{ color: "dimgray", marginBottom: 5 }}>Progress bar</p>
-                    <div className="loading-bar-container">
-                        <div data-project-details-info="progress" className="loading-bar" style={{width: `${project.progress}%`}}>
-                        {project.progress} %
-                        </div>
-                    </div>
-                    </div>
-                </div>
+                {SingleProjectDetailsComp}
                 <div
                     className="single-project-page-spaces todo-list"
                     style={{ flexGrow: 1, margin: 0, rowGap: 20 }}

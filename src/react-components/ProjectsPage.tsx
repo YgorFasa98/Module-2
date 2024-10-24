@@ -3,6 +3,7 @@ import { toggleModal, exportToJSON } from '../classes/Generic'
 import * as P from '../classes/Project'
 import { ProjectsManager } from '../classes/ProjectsManager'
 import { ProjectCard } from './ProjectCard'
+import { ProgressBar } from './ProgressBar'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -11,18 +12,17 @@ interface Props {
 export function ProjectsPage (props: Props) {
 
   //#region STATES
-  const [progress, setProgress] = React.useState(20) //progress-bar of new project form states update
   const [projects, setProjects] = React.useState<P.Project[]>(props.projectsManager.list)
 
   props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
-  props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
+  props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])}
 
   const ProjectsCards = projects.map((projects) => {
     return <ProjectCard project={projects} key={projects.id}/>
   })
 
   React.useEffect(() => {
-    console.log('Projects updated', projects)
+    console.log('Projects list updated', projects)
   }, [projects])
 
   //#endregion
@@ -58,7 +58,7 @@ export function ProjectsPage (props: Props) {
             todoList: []
         }
         try {
-            const project = props.projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
+            props.projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
             newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
             newProjectForm.reset() //reset the fields of the form
             props.projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
@@ -194,46 +194,7 @@ export function ProjectsPage (props: Props) {
                   <option>Dismissed</option>
                 </select>
               </div>
-              <div className="field-container">
-                <label className="field-title">
-                  <span className="material-icons-outlined form-icons">euro</span>
-                  Total cost
-                </label>
-                <input name="cost" type="number" defaultValue={0} />
-              </div>
-              <div className="field-container">
-                <label className="field-title">
-                  <span className="material-icons-outlined form-icons">
-                    rotate_right
-                  </span>
-                  Progress
-                </label>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between"
-                  }}
-                >
-                  <input
-                    className="progress-bar"
-                    name="progress"
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={progress} //react value for update the progress value
-                    onChange={(e) => setProgress(Number(e.target.value))} //function that update the progress value in live
-                    style={{ width: "85%", height: 18 }}
-                  />
-                  <p style={{ marginRight: 10 }}>
-                    <output className="progress-value" htmlFor="progress-bar">
-                      {progress} {/*the progress value updated*/}
-                    </output>{" "}
-                    %
-                  </p>
-                </div>
-              </div>
+              {ProgressBar(20)}
             </div>
             <div className="buttons">
               <button

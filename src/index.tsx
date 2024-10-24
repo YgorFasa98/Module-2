@@ -160,7 +160,7 @@ if (sliders[1] && values[1]){
 //form elements
 const editProjectFormSave = document.getElementById("button-editproject-form-save") //accept button
 const editProjectForm = document.getElementById("edit-project-form") //form element
-const editProjectModal = new toggleModal('edit-project-modal')
+//const editProjectModal = new toggleModal('edit-project-modal')
 //form events
 if (editProjectModal){
     //editProjectModal.preventEsc()
