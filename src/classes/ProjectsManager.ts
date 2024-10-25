@@ -10,11 +10,8 @@ export class ProjectsManager {
     onProjectDeleted = (project: Project) => {}
     onProjectUpdated = (project: Project) => {}
     onSidebarButtons = (project: Project) => {}
-    onSidebarButtonsClickFromSingleProjectPage = (project: Project) => {}
+    onProjectsCardsUpdate = (project: Project) => {}
 
-
-    //ui: HTMLDivElement
-    //uiButtons: HTMLUListElement
     //uiTodo: HTMLDivElement
     defaultProject: IProject = { //default Project data
         type: 'project',
@@ -33,14 +30,9 @@ export class ProjectsManager {
     //INTERNAL PROPERTIES to manage projects and todos
     oldProject: Project
     oldTodo: ToDo
-    viewerContainer: HTMLElement
 
     //constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
     constructor(){
-        //this.uiButtons = containerButtons
-        //this.uiTodo = containerTodo
-        //this.newProject(this.defaultProject)
-
         //#region TO REMOVE (programmatically enters the default project before the viewer is created)
         //This is needed because i don't set any event to load the viewer after the project card gets clicked
         //if the page is loaded in the home page infact the dom doesn't find the viewer container because it is hidden
@@ -69,18 +61,9 @@ export class ProjectsManager {
             throw new Error(`\n${joinedErrors}`)
         }
 
-        /*
-        project.uiButtons.addEventListener('click', () => {
-            this.setProjectDetails(project)
-            this.oldProject = project
-        })
-            */
-
-        //this.uiButtons.append(project.uiButtons)
         this.list.push(project)
         this.onProjectCreated(project)
         this.onSidebarButtons(project)
-        this.onSidebarButtonsClickFromSingleProjectPage(project)
 
         return project
     }
@@ -101,45 +84,13 @@ export class ProjectsManager {
         //project.todoList: ToDo[]
         this.onProjectUpdated(project)
         this.onSidebarButtons(project)
-        this.onSidebarButtonsClickFromSingleProjectPage(project)
+        this.onProjectsCardsUpdate(project)
         return project
     }
 
 
     //METHOD TO SET PROJECT DETAILS PAGE
     /*setProjectDetails (project:Project) {
-        //pages visibility to show project details page
-        const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
-        const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
-        const projectDetailsButtons = document.getElementById('nav-buttons-projects') as HTMLElement
-        pageProjects.style.display = "none"
-        pageSingleProject.style.display = ""
-        projectDetailsButtons.style.display = ""
-
-        //update container to show the details of the selected project
-        const title_name = pageSingleProject.querySelector("[data-project-details-info='title-name']") as HTMLElement
-        const title_address = pageSingleProject.querySelector("[data-project-details-info='title-address']") as HTMLElement
-        const name = pageSingleProject.querySelector("[data-project-details-info='name']") as HTMLElement
-        const address = pageSingleProject.querySelector("[data-project-details-info='address']") as HTMLElement
-        const acronym = pageSingleProject.querySelector("[data-project-details-info='acronym']") as HTMLElement
-        const company = pageSingleProject.querySelector("[data-project-details-info='company']") as HTMLElement
-        const projectType = pageSingleProject.querySelector("[data-project-details-info='project-type']") as HTMLElement
-        const status = pageSingleProject.querySelector("[data-project-details-info='status']") as HTMLElement
-        const cost = pageSingleProject.querySelector("[data-project-details-info='cost']") as HTMLElement
-        const progress = pageSingleProject.querySelector("[data-project-details-info='progress']") as HTMLElement
-        
-        if (title_name && title_address && name && address && acronym && company && projectType && status && cost && progress){
-        title_name.textContent = name.textContent = project.name
-        title_address.textContent = address.textContent = project.address
-        acronym.textContent = project.acronym
-        acronym.style.backgroundColor = project.color
-        company.textContent = project.companyName
-        projectType.textContent = project.projectType
-        status.textContent = project.status
-        cost.textContent = `${project.cost as unknown as string} €`
-        progress.textContent = `${project.progress as unknown as string}%`
-        progress.style.width = `${project.progress as unknown as string}%`
-        }
 
         const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
         projectTodoCardsContainer.innerHTML = ''
@@ -147,23 +98,6 @@ export class ProjectsManager {
             const todoFly = new ToDo(todo)
             projectTodoCardsContainer.append(todoFly.ui)           
         }
-
-        //set to the edit button the current project previously selected in the main page
-        const editProjectButton = document.getElementById('edit-button')
-        const editProjectModal = new toggleModal('edit-project-modal')
-        const editProjectForm = document.getElementById("edit-project-form") //form element
-
-        if (editProjectButton && editProjectForm && editProjectModal) {
-            editProjectButton.addEventListener('click', () => {  //show modal of edit project
-                const keys = ['acronym','color','name','projectType','address','companyName','status','cost','progress','progress-output']
-                for (const key of keys){ //pre-compile del form with the infos of the opened project
-                    const k = editProjectForm.querySelector(`[name=${key}]`) as any
-                    k.value = key=='progress-output' ? project.progress : project[key]
-                }
-                editProjectModal.showModal() //show the form
-                this.oldProject = project //set the active project as old to delete it
-            })
-        } else {console.warn("Edit project button was not found")}
 
         const todoAddButton = document.getElementById('todo-add') as HTMLElement
         if (todoAddButton){
@@ -186,18 +120,10 @@ export class ProjectsManager {
         })
         return project
     }
-
-    getProjectByName (name:string) {
-        const project = this.list.find((project) => {
-            return project.name === name
-        }) 
-        return project
-    }
     
     deleteProject (id: string) {
         const project = this.getProject(id)
         if (!project) {return}
-        //project.uiButtons.remove()
         const remaining = this.list.filter((project) => {
             return project.id !== id
         })

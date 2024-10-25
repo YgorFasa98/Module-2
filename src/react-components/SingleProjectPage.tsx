@@ -5,6 +5,8 @@ import * as P from '../classes/Project'
 import { toggleModal } from '../classes/Generic'
 import { SingleProjectDetails } from './SingleProjectDetails'
 import { ProgressBar } from './ProgressBar'
+import { ProjectButton } from './ProjectButton'
+import { EditProjectform } from './EditProjectForm'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -27,12 +29,16 @@ export function SingleProjectPage (props:Props) {
      //in the new row is needed a new instance of project otherwise: first reason will not enter the effect and do not update the page
      //and then it will be a simple object and won't pass the if statement above
     props.projectsManager.onProjectUpdated = () => {updateProject(new P.Project(p))}
-    props.projectsManager.onSidebarButtonsClickFromSingleProjectPage = () => {updateProject(new P.Project(p))}
-
+    
     const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
 
-    //#region EVENTS
+    console.log(project)
+    React.useEffect(() => {
+        updateProject(new P.Project(p))
+      }, [routeParams.id])
+    
 
+    //#region EVENTS
     const onEditProjectFormSaveButtonClick = (e: React.FormEvent) => {
         const editProjectForm = document.getElementById("edit-project-form") //form element       
         const editProjectModal = new toggleModal('edit-project-modal')
@@ -62,122 +68,13 @@ export function SingleProjectPage (props:Props) {
             }
         } else {console.warn("Edit project form was not found")}
       }
+
+    const onEditProjectForm = <EditProjectform project={project} onEditProjectFormSaveButtonClick={onEditProjectFormSaveButtonClick} key={project.id}/>
     //#endregion
 
     return(
         <div id="single-project-page" className="page">
-            <dialog id="edit-project-modal">
-                <div id="edit-project-dialog">
-                <form id="edit-project-form">
-                    <h2>Edit Project</h2>
-                    <div className="input-list">
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-symbols-outlined">abc</span>
-                        Acronym
-                        </label>
-                        <div
-                        style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 60px",
-                            alignItems: "center"
-                        }}
-                        >
-                        <input
-                            name="acronym"
-                            size={30}
-                            style={{ resize: "none" }}
-                            maxLength={4}
-                            defaultValue={project.acronym}
-                        />
-                        <input
-                            name="color"
-                            id="color"
-                            type="color"
-                            defaultValue={project.color}
-                            style={{
-                            backgroundColor: "transparent",
-                            padding: 0,
-                            marginLeft: 10,
-                            height: 50
-                            }}
-                        />
-                        </div>
-                        <div style={{ fontSize: 15, fontStyle: "italic", padding: 5 }}>
-                        Insert an abbreviation of project's name (max 4 characters, i.e.:
-                        SFH)
-                        </div>
-                    </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-symbols-outlined form-icons">
-                            location_away
-                        </span>
-                        Project name
-                        </label>
-                        <input name="name" type="text"  defaultValue={project.name}/>
-                    </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">
-                            home_work
-                        </span>
-                        Project type
-                        </label>
-                        <input name="projectType" type="text"  defaultValue={project.projectType}/>
-                    </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">home</span>
-                        Address
-                        </label>
-                        <input name="address" type="address" defaultValue={project.address}/>
-                    </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">
-                            business
-                        </span>
-                        Company name
-                        </label>
-                        <input name="companyName" type="text" defaultValue={project.companyName}/>
-                    </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">update</span>
-                        Status
-                        </label>
-                        <select name="status" defaultValue={project.status}>
-                        <option>Active</option>
-                        <option>Not started</option>
-                        <option>Completed</option>
-                        <option>Stopped</option>
-                        <option>Dismissed</option>
-                        </select>
-                    </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">euro</span>
-                        Total cost
-                        </label>
-                        <input name="cost" type="number" defaultValue={project.cost} />
-                    </div>
-                    {ProgressBar(project.progress)}
-                    </div>
-                    <div className="buttons">
-                        <button
-                            onClick={(e) => {onEditProjectFormSaveButtonClick(e)}}
-                            type="submit"
-                            id="button-editproject-form-save"
-                            className="generic-buttons"
-                        >
-                            Save
-                        </button>
-                    </div>
-                </form>
-                <div id="edit-project-error-tab" style={{ display: "none" }} />
-                </div>
-            </dialog>
+            {onEditProjectForm}
             <dialog id="new-todo-modal">
                 <div id="new-todo-dialog">
                 <form id="new-todo-form">
@@ -303,12 +200,12 @@ export function SingleProjectPage (props:Props) {
                 </div>
             </dialog>
             <header className="single-project-page-spaces">
-                <h1 data-project-details-info="title-name">Hospital Center</h1>
+                <h1 data-project-details-info="title-name">{project.name}</h1>
                 <h4
                 style={{ color: "rgb(115, 115, 115)" }}
                 data-project-details-info="title-address"
                 >
-                Address of the project
+                {project.address}
                 </h4>
             </header>
             <div className="main-page-content">

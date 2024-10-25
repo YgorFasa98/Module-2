@@ -1,12 +1,14 @@
 import * as React from 'react'
 import * as Router from 'react-router-dom'
 import * as P from '../classes/Project'
+import { ProjectsManager } from '../classes/ProjectsManager'
 
 interface Props {
     project: P.Project
 }
 
 export function ProjectButton (props:Props) {
+    
     return(
         <Router.Link to={`/single-project/${props.project.id}`}>
             <li className='single-project-button'>

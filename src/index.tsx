@@ -22,6 +22,7 @@ import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader.js"
 
 
 const projectsManager = new ProjectsManager()
+const usersManager = new UsersManager()
 
 //#region REACT COMPONENTS
 const rootElement = document.getElementById('app') as HTMLDivElement
@@ -33,7 +34,7 @@ appRoot.render(
         <Router.Routes>
             <Router.Route path='/home' element={ <ProjectsPage projectsManager={projectsManager} /> } />
             <Router.Route path='/single-project/:id' element={ <SingleProjectPage projectsManager={projectsManager} /> } />
-            <Router.Route path='/users' element={ <UsersPage /> } />
+            <Router.Route path='/users' element={ <UsersPage usersManager={usersManager}/> } />
         </Router.Routes>
     </Router.BrowserRouter>
     </>

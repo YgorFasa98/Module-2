@@ -13,7 +13,6 @@ export function Sidebar(props:Props) {
     const [projects, setProjects] = React.useState<P.Project[]>(props.projectsManager.list)
 
     props.projectsManager.onSidebarButtons = () => {setProjects([...props.projectsManager.list])}
-    props.projectsManager.onSidebarButtonsClickFromSingleProjectPage = () => {setProjects([...props.projectsManager.list])}
 
     const ProjectsButtons = projects.map((projects) => {
         return <ProjectButton project={projects} key={projects.id}/>

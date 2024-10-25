@@ -1,6 +1,24 @@
 import * as React from 'react'
+import { UsersManager } from '../classes/UsersManager'
+import { UserCard } from './UserCard'
+import * as U from '../classes/User'
 
-export function UsersPage () {
+interface Props {
+    usersManager: UsersManager
+}
+
+export function UsersPage (props:Props) {
+
+    const [users, setUsers] = React.useState<U.User[]>(props.usersManager.list)
+
+    props.usersManager.onUserCreated = () => {setUsers([...props.usersManager.list])}
+    //props.usersManager.onProjectDeleted = () => {setUsers([...props.usersManager.list])}
+    //props.usersManager.onProjectsCardsUpdate = () => {setUsers([...props.usersManager.list])}
+  
+    const UsersCards = users.map((users) => {
+      return <UserCard user={users} key={users.id}/>
+    })
+
     return(
         <div id="users-page" className="page">
             <dialog id="new-user-modal">
@@ -236,7 +254,7 @@ export function UsersPage () {
                     expand_more
                 </span>
                 </div>
-                <ul className="card-list" id="users-list"></ul>
+                <ul className="card-list" id="users-list">{UsersCards}</ul>
             </div>
         </div>
     )

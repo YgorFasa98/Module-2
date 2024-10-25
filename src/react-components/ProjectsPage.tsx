@@ -16,6 +16,7 @@ export function ProjectsPage (props: Props) {
 
   props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
   props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])}
+  props.projectsManager.onProjectsCardsUpdate = () => {setProjects([...props.projectsManager.list])}
 
   const ProjectsCards = projects.map((projects) => {
     return <ProjectCard project={projects} key={projects.id}/>

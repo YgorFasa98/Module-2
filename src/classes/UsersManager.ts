@@ -2,7 +2,6 @@ import {IUser, User} from './User'
 
 export class UsersManager {
     list: User[] = []
-    ui: HTMLElement
     defaultUser: IUser = { //default user data
         type: "user",
         name: 'Ygor Fasanella',
@@ -16,11 +15,13 @@ export class UsersManager {
         userImage: 'assets/user1.png'
     }
 
-    constructor(container:HTMLUListElement){
-        this.ui = container
+    onUserCreated = (user:User) => {}
+
+    constructor(){
+        //this.ui = container
         this.newUser(this.defaultUser)
-        this.setUI_meanAge()
-        this.setUI_usersCount()
+        //this.setUI_meanAge()
+        //this.setUI_usersCount()
     }
 
     newUser(data: IUser){
@@ -34,15 +35,9 @@ export class UsersManager {
             user.birthday = new Date('1-1-1801')
         }
 
-        user.ui.addEventListener('click', () => {
-            user.changeUI(user.ui.id)
-        })
-
-        this.ui.append(user.ui)
         this.list.push(user)
+        this.onUserCreated(user)
 
-        this.setUI_meanAge()
-        this.setUI_usersCount()
         return user
     }
 
