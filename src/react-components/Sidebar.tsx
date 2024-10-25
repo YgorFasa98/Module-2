@@ -27,7 +27,7 @@ export function Sidebar(props:Props) {
     const routePath = Router.useLocation().pathname
     const listOfProjects = document.getElementById("nav-buttons-projects")
     if (listOfProjects){
-        if(routePath == '/home'){
+        if(routePath == '/home' || routePath == '/users'){
             listOfProjects.style.display = 'none'
         } else {
             listOfProjects.style.display = ''
@@ -49,12 +49,12 @@ export function Sidebar(props:Props) {
                 listProjectsButton.setAttribute('value','compact')
             }
         }else if (listProjectsButton.getAttribute('value') == 'compact'){
+            compact_all_projects.style.display = ''
+            expand_all_projects.style.display = 'none'
             for (const button of singleProjectButtons){
                 const b = button as HTMLElement
                 b.style.display = ''
                 listProjectsButton.setAttribute('value','expanded')
-                compact_all_projects.style.display = ''
-                expand_all_projects.style.display = 'none'
             }
         }
     }

@@ -43,3 +43,21 @@ export function exportToJSON (list, fileName: string = 'downloaded_list') {
     a.click()
     URL.revokeObjectURL(url)
 }
+
+export function calculateMeanAge(birthdays:Date[]) {
+    const today = new Date();
+    const ages = birthdays.map(birthdate => {
+      const birth = birthdate;
+      let age = today.getFullYear() - birth.getFullYear();
+      // Adjust if birthday hasn’t occurred this year yet
+      const monthDiff = today.getMonth() - birth.getMonth();
+      const dayDiff = today.getDate() - birth.getDate();
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+      return age;
+    });
+    const meanAge = Math.round(ages.reduce((acc, age) => acc + age, 0) / ages.length * 100) / 100
+    return meanAge;
+  }
+  

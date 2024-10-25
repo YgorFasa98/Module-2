@@ -41,39 +41,8 @@ appRoot.render(
 )
 //#endregion
 
-/*
-//#region SIDEBAR EVENTS
-//sidebar buttons
-const menuProjectsButton = document.getElementById("home-button") as HTMLElement //project button sidebar
-const menuUsersButton = document.getElementById("users-button") as HTMLElement //users button sidebar
-//pages to open
-const pageProjects = document.getElementById('project-main-page') as HTMLElement //projects page
-const pageUsers = document.getElementById('users-page') as HTMLElement //users page
-const pageSingleProject = document.getElementById('single-project-page') as HTMLElement //single project page
-
-//if (menuProjectsButton && menuUsersButton && expandAllButton) {
-if (menuProjectsButton) {
-    menuProjectsButton.addEventListener('click', () => {  //events of project button
-        pageProjects.style.display = ""
-        pageUsers.style.display = "none"
-        pageSingleProject.style.display = "none"
-        projectDetailsButtons.style.display = "none"
-    })
-    menuUsersButton.addEventListener('click', () => { //events of users button
-        pageProjects.style.display = "none"
-        pageUsers.style.display = ""
-        pageSingleProject.style.display = "none"
-        projectDetailsButtons.style.display = "none"
-    })
-} else {console.warn("Menu button was not found")}
-//#endregion
-*/
-
 //#region PROJECTS PAGE EVENTS
-//const projectsListUI = document.getElementById("project-list") as HTMLDivElement //container of users cards
-//const projectsListUI_buttons = document.getElementById('nav-buttons-projects') as HTMLUListElement
 //const projectsTodoList = document.getElementById('todo-card-list') as HTMLDivElement
-//const projectsManager = new ProjectsManager() //new instance of users manager class
 //#endregion
 
 
@@ -123,51 +92,6 @@ if (expandAllButton && compactAllButton) {
         compactAllButton.style.display = 'none'
     })
 } else {console.warn("Expand/Compact all button was not found")}
-//#endregion
-
-//#region USER FORM INPUT EVENTS
-//form elements
-const userFormAccept = document.getElementById("button-user-form-accept") //accept button
-const userFormCancel = document.getElementById("button-user-form-cancel") //cancel button
-const newUserForm = document.getElementById("new-user-form") //form element
-//form events
-if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existance of user form
-    if (userFormAccept && userFormCancel) { //check the esistance of accept and cancel button
-
-        userFormAccept.addEventListener('click', (e) => { //event click on accept button
-            const formData = new FormData(newUserForm)
-            e.preventDefault()
-            const userData: U.IUser = { //store data in this dictionary
-                type: "user" as string,
-                name: formData.get('name') as string,
-                email: formData.get('email') as string,
-                role: formData.get('role') as U.role,
-                selfDescription: formData.get('selfDescription') as string,
-                gender: formData.get('gender') as U.gender,
-                birthday: new Date(formData.get('birthday') as string),
-                address: formData.get('address') as string,
-                companyName: formData.get('companyName') as string,
-                userImage: 'assets/genericUser.jpg'
-            }
-            try {
-                const user = usersManager.newUser(userData) //create the object project using userData dictionary, boolean: compact or expanded userUI
-                newUserModal.closeModal() //if i want to close or not the form after clicking on accept button
-                newUserForm.reset() //resent the fields of the form
-                usersManager.setUI_error(new Error(''),"none") //display the UI of error
-            } catch (err) {
-                usersManager.setUI_error(err,"")
-            }
-        }) //end of event
-
-        userFormCancel.addEventListener('click', (e) => { //event click on cancel button
-            e.preventDefault()
-            newUserModal.closeModal() //close the form
-            newUserForm.reset()
-            usersManager.setUI_error(new Error(''),"none")
-        })
-
-    } else {console.warn("Bottons of form not founded")}
-} else {console.warn("New user form was not found")}
 //#endregion
 
 //#region PROJECT DETAILS PAGE

@@ -18,7 +18,6 @@ export class UsersManager {
     onUserCreated = (user:User) => {}
 
     constructor(){
-        //this.ui = container
         this.newUser(this.defaultUser)
         //this.setUI_meanAge()
         //this.setUI_usersCount()
@@ -58,7 +57,6 @@ export class UsersManager {
     deleteUser (id: string) {
         const user = this.getUser(id)
         if (!user) {return}
-        user.ui.remove()
         const remaining = this.list.filter((user) => {
             return user.id !== id
         })
@@ -85,6 +83,7 @@ export class UsersManager {
         Manage Users (${this.list.length})`
     }
 
+    /*
     setUI_expandAll(){
         for (const user of this.list){
             user.templateUI_expandedUser()
@@ -94,7 +93,7 @@ export class UsersManager {
         for (const user of this.list){
             user.templateUI_compactUser()
         }
-    }
+    }*/
 
     setUI_error(err:Error,disp:string,category:string='none'){
         const ui_errorNewUser = document.getElementById('new-user-error-tab') as HTMLElement
@@ -102,17 +101,6 @@ export class UsersManager {
         ui_errorNewUser.innerHTML = `
         <h2>WARNING !</h2>
         <h3 style="font-weight: normal; margin-top: 10px">${err}</h3>`
-    }
-    
-    exportToJSON (fileName: string = 'users_list') {
-        const json = JSON.stringify(this.list, null, 2)
-        const blob = new Blob([json], {type: 'application/json'})
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = fileName
-        a.click()
-        URL.revokeObjectURL(url)
     }
 
     importFromJSON (){

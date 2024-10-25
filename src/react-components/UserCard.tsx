@@ -3,6 +3,7 @@ import { User } from '../classes/User'
 
 interface Props {
     user: User
+    cardVersion: string
 }
 
 export function UserCard (props:Props) {
@@ -125,8 +126,10 @@ export function UserCard (props:Props) {
             </li>
         )
     }
-
-    return(
-        templateUI_expandedUser()
-    )
+    if (props.cardVersion == 'expanded'){
+        return(templateUI_expandedUser())
+    }
+    if (props.cardVersion == 'compact'){
+        return(templateUI_compactUser())
+    }
 }

@@ -31,7 +31,6 @@ export class User implements IUser{
     userImage: string = 'assets/genericUser.jpg'
 
     //internal class properties
-    ui: HTMLLIElement
     id: string
 
     constructor(data: IUser, expanded: boolean = false) {

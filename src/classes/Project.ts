@@ -32,33 +32,14 @@ export class Project implements IProject{
     todoList: ToDo[] = []
 
     //internal class properties
-    //uiButtons: HTMLLIElement
     id: string
 
     constructor(data: IProject) {
         this.id = uuidv4()
+        
         //Project data definition
         for (const key in data) {
             this[key] = data[key]
         }
     }
-
-    /*
-    templateUI_buttons(){
-        this.uiButtons.className = 'single-project-button'
-        this.uiButtons.innerHTML=`
-        <p data-project-details-info="acronym" style="background-color: ${this.color};">${this.acronym}</p>
-        <div>${this.name}</div>
-        `
-    }
-        */
-
-    //method for the UI card html creation
-    /*
-    createUI() {
-        if (this.uiButtons && this.uiButtons instanceof HTMLElement) {return}
-        this.uiButtons = document.createElement("li")
-        this.templateUI_buttons()
-    }
-        */
 }

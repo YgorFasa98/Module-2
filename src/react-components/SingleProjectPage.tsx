@@ -32,7 +32,6 @@ export function SingleProjectPage (props:Props) {
     
     const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
 
-    console.log(project)
     React.useEffect(() => {
         updateProject(new P.Project(p))
       }, [routeParams.id])

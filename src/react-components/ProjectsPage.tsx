@@ -184,7 +184,7 @@ export function ProjectsPage (props: Props) {
             </div>
             <div className="buttons">
               <button
-              onClick={(e) => {onFormCancelButtonClick(e)}}
+                onClick={(e) => {onFormCancelButtonClick(e)}}
                 type="button"
                 id="button-project-form-cancel"
                 className="generic-buttons"

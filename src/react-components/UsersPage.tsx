@@ -2,6 +2,7 @@ import * as React from 'react'
 import { UsersManager } from '../classes/UsersManager'
 import { UserCard } from './UserCard'
 import * as U from '../classes/User'
+import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
 
 interface Props {
     usersManager: UsersManager
@@ -14,10 +15,83 @@ export function UsersPage (props:Props) {
     props.usersManager.onUserCreated = () => {setUsers([...props.usersManager.list])}
     //props.usersManager.onProjectDeleted = () => {setUsers([...props.usersManager.list])}
     //props.usersManager.onProjectsCardsUpdate = () => {setUsers([...props.usersManager.list])}
-  
-    const UsersCards = users.map((users) => {
-      return <UserCard user={users} key={users.id}/>
+    
+    const [cardVersion, setCardVersion] = React.useState<string>('compact')
+
+    const onChangeUIAll = () => {
+        const compactAllButton = document.getElementById('compact_all')
+        const expandAllButton = document.getElementById('expand_all')
+        if (compactAllButton && expandAllButton) {
+            if (compactAllButton.style.display == 'inline') {
+                compactAllButton.style.display = 'none'
+                expandAllButton.style.display = 'inline'
+                setCardVersion('compact')
+            } else if (expandAllButton.style.display == 'inline') {
+                compactAllButton.style.display = 'inline'
+                expandAllButton.style.display = 'none'
+                setCardVersion('expanded')
+            }
+        }
+    }
+
+    const UsersCards = users.map((user) => {
+      return <UserCard user={user} cardVersion={cardVersion} key={user.id}/>
     })
+
+    const onNewUserButtonClick = () => { //little different fron lessons because I implemented the showModal in an external class
+        const newUserModal = new toggleModal('new-user-modal') //new project modal
+        if (newUserModal) {
+          newUserModal.showModal()
+        } else {
+          console.warn("New user modal was not found")
+        }
+    }
+
+    const onFormAcceptButtonClick = (e: React.FormEvent) => {
+        const newUserModal = new toggleModal('new-user-modal') //new user modal
+        const newUserForm = document.getElementById("new-user-form") //form element
+        //form events
+        if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existance of user form
+            e.preventDefault()
+            const formData = new FormData(newUserForm)
+            const userData: U.IUser = { //store data in this dictionary
+                type: "user" as string,
+                name: formData.get('name') as string,
+                email: formData.get('email') as string,
+                role: formData.get('role') as U.role,
+                selfDescription: formData.get('selfDescription') as string,
+                gender: formData.get('gender') as U.gender,
+                birthday: new Date(formData.get('birthday') as string),
+                address: formData.get('address') as string,
+                companyName: formData.get('companyName') as string,
+                userImage: 'assets/genericUser.jpg'
+            }
+            try {
+                props.usersManager.newUser(userData) //create the object user using userData dictionary, boolean: compact or expanded userUI
+                newUserModal.closeModal() //if i want to close or not the form after clicking on accept button
+                newUserForm.reset() //reset the fields of the form
+                props.usersManager.setUI_error(new Error(''),"none",'new') //display the UI of error
+            } catch (err) {
+                props.usersManager.setUI_error(err,"",'new')
+            }
+          }
+      }
+    
+      const onFormCancelButtonClick = (e: React.FormEvent) => {
+        const newUserModal = new toggleModal('new-user-modal') //new user modal
+        const newUserForm = document.getElementById("new-user-form") //form element
+        if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existance of user form
+          e.preventDefault()
+          newUserModal.closeModal() //close the form
+          newUserForm.reset()
+          props.usersManager.setUI_error(new Error(''),"none",'new')
+      }
+    }
+
+    const meanAge = calculateMeanAge(users.map((u)=>{return u.birthday}))
+
+    const onDownloadUsersButtonClick = () =>  {exportToJSON(props.usersManager.list,'users_list')}
+    const onUploadUsersButtonClick = () => {props.usersManager.importFromJSON()}
 
     return(
         <div id="users-page" className="page">
@@ -131,6 +205,7 @@ export function UsersPage (props:Props) {
                     </div>
                     <div className="buttons">
                     <button
+                        onClick={(e) => {onFormCancelButtonClick(e)}}
                         type="button"
                         id="button-user-form-cancel"
                         className="generic-buttons"
@@ -138,6 +213,7 @@ export function UsersPage (props:Props) {
                         Cancel
                     </button>
                     <button
+                        onClick={(e) => {onFormAcceptButtonClick(e)}}
                         type="submit"
                         id="button-user-form-accept"
                         className="generic-buttons"
@@ -168,11 +244,11 @@ export function UsersPage (props:Props) {
                     person
                 </span>
                 <h1 id="manageUsersTitle" style={{ fontFamily: "Roboto", color: "gray" }}>
-                    Manage Users (default value)
+                    Manage Users ({users.length})
                 </h1>
                 </div>
                 <div id="users-page-addbar">
-                <button id="new-user-button">
+                <button id="new-user-button" onClick={onNewUserButtonClick}>
                     <span
                     id="add"
                     className="material-icons-outlined generic-buttons"
@@ -191,12 +267,14 @@ export function UsersPage (props:Props) {
                     }}
                 >
                     <span
+                    onClick={onUploadUsersButtonClick}
                     id="user-upload"
                     className="material-icons-outlined generic-buttons"
                     >
                     upload
                     </span>
                     <span
+                    onClick={onDownloadUsersButtonClick}
                     id="user-download"
                     className="material-icons-outlined generic-buttons"
                     >
@@ -219,27 +297,28 @@ export function UsersPage (props:Props) {
                 </div>
                 <div id="meanAge" style={{ padding: 20 }}>
                 <div>
-                    Users mean age test: 26 years
+                    Users mean age: {meanAge}
                     <h3 style={{ fontWeight: "normal" }} />
                 </div>
                 </div>
             </header>
             <div id="users-page-content">
                 <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "50px 300px 400px 1fr 50px",
-                    marginLeft: 30,
-                    gap: 20,
-                    padding: 5,
-                    marginRight: 25
-                }}
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "50px 300px 400px 1fr 50px",
+                        marginLeft: 30,
+                        gap: 20,
+                        padding: 5,
+                        marginRight: 25
+                    }}
                 >
                 <h3 style={{ color: "gray" }} />
                 <h3 style={{ color: "gray" }}>Name</h3>
                 <h3 style={{ color: "gray" }}>E-mail</h3>
                 <h3 style={{ color: "gray" }}>Role</h3>
                 <span
+                    onClick={onChangeUIAll}
                     id="compact_all"
                     className="material-icons-outlined generic-buttons"
                     style={{ display: "none", textAlign: "center" }}
@@ -247,9 +326,10 @@ export function UsersPage (props:Props) {
                     expand_less
                 </span>
                 <span
+                    onClick={onChangeUIAll}
                     id="expand_all"
                     className="material-icons-outlined generic-buttons"
-                    style={{ textAlign: "center" }}
+                    style={{ display: "inline", textAlign: "center" }}
                 >
                     expand_more
                 </span>
