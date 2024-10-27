@@ -1,15 +1,30 @@
 import * as React from'react'
 import { User } from '../classes/User'
+import { UsersManager } from '../classes/UsersManager'
 
 interface Props {
     user: User
     cardVersion: string
+    usersManager: UsersManager
 }
 
 export function UserCard (props:Props) {
+
+    const onChangeUISingle = (e) => {
+        const targetUser = e.currentTarget
+        if (targetUser.getAttribute('id') == 'user-card-compact-id'){
+            props.user.cardVersion = 'expanded'
+            props.usersManager.updateUserUI(props.user)
+        }
+        if (targetUser.getAttribute('id') == 'user-card-expanded-id'){
+            props.user.cardVersion = 'compact'
+            props.usersManager.updateUserUI(props.user)
+        }
+    }
+
     const templateUI_compactUser = () => {
         return (
-            <li id='user-card-compact-id' className='user-card'>
+            <li id='user-card-compact-id' className='user-card' onClick={onChangeUISingle}>
                 <div id="user-compact">
                     <div
                     className="user-image"
@@ -38,7 +53,7 @@ export function UserCard (props:Props) {
 
     const templateUI_expandedUser = () => {
         return (
-            <li id='user-card-expanded-id' className='user-card user-card-expanded'>
+            <li id='user-card-expanded-id' className='user-card user-card-expanded' onClick={onChangeUISingle}>
                 <div id="user-compact">
                 <div
                     className="user-image"

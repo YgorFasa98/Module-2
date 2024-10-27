@@ -6,6 +6,7 @@ import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
 
 interface Props {
     usersManager: UsersManager
+    user: U.User
 }
 
 export function UsersPage (props:Props) {
@@ -15,8 +16,7 @@ export function UsersPage (props:Props) {
     props.usersManager.onUserCreated = () => {setUsers([...props.usersManager.list])}
     //props.usersManager.onProjectDeleted = () => {setUsers([...props.usersManager.list])}
     //props.usersManager.onProjectsCardsUpdate = () => {setUsers([...props.usersManager.list])}
-    
-    const [cardVersion, setCardVersion] = React.useState<string>('compact')
+    props.usersManager.onSingleUserCardChange = () => {setUsers([...props.usersManager.list])}
 
     const onChangeUIAll = () => {
         const compactAllButton = document.getElementById('compact_all')
@@ -25,17 +25,21 @@ export function UsersPage (props:Props) {
             if (compactAllButton.style.display == 'inline') {
                 compactAllButton.style.display = 'none'
                 expandAllButton.style.display = 'inline'
-                setCardVersion('compact')
+                setUsers([...props.usersManager.list.map((user) => {
+                    user.cardVersion = 'compact'
+                    return user})])
             } else if (expandAllButton.style.display == 'inline') {
                 compactAllButton.style.display = 'inline'
                 expandAllButton.style.display = 'none'
-                setCardVersion('expanded')
+                setUsers([...props.usersManager.list.map((user) => {
+                    user.cardVersion = 'expanded'
+                    return user})])
             }
         }
     }
 
     const UsersCards = users.map((user) => {
-      return <UserCard user={user} cardVersion={cardVersion} key={user.id}/>
+            return <UserCard user={user} cardVersion={user.cardVersion} usersManager={props.usersManager} key={user.id}/>
     })
 
     const onNewUserButtonClick = () => { //little different fron lessons because I implemented the showModal in an external class

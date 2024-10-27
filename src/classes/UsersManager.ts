@@ -16,6 +16,7 @@ export class UsersManager {
     }
 
     onUserCreated = (user:User) => {}
+    onSingleUserCardChange = (user:User) => {}
 
     constructor(){
         this.newUser(this.defaultUser)
@@ -38,6 +39,10 @@ export class UsersManager {
         this.onUserCreated(user)
 
         return user
+    }
+
+    updateUserUI(user:User){
+        this.onSingleUserCardChange(user)
     }
 
     getUser (id:string) {

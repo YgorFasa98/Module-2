@@ -32,7 +32,8 @@ export class User implements IUser{
 
     //internal class properties
     id: string
-
+    cardVersion: string = 'compact'
+    
     constructor(data: IUser, expanded: boolean = false) {
 
         this.id = uuidv4()
@@ -42,15 +43,4 @@ export class User implements IUser{
             this[key] = data[key]
         }
     }
-
-    /*
-    //evento per lo swithc tra un tipo e l'altro della UI
-    changeUI(id:string){
-        if (id == 'user-card-compact-id'){
-            this.templateUI_expandedUser()
-        }
-        if (id == 'user-card-expanded-id'){
-            this.templateUI_compactUser()
-        }
-    }*/
 }
