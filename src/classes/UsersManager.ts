@@ -20,8 +20,6 @@ export class UsersManager {
 
     constructor(){
         this.newUser(this.defaultUser)
-        //this.setUI_meanAge()
-        //this.setUI_usersCount()
     }
 
     newUser(data: IUser){
@@ -87,18 +85,6 @@ export class UsersManager {
         ui_usersCount.innerHTML = `
         Manage Users (${this.list.length})`
     }
-
-    /*
-    setUI_expandAll(){
-        for (const user of this.list){
-            user.templateUI_expandedUser()
-        }
-    }
-    setUI_compactAll(){
-        for (const user of this.list){
-            user.templateUI_compactUser()
-        }
-    }*/
 
     setUI_error(err:Error,disp:string,category:string='none'){
         const ui_errorNewUser = document.getElementById('new-user-error-tab') as HTMLElement

@@ -6,7 +6,6 @@ import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
 
 interface Props {
     usersManager: UsersManager
-    user: U.User
 }
 
 export function UsersPage (props:Props) {

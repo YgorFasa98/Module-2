@@ -2,11 +2,13 @@ import * as React from 'react'
 import * as Router from 'react-router-dom'
 import { ProjectsManager } from '../classes/ProjectsManager'
 import * as P from '../classes/Project'
+import * as T from '../classes/Todo'
 import { toggleModal } from '../classes/Generic'
 import { SingleProjectDetails } from './SingleProjectDetails'
 import { ProgressBar } from './ProgressBar'
 import { ProjectButton } from './ProjectButton'
 import { EditProjectform } from './EditProjectForm'
+import { ToDoCard } from './ToDoCard'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -31,6 +33,7 @@ export function SingleProjectPage (props:Props) {
     props.projectsManager.onProjectUpdated = () => {updateProject(new P.Project(p))}
     
     const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
+    const ToDoCardsList = project.todoList.map((todo) => {return <ToDoCard todo={todo} key={todo.id}/>})
 
     React.useEffect(() => {
         updateProject(new P.Project(p))
@@ -67,8 +70,59 @@ export function SingleProjectPage (props:Props) {
             }
         } else {console.warn("Edit project form was not found")}
       }
-
     const onEditProjectForm = <EditProjectform project={project} onEditProjectFormSaveButtonClick={onEditProjectFormSaveButtonClick} key={project.id}/>
+
+    const onNewTodoButtonClick = () =>{
+        const newTodoModal = new toggleModal('new-todo-modal') //new project modal
+        if (newTodoModal) {
+          newTodoModal.showModal()
+        } else {
+          console.warn("New todo modal was not found")
+        }
+    }
+
+    const onNewTodoFormSaveButtonClick = (e: React.FormEvent) =>{
+        const newTodoModal = new toggleModal('new-todo-modal') //new project modal
+        const newTodoForm = document.getElementById("new-todo-form") //form element
+        if (newTodoForm && newTodoForm instanceof HTMLFormElement){
+            const formData = new FormData(newTodoForm)
+            e.preventDefault()
+            const todoData: T.ITodo = {
+                title: formData.get('title') as string,
+                description: formData.get('description') as string,
+                expiredate: new Date (formData.get('expiredate') as string),
+                status: formData.get('status') as T.statusTodo,
+                priority: formData.get('priority') as T.priorityTodo,
+            }
+            try {
+                const t = props.projectsManager.newTodo(todoData)
+                p.todoList.push(t)
+                updateProject(new P.Project(p))
+                newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
+                newTodoForm.reset() //reset the fields of the form
+                props.projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
+            } catch (err) {
+                console.log(err)
+                //projectsManager.setUI_error(err,"",'new')
+            }
+        }
+    }
+
+    const onFormCancelButtonClick = (e: React.FormEvent) => {
+        const newTodoModal = new toggleModal('new-todo-modal') //new project modal
+        const newTodoForm = document.getElementById("new-todo-form") //form element
+        if (newTodoForm && newTodoForm instanceof HTMLFormElement){
+            e.preventDefault()
+            try {
+                newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
+                newTodoForm.reset() //reset the fields of the form
+            } catch (err) {
+                console.log(err)
+                //projectsManager.setUI_error(err,"",'new')
+            }
+        }
+    }
+    
     //#endregion
 
     return(
@@ -140,6 +194,7 @@ export function SingleProjectPage (props:Props) {
                         type="button"
                         id="button-todo-form-cancel"
                         className="generic-buttons"
+                        onClick={onFormCancelButtonClick}
                     >
                         Cancel
                     </button>
@@ -147,6 +202,7 @@ export function SingleProjectPage (props:Props) {
                         type="submit"
                         id="button-todo-form-accept"
                         className="generic-buttons"
+                        onClick={onNewTodoFormSaveButtonClick}
                     >
                         Accept
                     </button>
@@ -252,6 +308,7 @@ export function SingleProjectPage (props:Props) {
                         <span
                         id="todo-add"
                         className="material-icons-outlined generic-buttons"
+                        onClick={onNewTodoButtonClick}
                         >
                         add
                         </span>
@@ -270,57 +327,7 @@ export function SingleProjectPage (props:Props) {
                         flexGrow: 1
                     }}
                     >
-                    <div className="to-do-card">
-                        <div
-                        style={{
-                            display: "flex",
-                            gap: 15,
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}
-                        >
-                        <span
-                            id="construction"
-                            className="material-icons-outlined"
-                            style={{
-                            backgroundColor: "gray",
-                            borderRadius: 5,
-                            padding: 10
-                            }}
-                        >
-                            construction
-                        </span>
-                        This is the first thing to do on this project.
-                        <br />
-                        Second line of first thing.This is the first thing to do on this
-                        project.
-                        </div>
-                        <div>Fri, 20 ago</div>
-                    </div>
-                    <div className="to-do-card">
-                        <div
-                        style={{
-                            display: "flex",
-                            gap: 15,
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}
-                        >
-                        <span
-                            id="construction"
-                            className="material-icons-outlined"
-                            style={{
-                            backgroundColor: "gray",
-                            borderRadius: 5,
-                            padding: 10
-                            }}
-                        >
-                            construction
-                        </span>
-                        This is the second thing to do on this project
-                        </div>
-                        <div>Thu, 12 feb</div>
-                    </div>
+                        {ToDoCardsList}
                     </div>
                 </div>
                 </div>

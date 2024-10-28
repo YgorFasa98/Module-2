@@ -12,7 +12,23 @@ export class ProjectsManager {
     onSidebarButtons = (project: Project) => {}
     onProjectsCardsUpdate = (project: Project) => {}
 
-    //uiTodo: HTMLDivElement
+    defaultToDoList: ToDo[] = [ //default todo list
+        new ToDo({
+            title: 'Default todo title',
+            description: 'Default todo description',
+            expiredate: new Date('12-3-2014'),
+            status: 'Active',
+            priority: 'Very high'
+        }),
+        new ToDo({
+            title: 'Default todo title 2',
+            description: 'Default todo description 2',
+            expiredate: new Date('8-7-2019'),
+            status: 'Closed',
+            priority: 'High'
+        })
+    ]
+
     defaultProject: IProject = { //default Project data
         type: 'project',
         color: '#931f1f',
@@ -24,27 +40,19 @@ export class ProjectsManager {
         progress: 100,
         companyName: 'University of Padua',
         projectType: 'Master degree thesis',
-        todoList: []
+        todoList: this.defaultToDoList
     }
 
     //INTERNAL PROPERTIES to manage projects and todos
     oldProject: Project
     oldTodo: ToDo
 
-    //constructor(container:HTMLDivElement, containerButtons:HTMLUListElement, containerTodo:HTMLDivElement){
     constructor(){
-        //#region TO REMOVE (programmatically enters the default project before the viewer is created)
-        //This is needed because i don't set any event to load the viewer after the project card gets clicked
-        //if the page is loaded in the home page infact the dom doesn't find the viewer container because it is hidden
-        //so it's possible to show the viewer but I have before to resize the window
-        //I have to find a way to do it automatically when the project ui card gets clicked
-        const defProject = this.newProject(this.defaultProject)
-        //defProject.ui.click()
-        //#endregion
+        this.newProject(this.defaultProject)
     }
 
     //NEW PROJECT METHOD
-    newProject(data: IProject, operation:string='new'){
+    newProject(data: IProject){
         const project = new Project(data)
         const projectsNameList = this.list.map((project) => {return project.name})
         const nameInUse = projectsNameList.includes(data.name)
@@ -81,32 +89,13 @@ export class ProjectsManager {
         project.progress = data.progress
         project.companyName = data.companyName
         project.projectType = data.projectType
-        //project.todoList: ToDo[]
+        project.todoList = data.todoList
         this.onProjectUpdated(project)
         this.onSidebarButtons(project)
         this.onProjectsCardsUpdate(project)
         return project
     }
-
-
-    //METHOD TO SET PROJECT DETAILS PAGE
-    /*setProjectDetails (project:Project) {
-
-        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
-        projectTodoCardsContainer.innerHTML = ''
-        for (const todo of project.todoList){
-            const todoFly = new ToDo(todo)
-            projectTodoCardsContainer.append(todoFly.ui)           
-        }
-
-        const todoAddButton = document.getElementById('todo-add') as HTMLElement
-        if (todoAddButton){
-            todoAddButton.addEventListener('click', () => {
-                this.oldProject = project
-            })
-        }
-    }*/
-    
+ 
     //METHODS
     setUI_projectsCount(){
         const ui_projectsCount = document.getElementById('ProjectsTitle') as HTMLElement
@@ -147,59 +136,14 @@ export class ProjectsManager {
         }
     }
 
-    //TODO
-    newTodo(data:ITodo){
-        const todo = new ToDo(data)
-        this.oldProject.todoList.push(todo)
-        todo.ui.addEventListener('mouseover', () => {
-            const deleteButton = todo.ui.querySelector(`[id=deletetodo]`) as HTMLElement
-            const editButton = todo.ui.querySelector(`[id=edittodo]`) as HTMLElement
-            const date = todo.ui.querySelector(`[id=date]`) as HTMLElement
-            const infos = todo.ui.querySelector(`[id=infos]`) as HTMLElement
-            todo.ui.style.justifyContent = 'center'
-            todo.ui.style.gap = '10px'
-            if (deleteButton && editButton) {
-                date.style.display = 'none'
-                infos.style.display = 'none'
-                deleteButton.style.display = ''
-                editButton.style.display = ''
-
-                editButton.addEventListener('click',()=>{
-                    const updateTodoModal = new toggleModal('edit-todo-modal')
-                    const updateTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
-                    const statusForm = (updateTodoForm.querySelector(`[name=status]`) as any)
-                    const priorityForm = (updateTodoForm.querySelector(`[name=priority]`) as any)
-                    if (updateTodoForm && updateTodoModal){
-                        statusForm.value = todo.status
-                        priorityForm.value = todo.priority
-                        this.oldTodo = todo
-                        updateTodoModal.showModal()
-                    }
-                })
-                deleteButton.addEventListener('click',()=>{
-                    this.oldTodo = todo
-                    this.deleteTodo()
-                })
-            }
-        })
-        todo.ui.addEventListener('mouseleave', () => {
-            const deleteButton = todo.ui.querySelector(`[id=deletetodo]`) as HTMLElement
-            const editButton = todo.ui.querySelector(`[id=edittodo]`) as HTMLElement
-            const date = todo.ui.querySelector(`[id=date]`) as HTMLElement
-            const infos = todo.ui.querySelector(`[id=infos]`) as HTMLElement
-            todo.ui.style.justifyContent = 'space-between'
-            if (deleteButton && editButton) {
-                deleteButton.style.display = 'none'
-                editButton.style.display = 'none'
-                date.style.display = ''
-                infos.style.display = 'flex'
-            }
-        })
-        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
-        projectTodoCardsContainer.append(todo.ui)
+    newTodo (data:ITodo) {
+        const date = data.expiredate
+        data.expiredate = new Date(date)
+        return new ToDo(data)
     }
-    
-    updateTodo(newStatus:statusTodo,newPriority:priorityTodo){
+
+    //TODO
+    /*updateTodo(newStatus:statusTodo,newPriority:priorityTodo){
         const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
         projectTodoCardsContainer.removeChild(this.oldTodo.ui)
         this.oldTodo.status = newStatus
@@ -215,8 +159,8 @@ export class ProjectsManager {
             return todo.id !== this.oldTodo.id
         })
         this.oldProject.todoList = remaining
-        this.setProjectDetails(this.oldProject)
-    }
+        //this.setProjectDetails(this.oldProject)
+    }*/
 
     //IMPORT JSON
     importFromJSON (){
@@ -236,18 +180,24 @@ export class ProjectsManager {
             const json = reader.result
             if (!json) {return}
             const projects: Project[] = JSON.parse(json as string)
-
+            const usedID = new Array()
             for (const project of projects){
                 if (project.type == 'project') {
                     const projectsIdList = this.list.map((p) => {return p.id})
                     const IdInUse = projectsIdList.includes(project.id)
-                    const todoList = project.todoList
+                    const importedTodoList = project.todoList
                     project.todoList = []
+                    for (const todo of importedTodoList){
+                        const newTodo = this.newTodo(todo)
+                        newTodo.id = todo.id
+                        project.todoList.push(newTodo)
+                    }
                     if (IdInUse) {
                         this.updateProject(project, project.id)
+                        usedID.push(project.name)
                     } else {
                         try{
-                            this.newProject(project, 'new')
+                            this.newProject(project)
                         } catch (error) {
                             console.log('Error during import: ', error)
                         }
@@ -261,76 +211,21 @@ export class ProjectsManager {
                     d.showModal()
                 }
             }
-        })
-    }
-    /*importFromJSON (){
-        const input = document.createElement('input') //create an html element tag <input>
-        input.type = 'file' //in this way opens a window to select files from PC
-        input.accept = 'application/json' //accept only json files
-        const reader = new FileReader()
-        input.click()
-        input.addEventListener('change', () => {
-            const fileList = input.files
-            if (!fileList) {return}
-            reader.readAsText(fileList[0])
-        })
-
-        reader.addEventListener("load", () => {
-            const json = reader.result
-            if (!json) {return}
-            const projects: Project[] = JSON.parse(json as string)
-            const usedNames = new Array()
-            console.log(projects)
-            for (const project of projects){
-                if (project.type == 'project') {
-                    const projectsIdList = this.list.map((p) => {return p.id})
-                    const IdInUse = projectsIdList.includes(project.id)
-                    console.log(IdInUse)
-                    const todoList = project.todoList
-                    project.todoList = []
-                    if (!IdInUse) {
-                        try {
-                            this.newProject(project)
-                            for (const todo of todoList){
-                                if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
-                                else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
-                                this.newTodo(todo)
-                            }
-                        } catch (error) {
-                            this.updateProjectFromImport(project)
-                            for (const todo of todoList){
-                                if (todo.expiredate==null) {todo.expiredate = new Date('')} //if there is a user with the birthday date exported as invalid date (null value)
-                                else {todo.expiredate = new Date(todo.expiredate)} //needs to recreate the date from the string, although it create an error
-                                this.newTodo(todo)
-                            }
-                            usedNames.push(project.name)
-                        }
-                    }
-                }else{
-                    const d = document.getElementById('error-import-project') as HTMLDialogElement
-                    d.innerHTML = `
-                        <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
-                        <div style="white-space:pre-line; padding: 20px;">You are not importing a projects file.</div>
-                        <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
-                    d.showModal()
-                }
-            }
-            if (usedNames.length > 0) {
-                //alert(`These names are already in use:\n${usedNames.join('\n')}.\nThese projects will not be imported`)
+            if (usedID.length > 0) {
                 const d = document.getElementById('error-import-project') as HTMLDialogElement
                 d.innerHTML = `
                     <h2 style="border-bottom: 2px solid black; padding: 20px;">WARNING !</h2>
-                    <div style="white-space:pre-line; padding: 20px;">These projects already exist:\n
-                    - ${usedNames.join('\n- ')}
-                    \nThese projects will be updated.
+                    <div style="white-space:pre-line; padding: 20px;">These imported projects has an ID already in use:\n
+                    - ${usedID.join('\n- ')}
+                    \nThese projects will be updated and the previous ones deleted.
                     </div>
                     <h5 style="text-align: center; padding: 10px; border-top: 2px solid black;">Press ESC to exit</h5>`
                 d.showModal()
             }
         })
         console.log('lista fine import', this.list)
-    }*/
-    
+    }
+
     upload3DFile(){
         return new Promise((resolve) => {
             let mesh

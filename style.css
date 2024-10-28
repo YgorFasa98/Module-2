@@ -408,6 +408,8 @@ fieldset input:focus, form #color:focus {
     background-color: var(--hover);
     cursor: pointer;
     border: 1.5px solid black;
+    justify-content: center;
+    gap: 20px;
 }
 .edittodo{
     border: 2px solid transparent;

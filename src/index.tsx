@@ -8,11 +8,7 @@ import { SingleProjectPage } from './react-components/SingleProjectPage'
 import { UsersPage } from './react-components/UsersPage'
 import { ProjectsManager } from './classes/ProjectsManager'
 
-import * as U from './classes/User'
-import * as P from './classes/Project'
-import * as T from './classes/Todo'
 import { UsersManager } from './classes/UsersManager'
-import { toggleModal, exportToJSON } from './classes/Generic'
 
 import * as THREE from "three"
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
@@ -48,65 +44,8 @@ appRoot.render(
 
 /*
 //#region USERS PAGE EVENTS
-//buttons
-const newUserButton = document.getElementById("new-user-button") //new user button
-const downloadButtonUser = document.getElementById("user-download") //download button
-const uploadButtonUser = document.getElementById("user-upload") //upload button
-const expandAllButton = document.getElementById('expand_all') //expand all button
-const compactAllButton = document.getElementById('compact_all') //comapct all button
-
-//users page container and cards
-const usersListUI = document.getElementById("users-list") as HTMLUListElement //container of users cards
-const usersManager = new UsersManager(usersListUI) //new instance of users manager class
-//modal
-const newUserModal = new toggleModal('new-user-modal') //new user modal
-
-//event click on users page buttons
-if (downloadButtonUser) {
-    downloadButtonUser.addEventListener('click', () => { //download users list as json file
-        exportToJSON(usersManager.list,'users_list') //moved the export to json from userManager to generic
-    })
-} else {console.warn("Download button was not found")}
-
-if (uploadButtonUser) {
-    uploadButtonUser.addEventListener('click', () => { //upload json file of users
-        usersManager.importFromJSON()
-    })
-} else {console.warn("Upload button was not found")}
-
-if (newUserButton && newUserModal) {
-    newUserButton.addEventListener('click', () => {  //show modal of new user
-        newUserModal.showModal()
-    })
-} else {console.warn("New user button was not found")}
-
-if (expandAllButton && compactAllButton) {
-    expandAllButton.addEventListener('click', () => { //events of expand button
-        usersManager.setUI_expandAll()
-        expandAllButton.style.display = 'none'
-        compactAllButton.style.display = ''
-    })
-    compactAllButton.addEventListener('click', () => { //events of compact button
-        usersManager.setUI_compactAll()
-        expandAllButton.style.display = ''
-        compactAllButton.style.display = 'none'
-    })
-} else {console.warn("Expand/Compact all button was not found")}
-//#endregion
 
 //#region PROJECT DETAILS PAGE
-//Progress bar slider value update
-const sliders = document.getElementsByClassName('progress-bar') as any
-const values = document.getElementsByClassName('progress-value') as any
-if (sliders[0] && values[0]){
-    sliders[0].addEventListener('input', function() {
-        values[0].textContent = sliders[0].value;
-    })}
-if (sliders[1] && values[1]){
-    sliders[1].addEventListener('input', function() {
-        values[1].textContent = sliders[1].value;
-    })}
-//#endregion
 
 //#region TO-DO
 const todoAddButton = document.getElementById('todo-add') as HTMLElement

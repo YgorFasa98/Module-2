@@ -38,7 +38,7 @@ export function ProjectsPage (props: Props) {
     }
   }
 
-  const onFormAcceptButtonClick = (e: React.FormEvent) => {
+  const onNewProjectFormAcceptButtonClick = (e: React.FormEvent) => {
     const newProjectModal = new toggleModal('new-project-modal') //new project modal
     const newProjectForm = document.getElementById("new-project-form") //form element
     //form events
@@ -192,7 +192,7 @@ export function ProjectsPage (props: Props) {
                 Cancel
               </button>
               <button
-                onClick={(e) => {onFormAcceptButtonClick(e)}}
+                onClick={(e) => {onNewProjectFormAcceptButtonClick(e)}}
                 type="submit"
                 id="button-project-form-accept"
                 className="generic-buttons"
