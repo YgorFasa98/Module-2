@@ -18,11 +18,6 @@ export function Sidebar(props:Props) {
         return <ProjectButton project={projects} key={projects.id}/>
     })
 
-    React.useEffect(() => {
-        //console.log('Button list updated', projects)
-    }, [projects])
-    //#endregion
-
     //hide or show projects buttons in home page or other pages
     const routePath = Router.useLocation().pathname
     const listOfProjects = document.getElementById("nav-buttons-projects")

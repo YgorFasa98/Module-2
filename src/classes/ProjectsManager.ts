@@ -142,26 +142,6 @@ export class ProjectsManager {
         return new ToDo(data)
     }
 
-    //TODO
-    /*updateTodo(newStatus:statusTodo,newPriority:priorityTodo){
-        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
-        projectTodoCardsContainer.removeChild(this.oldTodo.ui)
-        this.oldTodo.status = newStatus
-        this.oldTodo.priority = newPriority
-        const newUI = this.oldTodo.templateUI()
-        projectTodoCardsContainer.append(newUI)
-    }
-
-    deleteTodo(){
-        const projectTodoCardsContainer = document.getElementById('todo-card-list') as HTMLDivElement
-        //projectTodoCardsContainer.removeChild(this.oldTodo.ui)
-        const remaining = this.oldProject.todoList.filter((todo) => {
-            return todo.id !== this.oldTodo.id
-        })
-        this.oldProject.todoList = remaining
-        //this.setProjectDetails(this.oldProject)
-    }*/
-
     //IMPORT JSON
     importFromJSON (){
         //this import operate through the project ID, so it is possible to have multiple projects with same name, if they have different IDs
