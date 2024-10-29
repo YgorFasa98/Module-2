@@ -7,7 +7,7 @@ interface Props {
     onEditProjectFormSaveButtonClick
 }
 
-export function EditProjectform (props:Props) {
+export function EditProjectForm (props:Props) {
     
     return(
         <dialog id="edit-project-modal">

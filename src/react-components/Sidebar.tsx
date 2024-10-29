@@ -19,7 +19,7 @@ export function Sidebar(props:Props) {
     })
 
     React.useEffect(() => {
-        console.log('Button list updated', projects)
+        //console.log('Button list updated', projects)
     }, [projects])
     //#endregion
 

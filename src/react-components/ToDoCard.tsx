@@ -1,8 +1,13 @@
 import * as React from 'react'
-import { ToDo } from '../classes/Todo'
+import * as T from '../classes/Todo'
+import { Project } from '../classes/Project'
+import { ProjectsManager } from '../classes/ProjectsManager'
+import { toggleModal } from '../classes/Generic'
 
 interface Props{
-    todo: ToDo
+    todo: T.ToDo
+    project: Project
+    projectManager: ProjectsManager
 }
 
 export function ToDoCard (props:Props) {
@@ -19,6 +24,37 @@ export function ToDoCard (props:Props) {
 
     const [hover, setHover] = React.useState(false);
 
+    const onDeleteTodoButtonClick = () => {
+        const updatedTodoList = props.project.todoList.filter(item => item.id !== props.todo.id);
+        props.project.todoList = updatedTodoList
+        props.projectManager.updateProject(props.project, props.project.id)
+    }
+
+    const [editedTodo, setEditedTodo] = React.useState(props.todo)
+
+    const dialogRef = React.useRef(null) as any
+    const onEditTodoButtonClick = () =>{
+        dialogRef.current.showModal()
+    }
+
+    const editTodoForm = React.useRef(null) as any
+    const onEditTodoFormAcceptButtonClick = (e: React.FormEvent) =>{
+        //const editTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
+        e.preventDefault()
+        const formData = new FormData(editTodoForm.current)
+        const newData = {
+            status: formData.get('status') as T.statusTodo,
+            priority: formData.get('priority') as T.priorityTodo
+        }
+        props.todo.status = newData.status
+        props.todo.priority = newData.priority
+        setEditedTodo(new T.ToDo(props.todo))
+        const updatedTodoList = props.project.todoList.map(item => item.id === props.todo.id ? {...item, status: newData.status, priority: newData.priority} : item)
+        props.project.todoList = updatedTodoList
+        props.projectManager.updateProject(props.project, props.project.id)
+        dialogRef.current.close()
+    }
+
     return(
         <div
             className='to-do-card' 
@@ -26,6 +62,50 @@ export function ToDoCard (props:Props) {
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             >
+            <dialog id="edit-todo-modal" ref={dialogRef}>
+                <div id="edit-todo-dialog">
+                <form id="edit-todo-form" ref={editTodoForm}>
+                    <h2>Edit To-Do: change status or/and priority</h2>
+                    <div className="input-list">
+                    <div className="field-container">
+                        <label className="field-title">
+                        <span className="material-icons-outlined form-icons">update</span>
+                        Status
+                        </label>
+                        <select name="status" defaultValue={editedTodo.status}>
+                        <option>Active</option>
+                        <option>Pause</option>
+                        <option>Resolved</option>
+                        <option>Closed</option>
+                        </select>
+                    </div>
+                    <div className="field-container">
+                        <label className="field-title">
+                        <span className="material-icons-outlined form-icons">update</span>
+                        Priority
+                        </label>
+                        <select name="priority" defaultValue={editedTodo.priority}>
+                        <option>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                        <option>Very high</option>
+                        </select>
+                    </div>
+                    </div>
+                    <div className="buttons">
+                    <button
+                        type="submit"
+                        id="edit-todo-form-accept"
+                        className="generic-buttons"
+                        onClick={(e) => {onEditTodoFormAcceptButtonClick(e)}}
+                    >
+                        Accept
+                    </button>
+                    </div>
+                </form>
+                <div id="new-project-error-tab" style={{ display: "none" }} />
+                </div>
+            </dialog>
             <span
                 id="deletetodo"
                 className="material-icons-outlined edittodo"
@@ -35,6 +115,7 @@ export function ToDoCard (props:Props) {
                 borderRadius: 5,
                 padding: 10
                 }}
+                onClick={onDeleteTodoButtonClick}
             >
                 delete
             </span>
@@ -47,6 +128,7 @@ export function ToDoCard (props:Props) {
                 borderRadius: 5,
                 padding: 10
                 }}
+                onClick={onEditTodoButtonClick}
             >
                 edit
             </span>

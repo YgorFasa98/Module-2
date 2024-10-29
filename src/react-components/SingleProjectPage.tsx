@@ -7,7 +7,7 @@ import { toggleModal } from '../classes/Generic'
 import { SingleProjectDetails } from './SingleProjectDetails'
 import { ProgressBar } from './ProgressBar'
 import { ProjectButton } from './ProjectButton'
-import { EditProjectform } from './EditProjectForm'
+import { EditProjectForm } from './EditProjectForm'
 import { ToDoCard } from './ToDoCard'
 
 interface Props {
@@ -33,12 +33,11 @@ export function SingleProjectPage (props:Props) {
     props.projectsManager.onProjectUpdated = () => {updateProject(new P.Project(p))}
     
     const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
-    const ToDoCardsList = project.todoList.map((todo) => {return <ToDoCard todo={todo} key={todo.id}/>})
+    const ToDoCardsList = project.todoList.map((todo) => {return <ToDoCard todo={todo} project={project} projectManager={props.projectsManager} key={todo.id}/>})
 
     React.useEffect(() => {
         updateProject(new P.Project(p))
       }, [routeParams.id])
-    
 
     //#region EVENTS
     const onEditProjectFormSaveButtonClick = (e: React.FormEvent) => {
@@ -58,7 +57,7 @@ export function SingleProjectPage (props:Props) {
                 cost: formData.get('cost') as unknown as number,
                 progress: formData.get('progress') as unknown as number,
                 projectType: formData.get('projectType') as string,
-                todoList: []
+                todoList: project.todoList
             }
             try {
                 props.projectsManager.updateProject(projectData, project.id)
@@ -70,7 +69,7 @@ export function SingleProjectPage (props:Props) {
             }
         } else {console.warn("Edit project form was not found")}
       }
-    const onEditProjectForm = <EditProjectform project={project} onEditProjectFormSaveButtonClick={onEditProjectFormSaveButtonClick} key={project.id}/>
+    const onEditProjectForm = <EditProjectForm project={project} onEditProjectFormSaveButtonClick={onEditProjectFormSaveButtonClick} key={project.id}/>
 
     const onNewTodoButtonClick = () =>{
         const newTodoModal = new toggleModal('new-todo-modal') //new project modal
@@ -108,7 +107,7 @@ export function SingleProjectPage (props:Props) {
         }
     }
 
-    const onFormCancelButtonClick = (e: React.FormEvent) => {
+    const onNewTodoFormCancelButtonClick = (e: React.FormEvent) => {
         const newTodoModal = new toggleModal('new-todo-modal') //new project modal
         const newTodoForm = document.getElementById("new-todo-form") //form element
         if (newTodoForm && newTodoForm instanceof HTMLFormElement){
@@ -122,7 +121,6 @@ export function SingleProjectPage (props:Props) {
             }
         }
     }
-    
     //#endregion
 
     return(
@@ -194,7 +192,7 @@ export function SingleProjectPage (props:Props) {
                         type="button"
                         id="button-todo-form-cancel"
                         className="generic-buttons"
-                        onClick={onFormCancelButtonClick}
+                        onClick={onNewTodoFormCancelButtonClick}
                     >
                         Cancel
                     </button>
@@ -203,49 +201,6 @@ export function SingleProjectPage (props:Props) {
                         id="button-todo-form-accept"
                         className="generic-buttons"
                         onClick={onNewTodoFormSaveButtonClick}
-                    >
-                        Accept
-                    </button>
-                    </div>
-                </form>
-                <div id="new-project-error-tab" style={{ display: "none" }} />
-                </div>
-            </dialog>
-            <dialog id="edit-todo-modal">
-                <div id="edit-todo-dialog">
-                <form id="edit-todo-form">
-                    <h2>Edit To-Do: change status or/and priority</h2>
-                    <div className="input-list">
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">update</span>
-                        Status
-                        </label>
-                        <select name="status">
-                        <option>Active</option>
-                        <option>Pause</option>
-                        <option>Resolved</option>
-                        <option>Closed</option>
-                        </select>
-                    </div>
-                    <div className="field-container">
-                        <label className="field-title">
-                        <span className="material-icons-outlined form-icons">update</span>
-                        Priority
-                        </label>
-                        <select name="priority">
-                        <option>Low</option>
-                        <option>Medium</option>
-                        <option>High</option>
-                        <option>Very high</option>
-                        </select>
-                    </div>
-                    </div>
-                    <div className="buttons">
-                    <button
-                        type="submit"
-                        id="edit-todo-form-accept"
-                        className="generic-buttons"
                     >
                         Accept
                     </button>
