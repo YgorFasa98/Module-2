@@ -3,6 +3,7 @@ import { UsersManager } from '../classes/UsersManager'
 import { UserCard } from './UserCard'
 import * as U from '../classes/User'
 import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
+import { SearchBar } from './SearchBar'
 
 interface Props {
     usersManager: UsersManager
@@ -80,7 +81,7 @@ export function UsersPage (props:Props) {
           }
       }
     
-      const onFormCancelButtonClick = (e: React.FormEvent) => {
+    const onFormCancelButtonClick = (e: React.FormEvent) => {
         const newUserModal = new toggleModal('new-user-modal') //new user modal
         const newUserForm = document.getElementById("new-user-form") //form element
         if (newUserForm && newUserForm instanceof HTMLFormElement) { //check the existance of user form
@@ -90,6 +91,10 @@ export function UsersPage (props:Props) {
           props.usersManager.setUI_error(new Error(''),"none",'new')
       }
     }
+
+    const onUsersSearch = (value:string) => {
+        setUsers(props.usersManager.searchUser(value))
+    } 
 
     const meanAge = calculateMeanAge(users.map((u)=>{return u.birthday}))
 
@@ -284,15 +289,7 @@ export function UsersPage (props:Props) {
                     download
                     </span>
                     <div style={{ width: 10 }} />
-                    <textarea
-                    style={{ margin: 0 }}
-                    maxLength={20}
-                    className="search-bar"
-                    cols={40}
-                    rows={1}
-                    placeholder="Search by name (max 20 ch)"
-                    defaultValue={""}
-                    />
+                    <SearchBar onChange={onUsersSearch} searchBy='user name'/>
                     <span id="search" className="material-icons-outlined generic-buttons">
                     search
                     </span>
@@ -337,7 +334,9 @@ export function UsersPage (props:Props) {
                     expand_more
                 </span>
                 </div>
-                <ul className="card-list" id="users-list">{UsersCards}</ul>
+                {
+                users.length > 0 ? <ul className="card-list" id="users-list">{UsersCards}</ul> : <p style={{display:'flex', flexDirection:'column', fontSize:'20px', alignItems:'center'}}>Any user found!</p>
+                }
             </div>
         </div>
     )

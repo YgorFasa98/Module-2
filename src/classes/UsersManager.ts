@@ -39,6 +39,13 @@ export class UsersManager {
         return user
     }
 
+    searchUser(value:string){
+        const usersListFiltered = this.list.filter((user) => {
+            return user.name.toLowerCase().includes(value)
+        })
+        return usersListFiltered
+    }
+    
     updateUserUI(user:User){
         this.onSingleUserCardChange(user)
     }

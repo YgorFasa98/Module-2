@@ -9,6 +9,7 @@ import { ProgressBar } from './ProgressBar'
 import { ProjectButton } from './ProjectButton'
 import { EditProjectForm } from './EditProjectForm'
 import { ToDoCard } from './ToDoCard'
+import { SearchBar } from './SearchBar'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -24,22 +25,29 @@ export function SingleProjectPage (props:Props) {
     const p = props.projectsManager.getProject(routeParams.id)
     if (!p) {return}
     const [project, updateProject] = React.useState<P.Project>(p)
+    const [todos, setTodos] = React.useState<T.ToDo[]>(project.todoList)
+
     if (!(project && project instanceof P.Project)){
         alert('Project not found')
         return (<div id="single-project-page" className="page">Project not found</div>)
     }
      //in the new row is needed a new instance of project otherwise: first reason will not enter the effect and do not update the page
      //and then it will be a simple object and won't pass the if statement above
-    props.projectsManager.onProjectUpdated = () => {updateProject(new P.Project(p))}
+    props.projectsManager.onProjectUpdated = () => {onUpdateSingleProjectPageUI(p)}
     
     const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
-    const ToDoCardsList = project.todoList.map((todo) => {return <ToDoCard todo={todo} project={project} projectManager={props.projectsManager} key={todo.id}/>})
+    const ToDoCardsList = todos.map((todo) => {return <ToDoCard todo={todo} project={project} projectManager={props.projectsManager} key={todo.id}/>})
 
     React.useEffect(() => {
-        updateProject(new P.Project(p))
+        onUpdateSingleProjectPageUI(p)
       }, [routeParams.id])
 
     //#region EVENTS
+    const onUpdateSingleProjectPageUI = (project:P.Project) => {
+        updateProject(new P.Project(project))
+        setTodos(project.todoList)
+    }
+
     const onEditProjectFormSaveButtonClick = (e: React.FormEvent) => {
         const editProjectForm = document.getElementById("edit-project-form") //form element       
         const editProjectModal = new toggleModal('edit-project-modal')
@@ -96,7 +104,7 @@ export function SingleProjectPage (props:Props) {
             try {
                 const t = props.projectsManager.newTodo(todoData)
                 p.todoList.push(t)
-                updateProject(new P.Project(p))
+                onUpdateSingleProjectPageUI(p)
                 newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button
                 newTodoForm.reset() //reset the fields of the form
                 props.projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
@@ -120,6 +128,13 @@ export function SingleProjectPage (props:Props) {
                 //projectsManager.setUI_error(err,"",'new')
             }
         }
+    }
+
+    const onTodoSearch = (value:string) => {
+        const listTodoFiltered = project.todoList.filter((todo) => {
+            return todo.title.toLowerCase().includes(value)
+        })
+        setTodos(listTodoFiltered)
     }
     //#endregion
 
@@ -252,14 +267,7 @@ export function SingleProjectPage (props:Props) {
                         >
                         search
                         </span>
-                        <textarea
-                        maxLength={20}
-                        className="search-bar"
-                        cols={25}
-                        rows={1}
-                        placeholder="Search by name (max 20 ch)"
-                        defaultValue={""}
-                        />
+                        <SearchBar onChange={onTodoSearch} searchBy='todo title'/>
                         <span
                         id="todo-add"
                         className="material-icons-outlined generic-buttons"
@@ -269,6 +277,8 @@ export function SingleProjectPage (props:Props) {
                         </span>
                     </div>
                     </div>
+                    {
+                    todos.length > 0 ? 
                     <div
                     id="todo-card-list"
                     className="card-list"
@@ -283,7 +293,8 @@ export function SingleProjectPage (props:Props) {
                     }}
                     >
                         {ToDoCardsList}
-                    </div>
+                    </div> : <p style={{display:'flex', flexDirection:'column', fontSize:'20px', alignItems:'center'}}>Any todo found!</p>
+                    }
                 </div>
                 </div>
                 <div

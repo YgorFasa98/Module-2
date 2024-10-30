@@ -4,6 +4,7 @@ import * as P from '../classes/Project'
 import { ProjectsManager } from '../classes/ProjectsManager'
 import { ProjectCard } from './ProjectCard'
 import { ProgressBar } from './ProgressBar'
+import { SearchBar } from './SearchBar'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -22,9 +23,9 @@ export function ProjectsPage (props: Props) {
     return <ProjectCard project={projects} key={projects.id}/>
   })
 
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     console.log('Projects list updated', projects)
-  }, [projects])
+  }, [projects])*/
 
   //#endregion
   
@@ -83,6 +84,10 @@ export function ProjectsPage (props: Props) {
 
   const onDownloadProjectsButtonClick = () =>  {exportToJSON(props.projectsManager.list,'projects_list')}
   const onUploadProjectsButtonClick = () => {props.projectsManager.importFromJSON()}
+
+  const onProjectsSearch = (value: string) => {
+    setProjects(props.projectsManager.searchProject(value))
+  }
   //#endregion
 
   //#region STYLES
@@ -223,7 +228,7 @@ export function ProjectsPage (props: Props) {
             house
           </span>
           <h1 id="ProjectsTitle" style={{ fontFamily: "Roboto", color: "gray" }}>
-            Projects ({props.projectsManager.list.length})
+            Projects ({projects.length})
           </h1>
         </div>
         <div
@@ -268,15 +273,7 @@ export function ProjectsPage (props: Props) {
               download
             </span>
             <div style={{ width: 10 }} />
-            <textarea
-              style={{ margin: 0 }}
-              maxLength={20}
-              className="search-bar"
-              cols={40}
-              rows={1}
-              placeholder="Search by name (max 20 ch)"
-              defaultValue={""}
-            />
+            <SearchBar onChange={onProjectsSearch} searchBy='project name'/>
             <span id="search" className="material-icons-outlined generic-buttons">
               search
             </span>
@@ -287,7 +284,9 @@ export function ProjectsPage (props: Props) {
         className="card-list"
         style={{ flexGrow: 1, overflow: "auto", marginTop: 30, padding: 5 }}
       >
-        <div className="project-list" id="project-list">{ProjectsCards}</div>
+        {
+          projects.length > 0 ? <div className="project-list" id="project-list">{ProjectsCards}</div> : <p style={{display:'flex', flexDirection:'column', fontSize:'20px', alignItems:'center'}}>Any project found!</p>
+        }
       </div>
     </div>      
   )

@@ -44,8 +44,6 @@ export class ProjectsManager {
     }
 
     //INTERNAL PROPERTIES to manage projects and todos
-    oldProject: Project
-    oldTodo: ToDo
 
     constructor(){
         this.newProject(this.defaultProject)
@@ -95,7 +93,14 @@ export class ProjectsManager {
         this.onProjectsCardsUpdate(project)
         return project
     }
- 
+
+    searchProject (value:string) {
+        const projectsListFiltered = this.list.filter((project) => {
+            return project.name.toLowerCase().includes(value)
+        })
+        return projectsListFiltered
+    }
+
     //METHODS
     setUI_projectsCount(){
         const ui_projectsCount = document.getElementById('ProjectsTitle') as HTMLElement
