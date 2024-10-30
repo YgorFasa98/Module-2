@@ -10,6 +10,7 @@ import { ProjectButton } from './ProjectButton'
 import { EditProjectForm } from './EditProjectForm'
 import { ToDoCard } from './ToDoCard'
 import { SearchBar } from './SearchBar'
+import { ThreeViewer } from './ThreeViewer'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -315,11 +316,7 @@ export function SingleProjectPage (props:Props) {
                     <h5>GLTF</h5>
                     </li>
                 </ul>
-                <div
-                    id="viewer-container"
-                    className="single-project-page-spaces viewer-container"
-                    style={{ backgroundColor: "transparent", width: "100%", margin: 0 }}
-                />
+                <ThreeViewer projectsManager={props.projectsManager}/>
                 </div>
             </div>
         </div>
