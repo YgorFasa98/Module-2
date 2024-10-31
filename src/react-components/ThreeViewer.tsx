@@ -101,7 +101,7 @@ export function ThreeViewer (props:Props) {
                     if (!scene) return
                     scene.add(object)
                     mesh = object
-                })    
+                })
             })
         }
         LoaderObjMtl()
@@ -110,12 +110,13 @@ export function ThreeViewer (props:Props) {
         if (uploadGltfButton){
             uploadGltfButton.addEventListener('click', async () => {
                 if (!scene) return
-                const meshUploaded = await props.projectsManager.upload3DFile() as any
-                scene.add(meshUploaded.mesh)
+                const objectUploaded = await props.projectsManager.upload3DFile() as any
+                const meshUploaded = objectUploaded.mesh
+                scene.add(meshUploaded)
+                mesh?.add(meshUploaded)
             })
         }
     }
-
 
     React.useEffect(() => {
         setViewer()
