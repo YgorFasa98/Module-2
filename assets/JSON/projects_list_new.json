@@ -2,6 +2,43 @@
   {
     "type": "project",
     "color": "#931f1f",
+    "todoList": [
+      {
+        "colorStatus": "#ff0000",
+        "colorPriority": "#b83232",
+        "id": "90f332f6-941b-45c3-8018-3c361c5f75bf",
+        "title": "Default todo title",
+        "description": "Default todo description",
+        "expiredate": "2014-12-02T23:00:00.000Z",
+        "status": "Active",
+        "priority": "Very high",
+        "symbolStatus": "priority_high"
+      },
+      {
+        "colorStatus": "#a0a0a0",
+        "colorPriority": "#a0a0a0",
+        "id": "ca71b54b-d2e2-47b4-872e-a66614bd10a8",
+        "title": "Default todo title 2",
+        "description": "Default todo description 2",
+        "expiredate": "2019-08-06T22:00:00.000Z",
+        "status": "Closed",
+        "priority": "High",
+        "symbolStatus": "close"
+      }
+    ],
+    "id": "69a5e3ea-566b-4b54-bb95-97cf7816a485",
+    "acronym": "SFH",
+    "name": "Single Family House",
+    "address": "None",
+    "status": "Completed",
+    "cost": 1000,
+    "progress": 100,
+    "companyName": "University of Padua",
+    "projectType": "Master degree thesis"
+  },
+  {
+    "type": "project",
+    "color": "#931f1f",
     "todoList": [],
     "id": "40340aea-86e2-4f6d-827f-b081ef50d4e5",
     "acronym": "SFHi",
