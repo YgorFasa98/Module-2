@@ -22,8 +22,9 @@ export function ProjectsPage (props: Props) {
     const fbProjectsDocuments = await Firestore.getDocs(fbProjectsCollection)
     for (const doc of fbProjectsDocuments.docs){
       const data = doc.data()
+      data.todoList = []
       try {
-        props.projectsManager.newProject(data,doc.id)
+        props.projectsManager.newProject(data, doc.id)
       } catch (error) {
         props.projectsManager.updateProject(data, doc.id)
       }

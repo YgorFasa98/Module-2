@@ -45,7 +45,7 @@ export function SingleProjectPage (props:Props) {
 
     //#region EVENTS
     const onUpdateSingleProjectPageUI = (project:P.Project) => {
-        updateProject(new P.Project(project))
+        updateProject(new P.Project(project, routeParams.id)) //hook to update the project state of this component
         setTodos(project.todoList)
     }
 

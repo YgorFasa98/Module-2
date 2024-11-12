@@ -20,13 +20,13 @@ export function UsersPage (props:Props) {
         const fbUsersCollection = Firestore.collection(firebaseDB, '/users') as Firestore.CollectionReference<U.IUser>
         const fbUsersDocuments = await Firestore.getDocs(fbUsersCollection)
         for (const doc of fbUsersDocuments.docs){
-        const data = doc.data()
-        data.birthday = (data.birthday as unknown as Firestore.Timestamp).toDate()
-        try {
-            props.usersManager.newUser(data,doc.id)            
-        } catch (error) {
-            props.usersManager.updateUser(data,doc.id)
-        }
+            const data = doc.data()
+            data.birthday = (data.birthday as unknown as Firestore.Timestamp).toDate()
+            try {
+                props.usersManager.newUser(data,doc.id)            
+            } catch (error) {
+                props.usersManager.updateUser(data,doc.id)
+            }
         }
     }
     //#endregion

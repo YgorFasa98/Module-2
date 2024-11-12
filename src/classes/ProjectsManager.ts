@@ -57,16 +57,27 @@ export class ProjectsManager {
         const nameLength = data.name.length < 5
         const projectsAcronymList = this.list.map((project) => {return project.acronym})
         const acronymInUse = projectsAcronymList.includes(data.acronym)
-        
-        if (nameInUse || nameLength || acronymInUse){
-            const errName = nameInUse ? `<br><br>- A project with the name "${data.name}" already exists.` : ''
-            const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
-            const errAcronym = acronymInUse ? `<br><br>- A project with the acronym "${data.acronym}" already exists.` : ''
-            const errors = [errName,errNameLength,errAcronym]
-            const joinedErrors = errors.join('')
-            throw new Error(`\n${joinedErrors}`)
-        }
 
+        if (!id){ //this means that the project is completely new and not imported
+            if (nameInUse || nameLength || acronymInUse){
+                const errName = nameInUse ? `<br><br>- A project with the name "${data.name}" already exists.` : ''
+                const errNameLength = nameLength ? '<br><br>- The length of the name is less than 5 characters.' : ''
+                const errAcronym = acronymInUse ? `<br><br>- A project with the acronym "${data.acronym}" already exists.` : ''
+                const errors = [errName,errNameLength,errAcronym]
+                const joinedErrors = errors.join('')
+                throw new Error(`\n${joinedErrors}`) //end the method here
+            }
+        } else if (id) {
+            const projectsIdList = this.list.map((project) => {return project.id})
+            const idInUse = projectsIdList.includes(project.id)
+            if (idInUse){
+                const errId = nameInUse ? `<br><br>- A project with the ID "${project.id}" already exists.` : ''
+                console.log(errId)
+                throw new Error(`\n${errId}`) //end the method here
+            }
+        }
+        
+        //executes this only if is passed an id and this id is not in use
         this.list.push(project)
         this.onProjectCreated(project)
         this.onSidebarButtons(project)
@@ -169,7 +180,9 @@ export class ProjectsManager {
             for (const project of projects){
                 if (project.type == 'project') {
                     const projectsIdList = this.list.map((p) => {return p.id})
+                    console.log(projectsIdList)
                     const IdInUse = projectsIdList.includes(project.id)
+                    console.log(IdInUse)
                     const importedTodoList = project.todoList
                     project.todoList = []
                     for (const todo of importedTodoList){
@@ -182,7 +195,7 @@ export class ProjectsManager {
                         usedID.push(project.name)
                     } else {
                         try{
-                            this.newProject(project)
+                            this.newProject(project, project.id)
                         } catch (error) {
                             console.log('Error during import: ', error)
                         }

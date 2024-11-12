@@ -188,7 +188,7 @@
         "symbolStatus": "done"
       }
     ],
-    "id": "024590f1-79c1-4314-8f5c-1d39374ca8f3",
+    "id": "hLGuWGwKE6AYJ0axc74e",
     "name": "Information Security Management",
     "address": "789 Cyber Avenue, Securitopia",
     "companyName": "SecureTech Solutions",
@@ -196,7 +196,7 @@
     "status": "Stopped",
     "cost": "75000",
     "progress": "40",
-    "projectType": "Information Security"
+    "projectType": "imported from JSON"
   },
   {
     "type": "project",
