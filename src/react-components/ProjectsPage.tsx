@@ -6,11 +6,34 @@ import { ProjectCard } from './ProjectCard'
 import { ProgressBar } from './ProgressBar'
 import { SearchBar } from './SearchBar'
 
+import * as Firestore from 'firebase/firestore'
+import { firebaseDB } from '../firebase'
+
 interface Props {
     projectsManager: ProjectsManager
 }
 
 export function ProjectsPage (props: Props) {
+
+  //#region MOUNTING STAGE
+  const getFirestoreProjects = async() => {
+    //TYPE ASSERTION !!! --> it's developer job to be sure that data in db complies with the interface!
+    const fbProjectsCollection = Firestore.collection(firebaseDB, '/projects') as Firestore.CollectionReference<P.IProject>
+    const fbProjectsDocuments = await Firestore.getDocs(fbProjectsCollection)
+    for (const doc of fbProjectsDocuments.docs){
+      const data = doc.data()
+      try {
+        props.projectsManager.newProject(data,doc.id)
+      } catch (error) {
+        props.projectsManager.updateProject(data, doc.id)
+      }
+    }
+  }
+  //#endregion
+  
+  React.useEffect(() => {
+    getFirestoreProjects()
+  }, [])
 
   //#region STATES
   const [projects, setProjects] = React.useState<P.Project[]>(props.projectsManager.list)
@@ -22,10 +45,6 @@ export function ProjectsPage (props: Props) {
   const ProjectsCards = projects.map((projects) => {
     return <ProjectCard project={projects} key={projects.id}/>
   })
-
-  /*React.useEffect(() => {
-    console.log('Projects list updated', projects)
-  }, [projects])*/
 
   //#endregion
   

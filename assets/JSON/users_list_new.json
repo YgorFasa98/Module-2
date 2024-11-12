@@ -25,8 +25,7 @@
     "selfDescription": "Passionate structural engineer working on bridges and steel structures. Main hobbies are football and cinema.",
     "gender": "Male",
     "address": "Via Roma 34, Milano, Italy",
-    "companyName": "Bim4All",
-    "ui": {}
+    "companyName": "Bim4All"
   },
   {
     "type": "user",
@@ -40,8 +39,7 @@
     "selfDescription": "Experienced architect with a focus on sustainable design. Enthusiastic about creating spaces that blend functionality and aesthetics.",
     "gender": "Female",
     "address": "123 Green Street, Cityville, USA",
-    "companyName": "GreenDesign Studio",
-    "ui": {}
+    "companyName": "GreenDesign Studio"
   },
   {
     "type": "user",
@@ -55,8 +53,7 @@
     "selfDescription": "Passionate BIM specialist dedicated to optimizing workflows and ensuring accurate project documentation. Lifelong learner.",
     "gender": "Male",
     "address": "Rua das Flores, Lisbon, Portugal",
-    "companyName": "BIM Tech Solutions",
-    "ui": {}
+    "companyName": "BIM Tech Solutions"
   },
   {
     "type": "user",
@@ -70,8 +67,7 @@
     "selfDescription": "Detail-oriented BIM coordinator with a background in civil engineering. Committed to streamlining collaboration in construction projects.",
     "gender": "Female",
     "address": "High Street, Sydney, Australia",
-    "companyName": "Sydney Construction Group",
-    "ui": {}
+    "companyName": "Sydney Construction Group"
   },
   {
     "type": "user",
@@ -85,7 +81,6 @@
     "selfDescription": "Civil engineer specializing in infrastructure projects. Enjoys solving complex engineering challenges and staying up-to-date with industry trends.",
     "gender": "Other",
     "address": "Nguyen Street, Ho Chi Minh City, Vietnam",
-    "companyName": "InnoStructures",
-    "ui": {}
+    "companyName": "InnoStructures"
   }
 ]

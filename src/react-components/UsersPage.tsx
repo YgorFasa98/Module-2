@@ -5,18 +5,41 @@ import * as U from '../classes/User'
 import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
 import { SearchBar } from './SearchBar'
 
+import * as Firestore from 'firebase/firestore'
+import { firebaseDB } from '../firebase'
+
 interface Props {
     usersManager: UsersManager
 }
 
 export function UsersPage (props:Props) {
 
+    //#region MOUNTING STAGE
+    const getFirestoreUsers = async() => {
+        //TYPE ASSERTION !!! --> it's developer job to be sure that data in db complies with the interface!
+        const fbUsersCollection = Firestore.collection(firebaseDB, '/users') as Firestore.CollectionReference<U.IUser>
+        const fbUsersDocuments = await Firestore.getDocs(fbUsersCollection)
+        for (const doc of fbUsersDocuments.docs){
+        const data = doc.data()
+        data.birthday = (data.birthday as unknown as Firestore.Timestamp).toDate()
+        try {
+            props.usersManager.newUser(data,doc.id)            
+        } catch (error) {
+            props.usersManager.updateUser(data,doc.id)
+        }
+        }
+    }
+    //#endregion
+
+    React.useEffect(() => {
+        getFirestoreUsers()
+    }, [])
+
     const [users, setUsers] = React.useState<U.User[]>(props.usersManager.list)
 
     props.usersManager.onUserCreated = () => {setUsers([...props.usersManager.list])}
-    //props.usersManager.onProjectDeleted = () => {setUsers([...props.usersManager.list])}
-    //props.usersManager.onProjectsCardsUpdate = () => {setUsers([...props.usersManager.list])}
     props.usersManager.onSingleUserCardChange = () => {setUsers([...props.usersManager.list])}
+
 
     const onChangeUIAll = () => {
         const compactAllButton = document.getElementById('compact_all')
@@ -39,7 +62,7 @@ export function UsersPage (props:Props) {
     }
 
     const UsersCards = users.map((user) => {
-            return <UserCard user={user} cardVersion={user.cardVersion} usersManager={props.usersManager} key={user.id}/>
+        return <UserCard user={user} cardVersion={user.cardVersion} usersManager={props.usersManager} key={user.id}/>
     })
 
     const onNewUserButtonClick = () => { //little different fron lessons because I implemented the showModal in an external class

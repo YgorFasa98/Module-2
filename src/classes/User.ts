@@ -34,13 +34,11 @@ export class User implements IUser{
     id: string
     cardVersion: string = 'compact'
     
-    constructor(data: IUser, expanded: boolean = false) {
-
-        this.id = uuidv4()
-        
-        //Project data definition
+    constructor(data: IUser, id = uuidv4(), expanded: boolean = false) {
+        //User data definition
         for (const key in data) {
             this[key] = data[key]
         }
+        this.id = id
     }
 }

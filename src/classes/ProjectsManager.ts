@@ -45,13 +45,13 @@ export class ProjectsManager {
 
     //INTERNAL PROPERTIES to manage projects and todos
 
-    constructor(){
+    /*constructor(){
         this.newProject(this.defaultProject)
-    }
+    }*/
 
     //NEW PROJECT METHOD
-    newProject(data: IProject){
-        const project = new Project(data)
+    newProject(data:IProject, id?:string){
+        const project = new Project(data, id)
         const projectsNameList = this.list.map((project) => {return project.name})
         const nameInUse = projectsNameList.includes(data.name)
         const nameLength = data.name.length < 5

@@ -2,7 +2,7 @@ import {IUser, User} from './User'
 
 export class UsersManager {
     list: User[] = []
-    defaultUser: IUser = { //default user data
+    /*defaultUser: IUser = { //default user data
         type: "user",
         name: 'Ygor Fasanella',
         email: 'ygor.fasanella@unipd.it',
@@ -13,17 +13,17 @@ export class UsersManager {
         address: 'Via Sambughè, TV',
         companyName: 'University of Padua',
         userImage: 'assets/user1.png'
-    }
+    }*/
 
     onUserCreated = (user:User) => {}
     onSingleUserCardChange = (user:User) => {}
 
-    constructor(){
+    /*constructor(){
         this.newUser(this.defaultUser)
-    }
+    }*/
 
-    newUser(data: IUser){
-        const user = new User(data)
+    newUser(data: IUser, id? :string){
+        const user = new User(data, id)
         const usersNameList = this.list.map((user) => {return user.name})
         const nameInUse = usersNameList.includes(data.name)
         if (nameInUse){
@@ -36,6 +36,17 @@ export class UsersManager {
         this.list.push(user)
         this.onUserCreated(user)
 
+        return user
+    }
+
+    updateUser(data:IUser, id:string){
+        let user = this.getUser(id)
+        if (!user) {return}
+        for (const key in user) {
+            user[key] = data[key]
+        }
+        user.id = id
+        user.cardVersion = 'compact'
         return user
     }
 

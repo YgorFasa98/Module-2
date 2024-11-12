@@ -34,12 +34,11 @@ export class Project implements IProject{
     //internal class properties
     id: string
 
-    constructor(data: IProject) {
-        this.id = uuidv4()
-        
+    constructor(data: IProject, id = uuidv4()) {        
         //Project data definition
         for (const key in data) {
             this[key] = data[key]
         }
+        this.id = id
     }
 }

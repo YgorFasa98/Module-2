@@ -48,9 +48,7 @@
     "cost": 1000,
     "progress": 80,
     "companyName": "University of Padua",
-    "projectType": "Master degree thesis",
-    "ui": {},
-    "uiButtons": {}
+    "projectType": "Master degree thesis"
   },
   {
     "type": "project",
@@ -65,7 +63,6 @@
         "expiredate": "2024-03-10T00:00:00.000Z",
         "status": "Active",
         "priority": "High",
-        "ui": {},
         "symbolStatus": "priority_high"
       },
       {
@@ -77,7 +74,6 @@
         "expiredate": "2024-05-24T00:00:00.000Z",
         "status": "Pause",
         "priority": "Low",
-        "ui": {},
         "symbolStatus": "pause"
       }
     ],
@@ -89,9 +85,7 @@
     "status": "Stopped",
     "cost": "1200000",
     "progress": "62",
-    "projectType": "Commercial building",
-    "ui": {},
-    "uiButtons": {}
+    "projectType": "Commercial building"
   },
   {
     "type": "project",
@@ -106,7 +100,6 @@
         "expiredate": "2024-03-20T00:00:00.000Z",
         "status": "Active",
         "priority": "High",
-        "ui": {},
         "symbolStatus": "priority_high"
       },
       {
@@ -118,7 +111,6 @@
         "expiredate": "2024-04-05T00:00:00.000Z",
         "status": "Pause",
         "priority": "Medium",
-        "ui": {},
         "symbolStatus": "pause"
       },
       {
@@ -130,7 +122,6 @@
         "expiredate": "2024-05-15T00:00:00.000Z",
         "status": "Active",
         "priority": "Low",
-        "ui": {},
         "symbolStatus": "priority_high"
       }
     ],
@@ -142,9 +133,7 @@
     "status": "Dismissed",
     "cost": "25000",
     "progress": "62",
-    "projectType": "Strategic Planning",
-    "ui": {},
-    "uiButtons": {}
+    "projectType": "Strategic Planning"
   },
   {
     "type": "project",
@@ -159,7 +148,6 @@
         "expiredate": "2024-04-15T00:00:00.000Z",
         "status": "Active",
         "priority": "Very high",
-        "ui": {},
         "symbolStatus": "priority_high"
       },
       {
@@ -171,7 +159,6 @@
         "expiredate": "2024-06-30T00:00:00.000Z",
         "status": "Resolved",
         "priority": "Medium",
-        "ui": {},
         "symbolStatus": "done"
       }
     ],
@@ -183,9 +170,7 @@
     "status": "Active",
     "cost": "50000",
     "progress": "24",
-    "projectType": "Environmental Sustainability",
-    "ui": {},
-    "uiButtons": {}
+    "projectType": "Environmental Sustainability"
   },
   {
     "type": "project",
@@ -200,7 +185,6 @@
         "expiredate": "2024-04-30T00:00:00.000Z",
         "status": "Resolved",
         "priority": "High",
-        "ui": {},
         "symbolStatus": "done"
       }
     ],
@@ -212,9 +196,7 @@
     "status": "Stopped",
     "cost": "75000",
     "progress": "40",
-    "projectType": "Information Security",
-    "ui": {},
-    "uiButtons": {}
+    "projectType": "Information Security"
   },
   {
     "type": "project",
@@ -229,7 +211,6 @@
         "expiredate": "2024-04-10T00:00:00.000Z",
         "status": "Active",
         "priority": "High",
-        "ui": {},
         "symbolStatus": "priority_high"
       },
       {
@@ -241,7 +222,6 @@
         "expiredate": "2024-04-25T00:00:00.000Z",
         "status": "Pause",
         "priority": "Medium",
-        "ui": {},
         "symbolStatus": "pause"
       },
       {
@@ -253,7 +233,6 @@
         "expiredate": "2024-05-15T00:00:00.000Z",
         "status": "Active",
         "priority": "Low",
-        "ui": {},
         "symbolStatus": "priority_high"
       },
       {
@@ -265,7 +244,6 @@
         "expiredate": "2024-06-01T00:00:00.000Z",
         "status": "Active",
         "priority": "Very high",
-        "ui": {},
         "symbolStatus": "priority_high"
       },
       {
@@ -277,7 +255,6 @@
         "expiredate": "2024-06-20T00:00:00.000Z",
         "status": "Resolved",
         "priority": "High",
-        "ui": {},
         "symbolStatus": "done"
       },
       {
@@ -289,7 +266,6 @@
         "expiredate": "2024-07-05T00:00:00.000Z",
         "status": "Closed",
         "priority": "Medium",
-        "ui": {},
         "symbolStatus": "close"
       }
     ],
@@ -301,9 +277,7 @@
     "cost": 150000,
     "progress": 30,
     "companyName": "InnovateTech Inc.",
-    "projectType": "Product Development",
-    "ui": {},
-    "uiButtons": {}
+    "projectType": "Product Development"
   },
   {
     "type": "project",
@@ -318,7 +292,6 @@
         "expiredate": "2024-03-15T00:00:00.000Z",
         "status": "Active",
         "priority": "High",
-        "ui": {},
         "symbolStatus": "priority_high"
       },
       {
@@ -330,7 +303,6 @@
         "expiredate": "2024-04-01T00:00:00.000Z",
         "status": "Resolved",
         "priority": "Medium",
-        "ui": {},
         "symbolStatus": "done"
       }
     ],
@@ -342,8 +314,6 @@
     "cost": 50000,
     "progress": 0,
     "companyName": "FinanceWise Solutions",
-    "projectType": "Financial Planning",
-    "ui": {},
-    "uiButtons": {}
+    "projectType": "Financial Planning"
   }
 ]
