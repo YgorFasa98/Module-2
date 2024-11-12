@@ -7,18 +7,19 @@ import { ProgressBar } from './ProgressBar'
 import { SearchBar } from './SearchBar'
 
 import * as Firestore from 'firebase/firestore'
-import { firebaseDB } from '../firebase'
+import { getCollection } from '../firebase'
 
 interface Props {
     projectsManager: ProjectsManager
 }
+
+const fbProjectsCollection = getCollection<P.IProject>('/projects')
 
 export function ProjectsPage (props: Props) {
 
   //#region MOUNTING STAGE
   const getFirestoreProjects = async() => {
     //TYPE ASSERTION !!! --> it's developer job to be sure that data in db complies with the interface!
-    const fbProjectsCollection = Firestore.collection(firebaseDB, '/projects') as Firestore.CollectionReference<P.IProject>
     const fbProjectsDocuments = await Firestore.getDocs(fbProjectsCollection)
     for (const doc of fbProjectsDocuments.docs){
       const data = doc.data()
@@ -80,6 +81,7 @@ export function ProjectsPage (props: Props) {
             todoList: []
         }
         try {
+            Firestore.addDoc(fbProjectsCollection, projectData)
             props.projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
             newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
             newProjectForm.reset() //reset the fields of the form

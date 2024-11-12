@@ -6,18 +6,19 @@ import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
 import { SearchBar } from './SearchBar'
 
 import * as Firestore from 'firebase/firestore'
-import { firebaseDB } from '../firebase'
+import { getCollection } from '../firebase'
 
 interface Props {
     usersManager: UsersManager
 }
+
+const fbUsersCollection = getCollection<U.IUser>('/users')
 
 export function UsersPage (props:Props) {
 
     //#region MOUNTING STAGE
     const getFirestoreUsers = async() => {
         //TYPE ASSERTION !!! --> it's developer job to be sure that data in db complies with the interface!
-        const fbUsersCollection = Firestore.collection(firebaseDB, '/users') as Firestore.CollectionReference<U.IUser>
         const fbUsersDocuments = await Firestore.getDocs(fbUsersCollection)
         for (const doc of fbUsersDocuments.docs){
             const data = doc.data()
@@ -94,6 +95,7 @@ export function UsersPage (props:Props) {
                 userImage: 'assets/genericUser.jpg'
             }
             try {
+                Firestore.addDoc(fbUsersCollection, userData)
                 props.usersManager.newUser(userData) //create the object user using userData dictionary, boolean: compact or expanded userUI
                 newUserModal.closeModal() //if i want to close or not the form after clicking on accept button
                 newUserForm.reset() //reset the fields of the form
