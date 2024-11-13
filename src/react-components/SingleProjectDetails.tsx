@@ -5,6 +5,7 @@ import { toggleModal } from '../classes/Generic'
 
 interface Props {
     project: P.Project
+    deleteEvent
 }
 
 export function SingleProjectDetails (props:Props) {
@@ -16,6 +17,7 @@ export function SingleProjectDetails (props:Props) {
         console.warn("Edit project modal was not found")
         }
     }
+
     return(
         <div
             className="single-project-page-spaces dash-card"
@@ -39,7 +41,10 @@ export function SingleProjectDetails (props:Props) {
             >
                 {props.project.acronym}
             </p>
+            <div style={{display:'flex', flexDirection:'row'}}>
             <button id="edit-button" onClick={onEditProjectButtonClick}>Edit</button>
+            <button id="delete-button" onClick={() => {props.deleteEvent(props.project.id)}}>Delete</button>
+            </div>
             </div>
             <div style={{ borderBottom: "1px solid white", paddingBottom: 5 }}>
             <h3 data-project-details-info="name">{props.project.name}</h3>

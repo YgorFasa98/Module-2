@@ -6,7 +6,8 @@ import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
 import { SearchBar } from './SearchBar'
 
 import * as Firestore from 'firebase/firestore'
-import { getCollection } from '../firebase'
+import { deleteDocument, getCollection } from '../firebase'
+import * as Router from 'react-router-dom'
 
 interface Props {
     usersManager: UsersManager
@@ -30,11 +31,11 @@ export function UsersPage (props:Props) {
             }
         }
     }
-    //#endregion
 
     React.useEffect(() => {
         getFirestoreUsers()
     }, [])
+    //#endregion
 
     const [users, setUsers] = React.useState<U.User[]>(props.usersManager.list)
 
@@ -62,10 +63,6 @@ export function UsersPage (props:Props) {
         }
     }
 
-    const UsersCards = users.map((user) => {
-        return <UserCard user={user} cardVersion={user.cardVersion} usersManager={props.usersManager} key={user.id}/>
-    })
-
     const onNewUserButtonClick = () => { //little different fron lessons because I implemented the showModal in an external class
         const newUserModal = new toggleModal('new-user-modal') //new project modal
         if (newUserModal) {
@@ -75,7 +72,7 @@ export function UsersPage (props:Props) {
         }
     }
 
-    const onFormAcceptButtonClick = (e: React.FormEvent) => {
+    const onFormAcceptButtonClick = async (e: React.FormEvent) => {
         const newUserModal = new toggleModal('new-user-modal') //new user modal
         const newUserForm = document.getElementById("new-user-form") //form element
         //form events
@@ -95,8 +92,8 @@ export function UsersPage (props:Props) {
                 userImage: 'assets/genericUser.jpg'
             }
             try {
-                Firestore.addDoc(fbUsersCollection, userData)
-                props.usersManager.newUser(userData) //create the object user using userData dictionary, boolean: compact or expanded userUI
+                const doc = await Firestore.addDoc(fbUsersCollection, userData)
+                props.usersManager.newUser(userData, doc.id) //create the object user using userData dictionary, boolean: compact or expanded userUI
                 newUserModal.closeModal() //if i want to close or not the form after clicking on accept button
                 newUserForm.reset() //reset the fields of the form
                 props.usersManager.setUI_error(new Error(''),"none",'new') //display the UI of error
@@ -125,6 +122,20 @@ export function UsersPage (props:Props) {
 
     const onDownloadUsersButtonClick = () =>  {exportToJSON(props.usersManager.list,'users_list')}
     const onUploadUsersButtonClick = () => {props.usersManager.importFromJSON()}
+
+    const navigateTo = Router.useNavigate()        
+    props.usersManager.onUserDeleted = async (id) => { //this event is activated within project manager delete method executing the steps here
+        await deleteDocument('/users', id) //function to delete doc in firestore
+        //navigateTo(0) //return to home WAITING deleting is completed
+        setUsers([...props.usersManager.list])
+    }
+    const onDeleteUserButtonClick = (id:string) => { //event on click mouse
+        props.usersManager.deleteUser(id) //the event activates the method in project manager which activate: 1. the method above and 2. delete project from project manager list
+    }
+
+    const UsersCards = users.map((user) => {
+        return <UserCard user={user} cardVersion={user.cardVersion} deleteEvent={onDeleteUserButtonClick} usersManager={props.usersManager} key={user.id}/>
+    })
 
     return(
         <div id="users-page" className="page">

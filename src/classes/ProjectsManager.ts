@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 export class ProjectsManager {
     list: Project[] = []
     onProjectCreated = (project: Project) => {} //custom event
-    onProjectDeleted = (project: Project) => {}
+    onProjectDeleted = (id: string) => {}
     onProjectUpdated = (project: Project) => {}
     onSidebarButtons = (project: Project) => {}
     onProjectsCardsUpdate = (project: Project) => {}
@@ -49,7 +49,14 @@ export class ProjectsManager {
         this.newProject(this.defaultProject)
     }*/
 
-    //NEW PROJECT METHOD
+    //METHODS    
+    getProject (id:string) {
+        const project = this.list.find((project) => {
+            return project.id === id
+        })
+        return project
+    }
+
     newProject(data:IProject, id?:string){
         const project = new Project(data, id)
         const projectsNameList = this.list.map((project) => {return project.name})
@@ -112,20 +119,6 @@ export class ProjectsManager {
         return projectsListFiltered
     }
 
-    //METHODS
-    setUI_projectsCount(){
-        const ui_projectsCount = document.getElementById('ProjectsTitle') as HTMLElement
-        ui_projectsCount.innerHTML = `
-        Projects (${this.list.length})`
-    }
-
-    getProject (id:string) {
-        const project = this.list.find((project) => {
-            return project.id === id
-        })
-        return project
-    }
-    
     deleteProject (id: string) {
         const project = this.getProject(id)
         if (!project) {return}
@@ -133,7 +126,13 @@ export class ProjectsManager {
             return project.id !== id
         })
         this.list = remaining
-        this.onProjectDeleted(project)
+        this.onProjectDeleted(id)
+    }
+    
+    setUI_projectsCount(){
+        const ui_projectsCount = document.getElementById('ProjectsTitle') as HTMLElement
+        ui_projectsCount.innerHTML = `
+        Projects (${this.list.length})`
     }
 
     setUI_error(err:Error,disp:string,page:string){

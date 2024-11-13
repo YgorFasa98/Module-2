@@ -11,6 +11,7 @@ import { EditProjectForm } from './EditProjectForm'
 import { ToDoCard } from './ToDoCard'
 import { SearchBar } from './SearchBar'
 import { ThreeViewer } from './ThreeViewer'
+import { deleteDocument, updateDocument } from '../firebase'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -35,8 +36,13 @@ export function SingleProjectPage (props:Props) {
      //in the new row is needed a new instance of project otherwise: first reason will not enter the effect and do not update the page
      //and then it will be a simple object and won't pass the if statement above
     props.projectsManager.onProjectUpdated = () => {onUpdateSingleProjectPageUI(p)}
+
+    const navigateTo = Router.useNavigate()        
+    props.projectsManager.onProjectDeleted = async (id) => { //this event is activated within project manager delete method executing the steps here
+        await deleteDocument('/projects', id) //function to delete doc in firestore
+        navigateTo('/home') //return to home WAITING deleting is completed
+    }
     
-    const SingleProjectDetailsComp = <SingleProjectDetails project={project} key={project.id}/>
     const ToDoCardsList = todos.map((todo) => {return <ToDoCard todo={todo} project={project} projectManager={props.projectsManager} key={todo.id}/>})
 
     React.useEffect(() => {
@@ -49,7 +55,13 @@ export function SingleProjectPage (props:Props) {
         setTodos(project.todoList)
     }
 
-    const onEditProjectFormSaveButtonClick = (e: React.FormEvent) => {
+    const onDeleteProjectButtonClick = (id:string) => { //event on click mouse
+        props.projectsManager.deleteProject(id) //the event activates the method in project manager which activate: 1. the method above and 2. delete project from project manager list
+    }
+
+    const SingleProjectDetailsComp = <SingleProjectDetails project={project} deleteEvent={onDeleteProjectButtonClick} key={project.id}/>
+
+    const onEditProjectFormSaveButtonClick = async (e: React.FormEvent) => {
         const editProjectForm = document.getElementById("edit-project-form") //form element       
         const editProjectModal = new toggleModal('edit-project-modal')
         if (editProjectForm && editProjectForm instanceof HTMLFormElement) { //check the existance of user form
@@ -69,6 +81,7 @@ export function SingleProjectPage (props:Props) {
                 todoList: project.todoList
             }
             try {
+                await updateDocument<Partial<P.IProject>>('/projects', project.id, projectData)
                 props.projectsManager.updateProject(projectData, project.id)
                 editProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
                 editProjectForm.reset() //reset the fields of the form
@@ -77,9 +90,11 @@ export function SingleProjectPage (props:Props) {
                 props.projectsManager.setUI_error(err,"",'edit')
             }
         } else {console.warn("Edit project form was not found")}
-      }
+    }
     const onEditProjectForm = <EditProjectForm project={project} onEditProjectFormSaveButtonClick={onEditProjectFormSaveButtonClick} key={project.id}/>
 
+
+    //TODO
     const onNewTodoButtonClick = () =>{
         const newTodoModal = new toggleModal('new-todo-modal') //new project modal
         if (newTodoModal) {

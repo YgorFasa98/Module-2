@@ -16,6 +16,8 @@ export class UsersManager {
     }*/
 
     onUserCreated = (user:User) => {}
+    onUserUpdated = (user:User) => {}
+    onUserDeleted = (id:string) => {}
     onSingleUserCardChange = (user:User) => {}
 
     /*constructor(){
@@ -82,6 +84,7 @@ export class UsersManager {
             return user.id !== id
         })
         this.list = remaining
+        this.onUserDeleted(id)
     }
 
     meanUsersAge (){

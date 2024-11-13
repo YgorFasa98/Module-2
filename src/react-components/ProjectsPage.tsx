@@ -31,17 +31,16 @@ export function ProjectsPage (props: Props) {
       }
     }
   }
-  //#endregion
   
   React.useEffect(() => {
     getFirestoreProjects()
   }, [])
+  //#endregion
 
   //#region STATES
   const [projects, setProjects] = React.useState<P.Project[]>(props.projectsManager.list)
 
   props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
-  props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])}
   props.projectsManager.onProjectsCardsUpdate = () => {setProjects([...props.projectsManager.list])}
 
   const ProjectsCards = projects.map((projects) => {
@@ -60,7 +59,7 @@ export function ProjectsPage (props: Props) {
     }
   }
 
-  const onNewProjectFormAcceptButtonClick = (e: React.FormEvent) => {
+  const onNewProjectFormAcceptButtonClick = async (e: React.FormEvent) => {
     const newProjectModal = new toggleModal('new-project-modal') //new project modal
     const newProjectForm = document.getElementById("new-project-form") //form element
     //form events
@@ -81,12 +80,12 @@ export function ProjectsPage (props: Props) {
             todoList: []
         }
         try {
-            Firestore.addDoc(fbProjectsCollection, projectData)
-            props.projectsManager.newProject(projectData) //create the object project using userData dictionary, boolean: compact or expanded userUI
-            newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
-            newProjectForm.reset() //reset the fields of the form
-            props.projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
-            //console.log(project)
+          const doc = await Firestore.addDoc(fbProjectsCollection, projectData)
+          props.projectsManager.newProject(projectData, doc.id) //create the object project using userData dictionary, boolean: compact or expanded userUI
+          newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
+          newProjectForm.reset() //reset the fields of the form
+          props.projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
+          //console.log(project)
         } catch (err) {
             props.projectsManager.setUI_error(err,"",'new')
         }

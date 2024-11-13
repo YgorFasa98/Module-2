@@ -6,6 +6,7 @@ interface Props {
     user: User
     cardVersion: string
     usersManager: UsersManager
+    deleteEvent
 }
 
 export function UserCard (props:Props) {
@@ -16,7 +17,7 @@ export function UserCard (props:Props) {
             props.user.cardVersion = 'expanded'
             props.usersManager.updateUserUI(props.user)
         }
-        if (targetUser.getAttribute('id') == 'user-card-expanded-id'){
+        if (targetUser.getAttribute('id') == 'user-compact'){
             props.user.cardVersion = 'compact'
             props.usersManager.updateUserUI(props.user)
         }
@@ -53,11 +54,11 @@ export function UserCard (props:Props) {
 
     const templateUI_expandedUser = () => {
         return (
-            <li id='user-card-expanded-id' className='user-card user-card-expanded' onClick={onChangeUISingle}>
-                <div id="user-compact">
-                <div
-                    className="user-image"
-                    style={{ backgroundImage: `url(${props.user.userImage})` }}
+            <li id='user-card-expanded-id' className='user-card user-card-expanded'>
+                <div id="user-compact" onClick={onChangeUISingle}>
+                    <div
+                        className="user-image"
+                        style={{ backgroundImage: `url(${props.user.userImage})` }}
                     />
                     <p>
                     {props.user.name}
@@ -78,69 +79,74 @@ export function UserCard (props:Props) {
                 </div>
                 <div id="users-details">
                     <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "250px 1fr",
-                        paddingRight: 20
-                    }}
-                    >
-                    <p style={{ color: "gray" }}>Description</p>
-                    <p>
-                        {props.user.selfDescription}
-                    </p>
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "250px 1fr",
+                            paddingRight: 20
+                        }}
+                        >
+                        <p style={{ color: "gray" }}>Description</p>
+                        <p>
+                            {props.user.selfDescription}
+                        </p>
                     </div>
                     <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "250px 1fr",
-                        paddingRight: 20
-                    }}
-                    >
-                    <p style={{ color: "gray" }}>Gender</p>
-                    <p>
-                        {props.user.gender}
-                    </p>
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "250px 1fr",
+                            paddingRight: 20
+                        }}
+                        >
+                        <p style={{ color: "gray" }}>Gender</p>
+                        <p>
+                            {props.user.gender}
+                        </p>
                     </div>
                     <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "250px 1fr",
-                        paddingRight: 20
-                    }}
-                    >
-                    <p style={{ color: "gray" }}>Birthday date</p>
-                    <p>
-                        {props.user.birthday.toLocaleDateString('en-UK',{day:'2-digit',month: 'long',year: 'numeric'})}
-                    </p>
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "250px 1fr",
+                            paddingRight: 20
+                        }}
+                        >
+                        <p style={{ color: "gray" }}>Birthday date</p>
+                        <p>
+                            {props.user.birthday.toLocaleDateString('en-UK',{day:'2-digit',month: 'long',year: 'numeric'})}
+                        </p>    
                     </div>
                     <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "250px 1fr",
-                        paddingRight: 20
-                    }}
-                    >
-                    <p style={{ color: "gray" }}>Address</p>
-                    <p>
-                        {props.user.address}
-                    </p>
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "250px 1fr",
+                            paddingRight: 20
+                        }}
+                        >
+                        <p style={{ color: "gray" }}>Address</p>
+                        <p>
+                            {props.user.address}
+                        </p>    
                     </div>
                     <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "250px 1fr",
-                        paddingRight: 20
-                    }}
-                    >
-                    <p style={{ color: "gray" }}>Company name</p>
-                    <p>
-                        {props.user.companyName}
-                    </p>
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "250px 1fr",
+                            paddingRight: 20
+                        }}
+                        >
+                        <p style={{ color: "gray" }}>Company name</p>
+                        <p>
+                            {props.user.companyName}
+                        </p>
+                    </div>
+                    <div style={{display:'flex', flexDirection:'row', justifyContent:'end'}}>
+                        <button id="edit-button" value={props.user.id} >Edit</button>
+                        <button id="delete-button" value={props.user.id} onClick={() => {props.deleteEvent(props.user.id)}} >Delete</button>
                     </div>
                 </div>
             </li>
         )
     }
+
     if (props.cardVersion == 'expanded'){
         return(templateUI_expandedUser())
     }
