@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as BUI from '@thatopen/ui'
 
 export function InfoPage () {
     return(
