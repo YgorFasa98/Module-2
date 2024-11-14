@@ -28,7 +28,7 @@ export function ProjectsPage (props: Props) {
             data.expiredate = (data.expiredate as unknown as Firestore.Timestamp).toDate()
             todoList.push(new ToDo(data, doc.id))
         } catch (error) {
-            console.log('error')
+            console.log('any todo found')
         }
     }
     return todoList
