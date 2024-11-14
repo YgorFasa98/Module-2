@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as Router from 'react-router-dom'
 import * as P from '../classes/Project'
 import { toggleModal } from '../classes/Generic'
 

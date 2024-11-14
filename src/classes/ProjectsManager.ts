@@ -1,6 +1,5 @@
-import { IProject, Project, status } from './Project'
-import { toggleModal } from './Generic'
-import { ITodo, ToDo, priorityTodo, statusTodo } from './Todo'
+import { IProject, Project } from './Project'
+import { ITodo, ToDo } from './Todo'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -11,43 +10,6 @@ export class ProjectsManager {
     onProjectUpdated = (project: Project) => {}
     onSidebarButtons = (project: Project) => {}
     onProjectsCardsUpdate = (project: Project) => {}
-
-    defaultToDoList: ToDo[] = [ //default todo list
-        new ToDo({
-            title: 'Default todo title',
-            description: 'Default todo description',
-            expiredate: new Date('12-3-2014'),
-            status: 'Active',
-            priority: 'Very high'
-        }),
-        new ToDo({
-            title: 'Default todo title 2',
-            description: 'Default todo description 2',
-            expiredate: new Date('8-7-2019'),
-            status: 'Closed',
-            priority: 'High'
-        })
-    ]
-
-    defaultProject: IProject = { //default Project data
-        type: 'project',
-        color: '#931f1f',
-        acronym: 'SFH',
-        name: 'Single Family House',
-        address: 'None',
-        status: 'Completed',
-        cost: 1000,
-        progress: 100,
-        companyName: 'University of Padua',
-        projectType: 'Master degree thesis',
-        todoList: this.defaultToDoList
-    }
-
-    //INTERNAL PROPERTIES to manage projects and todos
-
-    /*constructor(){
-        this.newProject(this.defaultProject)
-    }*/
 
     //METHODS    
     getProject (id:string) {
@@ -79,7 +41,6 @@ export class ProjectsManager {
             const idInUse = projectsIdList.includes(project.id)
             if (idInUse){
                 const errId = nameInUse ? `<br><br>- A project with the ID "${project.id}" already exists.` : ''
-                console.log(errId)
                 throw new Error(`\n${errId}`) //end the method here
             }
         }
@@ -151,10 +112,10 @@ export class ProjectsManager {
         }
     }
 
-    newTodo (data:ITodo) {
+    newTodo (data:ITodo, id?:string) {
         const date = data.expiredate
         data.expiredate = new Date(date)
-        return new ToDo(data)
+        return new ToDo(data, id)
     }
 
     //IMPORT JSON
@@ -179,9 +140,7 @@ export class ProjectsManager {
             for (const project of projects){
                 if (project.type == 'project') {
                     const projectsIdList = this.list.map((p) => {return p.id})
-                    console.log(projectsIdList)
                     const IdInUse = projectsIdList.includes(project.id)
-                    console.log(IdInUse)
                     const importedTodoList = project.todoList
                     project.todoList = []
                     for (const todo of importedTodoList){
@@ -220,7 +179,7 @@ export class ProjectsManager {
                 d.showModal()
             }
         })
-        console.log('lista fine import', this.list)
+        //console.log('lista fine import', this.list)
     }
 
     upload3DFile(){

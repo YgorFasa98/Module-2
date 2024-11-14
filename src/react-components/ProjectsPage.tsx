@@ -8,6 +8,7 @@ import { SearchBar } from './SearchBar'
 
 import * as Firestore from 'firebase/firestore'
 import { getCollection } from '../firebase'
+import { ITodo, ToDo } from '../classes/Todo'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -18,12 +19,28 @@ const fbProjectsCollection = getCollection<P.IProject>('/projects')
 export function ProjectsPage (props: Props) {
 
   //#region MOUNTING STAGE
+  const getFirestoreProjectTodo = async (collection: Firestore.CollectionReference<ITodo>): Promise<ToDo[]> => {
+    const fbProjectTodosDocuments = await Firestore.getDocs(collection)
+    const todoList = new Array
+    for (const doc of fbProjectTodosDocuments.docs){
+        const data = doc.data()
+        try {
+            data.expiredate = (data.expiredate as unknown as Firestore.Timestamp).toDate()
+            todoList.push(new ToDo(data, doc.id))
+        } catch (error) {
+            console.log('error')
+        }
+    }
+    return todoList
+  }
+
   const getFirestoreProjects = async() => {
-    //TYPE ASSERTION !!! --> it's developer job to be sure that data in db complies with the interface!
     const fbProjectsDocuments = await Firestore.getDocs(fbProjectsCollection)
     for (const doc of fbProjectsDocuments.docs){
       const data = doc.data()
-      data.todoList = []
+      const fbTodosCollection = getCollection<ITodo>(`/projects/${doc.id}/todoList`)
+      const todoList = await getFirestoreProjectTodo(fbTodosCollection)
+      data.todoList = todoList
       try {
         props.projectsManager.newProject(data, doc.id)
       } catch (error) {
@@ -58,7 +75,7 @@ export function ProjectsPage (props: Props) {
       console.warn("New project modal was not found")
     }
   }
-
+  
   const onNewProjectFormAcceptButtonClick = async (e: React.FormEvent) => {
     const newProjectModal = new toggleModal('new-project-modal') //new project modal
     const newProjectForm = document.getElementById("new-project-form") //form element
@@ -85,7 +102,6 @@ export function ProjectsPage (props: Props) {
           newProjectModal.closeModal() //if i want to close or not the form after clicking on accept button
           newProjectForm.reset() //reset the fields of the form
           props.projectsManager.setUI_error(new Error(''),"none",'new') //display the UI of error
-          //console.log(project)
         } catch (err) {
             props.projectsManager.setUI_error(err,"",'new')
         }

@@ -2,27 +2,11 @@ import {IUser, User} from './User'
 
 export class UsersManager {
     list: User[] = []
-    /*defaultUser: IUser = { //default user data
-        type: "user",
-        name: 'Ygor Fasanella',
-        email: 'ygor.fasanella@unipd.it',
-        role: 'BIM manager',
-        selfDescription: 'PhD student ad University of Padua and student of BIM software developer master. Be free again!',
-        gender: 'Male',
-        birthday: new Date('1998-12-10T23:00:00.000Z'),
-        address: 'Via Sambughè, TV',
-        companyName: 'University of Padua',
-        userImage: 'assets/user1.png'
-    }*/
 
     onUserCreated = (user:User) => {}
     onUserUpdated = (user:User) => {}
     onUserDeleted = (id:string) => {}
     onSingleUserCardChange = (user:User) => {}
-
-    /*constructor(){
-        this.newUser(this.defaultUser)
-    }*/
 
     newUser(data: IUser, id? :string){
         const user = new User(data, id)

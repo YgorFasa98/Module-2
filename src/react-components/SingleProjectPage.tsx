@@ -5,13 +5,12 @@ import * as P from '../classes/Project'
 import * as T from '../classes/Todo'
 import { toggleModal } from '../classes/Generic'
 import { SingleProjectDetails } from './SingleProjectDetails'
-import { ProgressBar } from './ProgressBar'
-import { ProjectButton } from './ProjectButton'
 import { EditProjectForm } from './EditProjectForm'
 import { ToDoCard } from './ToDoCard'
 import { SearchBar } from './SearchBar'
 import { ThreeViewer } from './ThreeViewer'
-import { deleteDocument, updateDocument } from '../firebase'
+import { deleteDocument, getCollection, updateDocument } from '../firebase'
+import * as Firestore from 'firebase/firestore'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -27,7 +26,7 @@ export function SingleProjectPage (props:Props) {
     const p = props.projectsManager.getProject(routeParams.id)
     if (!p) {return}
     const [project, updateProject] = React.useState<P.Project>(p)
-    const [todos, setTodos] = React.useState<T.ToDo[]>(project.todoList)
+    const [todos, setTodos] = React.useState<T.ToDo[]>([])
 
     if (!(project && project instanceof P.Project)){
         alert('Project not found')
@@ -104,7 +103,7 @@ export function SingleProjectPage (props:Props) {
         }
     }
 
-    const onNewTodoFormSaveButtonClick = (e: React.FormEvent) =>{
+    const onNewTodoFormSaveButtonClick = async (e: React.FormEvent) =>{
         const newTodoModal = new toggleModal('new-todo-modal') //new project modal
         const newTodoForm = document.getElementById("new-todo-form") //form element
         if (newTodoForm && newTodoForm instanceof HTMLFormElement){
@@ -118,7 +117,9 @@ export function SingleProjectPage (props:Props) {
                 priority: formData.get('priority') as T.priorityTodo,
             }
             try {
-                const t = props.projectsManager.newTodo(todoData)
+                const fbTodosCollection = getCollection<T.ITodo>(`/projects/${project.id}/todoList`)
+                const doc = await Firestore.addDoc(fbTodosCollection, todoData)
+                const t = props.projectsManager.newTodo(todoData, doc.id)
                 p.todoList.push(t)
                 onUpdateSingleProjectPageUI(p)
                 newTodoModal.closeModal() //if i want to close or not the form after clicking on accept button

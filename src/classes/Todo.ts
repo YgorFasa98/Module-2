@@ -1,5 +1,4 @@
 import {v4 as uuidv4} from 'uuid'
-import { toggleModal } from './Generic'
 
 export type statusTodo = 'Active' | 'Pause' | 'Resolved' | 'Closed'
 export type priorityTodo = 'Low' | 'Medium' | 'High' | 'Very high'
@@ -25,8 +24,8 @@ export class ToDo implements ITodo{
     colorPriority: string = '#931f1f'
     id: string
 
-    constructor(data:ITodo){
-        this.id = uuidv4()
+    constructor(data:ITodo, id = uuidv4()){
+        this.id = id
         for (const key in data) {
             this[key] = data[key]
         }

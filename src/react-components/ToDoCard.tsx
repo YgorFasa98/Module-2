@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as T from '../classes/Todo'
 import { Project } from '../classes/Project'
 import { ProjectsManager } from '../classes/ProjectsManager'
-import { toggleModal } from '../classes/Generic'
+import { deleteDocument, updateDocument } from '../firebase'
 
 interface Props{
     todo: T.ToDo
@@ -24,10 +24,11 @@ export function ToDoCard (props:Props) {
 
     const [hover, setHover] = React.useState(false);
 
-    const onDeleteTodoButtonClick = () => {
+    const onDeleteTodoButtonClick = async () => {
         const updatedTodoList = props.project.todoList.filter(item => item.id !== props.todo.id);
         props.project.todoList = updatedTodoList
         props.projectManager.updateProject(props.project, props.project.id)
+        await deleteDocument(`/projects/${props.project.id}/todoList`, props.todo.id)
     }
 
     const [editedTodo, setEditedTodo] = React.useState(props.todo)
@@ -38,7 +39,7 @@ export function ToDoCard (props:Props) {
     }
 
     const editTodoForm = React.useRef(null) as any
-    const onEditTodoFormAcceptButtonClick = (e: React.FormEvent) =>{
+    const onEditTodoFormAcceptButtonClick = async (e: React.FormEvent) =>{
         //const editTodoForm = document.getElementById('edit-todo-form') as HTMLFormElement
         e.preventDefault()
         const formData = new FormData(editTodoForm.current)
@@ -48,7 +49,8 @@ export function ToDoCard (props:Props) {
         }
         props.todo.status = newData.status
         props.todo.priority = newData.priority
-        setEditedTodo(new T.ToDo(props.todo))
+        await updateDocument<Partial<T.ITodo>>(`/projects/${props.project.id}/todoList`, props.todo.id, {status:newData.status, priority:newData.priority})
+        setEditedTodo(new T.ToDo(props.todo, props.todo.id))
         const updatedTodoList = props.project.todoList.map(item => item.id === props.todo.id ? {...item, status: newData.status, priority: newData.priority} : item)
         props.project.todoList = updatedTodoList
         props.projectManager.updateProject(props.project, props.project.id)
