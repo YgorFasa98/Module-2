@@ -6,8 +6,9 @@ import { Sidebar } from './react-components/Sidebar'
 import { ProjectsPage } from './react-components/ProjectsPage'
 import { SingleProjectPage } from './react-components/SingleProjectPage'
 import { UsersPage } from './react-components/UsersPage'
-import { ProjectsManager } from './classes/ProjectsManager'
+import { InfoPage } from './react-components/InfoPage'
 
+import { ProjectsManager } from './classes/ProjectsManager'
 import { UsersManager } from './classes/UsersManager'
 
 
@@ -25,6 +26,7 @@ appRoot.render(
             <Router.Route path='/home' element={ <ProjectsPage projectsManager={projectsManager} /> } />
             <Router.Route path='/single-project/:id' element={ <SingleProjectPage projectsManager={projectsManager} /> } />
             <Router.Route path='/users' element={ <UsersPage usersManager={usersManager}/> } />
+            <Router.Route path='/info' element={ <InfoPage /> } />
         </Router.Routes>
     </Router.BrowserRouter>
     </>

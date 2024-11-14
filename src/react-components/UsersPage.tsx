@@ -1,4 +1,6 @@
 import * as React from 'react'
+import * as Router from 'react-router-dom'
+
 import { UsersManager } from '../classes/UsersManager'
 import { UserCard } from './UserCard'
 import * as U from '../classes/User'
@@ -7,7 +9,6 @@ import { SearchBar } from './SearchBar'
 
 import * as Firestore from 'firebase/firestore'
 import { deleteDocument, getCollection } from '../firebase'
-import * as Router from 'react-router-dom'
 
 interface Props {
     usersManager: UsersManager

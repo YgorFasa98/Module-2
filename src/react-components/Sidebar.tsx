@@ -22,7 +22,7 @@ export function Sidebar(props:Props) {
     const routePath = Router.useLocation().pathname
     const listOfProjects = document.getElementById("nav-buttons-projects")
     if (listOfProjects){
-        if(routePath == '/home' || routePath == '/users'){
+        if(['/home','/users','/info'].includes(routePath)){
             listOfProjects.style.display = 'none'
         } else {
             listOfProjects.style.display = ''
@@ -74,10 +74,12 @@ export function Sidebar(props:Props) {
                         <div>Users</div>
                     </li>
                 </Router.Link>
+                <Router.Link to={'/info'}>
                 <li id="info-button">
                     <span className="material-icons-outlined">info</span>
                     <div>Info</div>
                 </li>
+                </Router.Link>
             </ul>
             <ul className="nav-buttons" id="nav-buttons-projects" style={{display:'none', borderTop: '2px solid gray', paddingTop: '15px'}}>
                 <li onClick={onShowProjectsButtons} id="list-projects-button" style={{marginLeft: '5px', justifyContent: 'space-between'}} value='expanded'>

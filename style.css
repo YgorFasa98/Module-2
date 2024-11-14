@@ -146,14 +146,16 @@ button div{
     height: 100vh;
     display: flex;
 }
-#project-main-page{
-    display:flex;
+
+.page{
     flex-direction: column;
+    flex-grow: 1;
     padding: 10px;
     background-color: var(--background);
     border-radius: 10px;
     margin: 10px;
-    height: calc(100vh - 40px);
+    display: flex;
+    height: calc(100vh - 40px)
 }
 
 /*Header styles*/
@@ -201,20 +203,6 @@ button div{
 }
 .cards-categories{
     color: rgb(204, 204, 204);
-}
-
-    /* Images styles */
-.eiffel{
-    background-image: linear-gradient(var(--cardback),var(--cardback)), url("assets/eiffel.jpg");
-}
-.eiffel:hover{
-    background-image: none;
-}
-.colosseo{
-    background-image: linear-gradient(var(--cardback),var(--cardback)), url("assets/colosseo.jpg");
-}
-.colosseo:hover{
-    background-image: none;
 }
 
     /* Form styles */
@@ -310,20 +298,13 @@ fieldset input:focus, form #color:focus {
 }
 
 /* user page style */
+
 #single-project-page{
     padding: 0px;
-    background-color: transparent;
-    border-radius: 10px;
     margin: 5px;
+    background-color: transparent;
     display: grid;
-    grid-template-rows: var(--header_height) 1fr;
-    /*display: flex;
-    flex-direction: column;
-    flex-grow: 1;*/
-}
-.page{
-    flex-direction: column;
-    flex-grow: 1;
+    grid-template-rows: var(--header_height) calc(100vh - var(--header_height) - 10px);
 }
 #single-project-page > .main-page-content{
     display: grid;
@@ -432,15 +413,6 @@ fieldset input:focus, form #color:focus {
 } 
 
 /* users page */
-#users-page{
-    padding: 10px;
-    background-color: var(--background);
-    border-radius: 10px;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 40px)
-}
 header{
     padding: 20px;
     margin-bottom: 0px;
