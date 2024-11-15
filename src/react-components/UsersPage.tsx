@@ -4,7 +4,7 @@ import * as Router from 'react-router-dom'
 import { UsersManager } from '../classes/UsersManager'
 import { UserCard } from './UserCard'
 import * as U from '../classes/User'
-import { calculateMeanAge, exportToJSON, toggleModal } from '../classes/Generic'
+import { calculateMeanAge, exportToCSV, exportToJSON, toggleModal } from '../classes/Generic'
 import { SearchBar } from './SearchBar'
 
 import * as Firestore from 'firebase/firestore'
@@ -121,7 +121,7 @@ export function UsersPage (props:Props) {
 
     const meanAge = calculateMeanAge(users.map((u)=>{return u.birthday}))
 
-    const onDownloadUsersButtonClick = () =>  {exportToJSON(props.usersManager.list,'users_list')}
+    const onDownloadJSONUsersButtonClick = () =>  {exportToJSON(props.usersManager.list,'users_list')}
     const onUploadUsersButtonClick = () => {props.usersManager.importFromJSON()}
 
     const navigateTo = Router.useNavigate()        
@@ -311,6 +311,7 @@ export function UsersPage (props:Props) {
                     gap: 5
                     }}
                 >
+                    JSON:
                     <span
                     onClick={onUploadUsersButtonClick}
                     id="user-upload"
@@ -319,7 +320,7 @@ export function UsersPage (props:Props) {
                     upload
                     </span>
                     <span
-                    onClick={onDownloadUsersButtonClick}
+                    onClick={onDownloadJSONUsersButtonClick}
                     id="user-download"
                     className="material-icons-outlined generic-buttons"
                     >

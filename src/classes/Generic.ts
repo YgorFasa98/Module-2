@@ -1,6 +1,3 @@
-import {IUser} from './User'
-import { UsersManager } from './UsersManager'
-
 //Modal class
 export class toggleModal{
     m
@@ -33,9 +30,20 @@ export class toggleModal{
     }
 }
 
-export function exportToJSON (list, fileName: string = 'downloaded_list') {
+export function exportToJSON (list, fileName: string = 'downloaded_list.json') {
     const json = JSON.stringify(list, null, 2)
     const blob = new Blob([json], {type: 'application/json'})
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = fileName
+    a.click()
+    URL.revokeObjectURL(url)
+}
+
+export function exportToCSV (list, fileName: string = 'downloaded_list.csv') {
+    const csv = list.csv
+    const blob = new Blob([csv], {type: 'text/csv'})
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
