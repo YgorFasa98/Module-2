@@ -11,6 +11,7 @@ import { SearchBar } from './SearchBar'
 import { ThreeViewer } from './ThreeViewer'
 import { deleteDocument, getCollection, updateDocument } from '../firebase'
 import * as Firestore from 'firebase/firestore'
+import * as BUI from '@thatopen/ui'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -154,6 +155,18 @@ export function SingleProjectPage (props:Props) {
         setTodos(listTodoFiltered)
     }
     //#endregion
+    const newTodoButton = BUI.Component.create<BUI.Button>(() => {
+        return BUI.html`
+            <bim-button 
+                @click=${onNewTodoButtonClick} 
+                icon="streamline:add-1-solid" 
+            </bim-button>`;
+        })
+
+    React.useEffect(() => {
+        const todoBar = document.getElementById('todo-bar')
+        todoBar?.appendChild(newTodoButton)
+    }, [])
 
     return(
         <div id="single-project-page" className="page">
@@ -242,13 +255,17 @@ export function SingleProjectPage (props:Props) {
                 </div>
             </dialog>
             <header className="single-project-page-spaces">
-                <h1 data-project-details-info="title-name">{project.name}</h1>
-                <h4
-                style={{ color: "rgb(115, 115, 115)" }}
-                data-project-details-info="title-address"
-                >
-                {project.address}
-                </h4>
+                <bim-label class='bim-label-header'>
+                    {project.name}
+                </bim-label>
+                <bim-label 
+                    class='bim-label-header'
+                    style= {{
+                        fontSize:'var(--bim-ui_size-base)'
+                    }}
+                    >
+                    {project.address}
+                </bim-label>
             </header>
             <div className="main-page-content">
                 <div
@@ -269,30 +286,18 @@ export function SingleProjectPage (props:Props) {
                         justifyContent: "space-between"
                     }}
                     >
-                    <h2>To-Do</h2>
-                    <div
-                        style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5
-                        }}
-                    >
-                        <span
-                        id="todo-search"
-                        className="material-icons-outlined generic-buttons"
+                        <bim-label class='bim-label-section-title'>To-Do</bim-label>
+                        <div
+                            style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 5
+                            }}
+                            id='todo-bar'
                         >
-                        search
-                        </span>
-                        <SearchBar onChange={onTodoSearch} searchBy='todo title'/>
-                        <span
-                        id="todo-add"
-                        className="material-icons-outlined generic-buttons"
-                        onClick={onNewTodoButtonClick}
-                        >
-                        add
-                        </span>
-                    </div>
+                            <SearchBar onChange={onTodoSearch} searchBy='todo title'/>
+                        </div>
                     </div>
                     {
                     todos.length > 0 ? 

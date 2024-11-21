@@ -10,8 +10,10 @@
     --text-title: rgb(4, 0, 255);
     --cardback: rgba(130, 130, 130, 0.85);
     --areatext: rgb(40, 40, 71);
-    --header_height: 100px;
+    --header_height: 120px;
     --sidebar_width: 350px;
+
+    --bim-icon--fz: 20px;
 }
 * {
     margin: 0;
@@ -98,17 +100,9 @@ button div{
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    grid-template-areas: 'icona nome';
-}
-.nav-buttons li span{
-    grid-area: icona;
-    text-align: center;
-}
-.nav-buttons li div{
-    grid-area: nome;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .nav-buttons li:hover{
     background-color: var(--hover);
@@ -201,11 +195,9 @@ button div{
     display: flex;
     justify-content: space-between;
 }
-.cards-categories{
-    color: rgb(204, 204, 204);
-}
 
-    /* Form styles */
+
+/* Form styles */
 dialog{
     background-color: transparent;
     border: none;
@@ -487,4 +479,44 @@ button:hover{
 .card-list{
     margin-right: 30px;
     margin-left: 30px;
+}
+
+/*BIM COMPONENTS*/
+bim-table-row{
+    background-color: red;
+}
+bim-icon{
+    display: contents;
+}
+bim-button{
+    padding: 5px;
+    max-width: fit-content;
+}
+
+.bim-label-header{
+    display: flex;
+    justify-content: center;
+    --bim-icon--fz: 50px;
+    color: gray;
+    font-size: var(--bim-ui_size-9xl);
+    line-height: calc(1.1 * var(--bim-ui_size-9xl));
+    color: white;
+}
+.bim-label-section-title{
+    display: flex;
+    justify-content: center;
+    --bim-icon--fz: 20px;
+    color: gray;
+    font-size: var(--bim-ui_size-3xl);
+    line-height: calc(1.1 * var(--bim-ui_size-3xl));
+    color: white;
+}
+.bim-label-form{
+    display: flex;
+    justify-content: left;
+    --bim-icon--fz: 20px;
+    color: gray;
+    font-size: var(--bim-ui_size-xl);
+    line-height: calc(1.1 * var(--bim-ui_size-xl));
+    color: lightgray;
 }

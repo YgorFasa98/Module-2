@@ -282,15 +282,12 @@ export function UsersPage (props:Props) {
                     alignItems: "center"
                 }}
                 >
-                <span
-                    className="material-icons-outlined"
-                    style={{ color: "gray", fontSize: 40 }}
-                >
-                    person
-                </span>
-                <h1 id="manageUsersTitle" style={{ fontFamily: "Roboto", color: "gray" }}>
-                    Manage Users ({users.length})
-                </h1>
+                <bim-label 
+                    class='bim-label-header'
+                    icon='ion:user'
+                    >
+                    Users ({users.length})
+                </bim-label>
                 </div>
                 <div id="users-page-addbar">
                 <button id="new-user-button" onClick={onNewUserButtonClick}>

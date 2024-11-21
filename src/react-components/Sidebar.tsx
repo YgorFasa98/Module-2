@@ -54,6 +54,9 @@ export function Sidebar(props:Props) {
         }
     }
 
+    const buttonStyle = {
+        fontSize: '20px'
+    }
 
     return(
         <aside id="sidebar">
@@ -64,20 +67,17 @@ export function Sidebar(props:Props) {
             <ul className="nav-buttons" id="nav-buttons-home">
                 <Router.Link to='/home'>
                     <li id="home-button">
-                        <span className="material-icons-outlined">maps_home_work</span>
-                        <div>Projects Home</div>
+                        <bim-label style={buttonStyle} icon="ic:outline-apartment">Projects Home</bim-label>
                     </li>
                 </Router.Link>                
                 <Router.Link to='/users'>
                     <li id="users-button">
-                        <span className="material-icons-outlined">person</span>
-                        <div>Users</div>
+                        <bim-label style={buttonStyle} icon="ic:baseline-people-alt">Users</bim-label>
                     </li>
                 </Router.Link>
                 <Router.Link to={'/info'}>
                 <li id="info-button">
-                    <span className="material-icons-outlined">info</span>
-                    <div>Info</div>
+                    <bim-label style={buttonStyle} icon="octicon:info-16">Info</bim-label>
                 </li>
                 </Router.Link>
             </ul>

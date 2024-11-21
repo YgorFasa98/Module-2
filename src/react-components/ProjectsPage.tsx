@@ -10,6 +10,8 @@ import * as Firestore from 'firebase/firestore'
 import { getCollection } from '../firebase'
 import { ITodo, ToDo } from '../classes/Todo'
 
+import * as BUI from '@thatopen/ui'
+
 interface Props {
     projectsManager: ProjectsManager
 }
@@ -119,7 +121,10 @@ export function ProjectsPage (props: Props) {
   }
 }
 
-  const onDownloadProjectsButtonClick = () =>  {exportToJSON(props.projectsManager.list,'projects_list')}
+  const onDownloadProjectsButtonClick = () =>  {
+    console.log('prova')
+    exportToJSON(props.projectsManager.list,'projects_list')
+  }
   const onUploadProjectsButtonClick = () => {props.projectsManager.importFromJSON()}
 
   const onProjectsSearch = (value: string) => {
@@ -136,26 +141,66 @@ export function ProjectsPage (props: Props) {
   }
   //#endregion
 
+  //BUI
+  const downloadButton = BUI.Component.create<BUI.Button>(() => {
+    return BUI.html`
+      <bim-button
+        @click=${onDownloadProjectsButtonClick}
+        id="project-download"
+        icon='mingcute:download-2-fill'
+      >
+      </bim-button>`;
+  })  
+  const uploadButton = BUI.Component.create<BUI.Button>(() => {
+    return BUI.html`
+      <bim-button
+        @click=${onUploadProjectsButtonClick}
+        id="project-upload"
+        icon='mingcute:upload-2-fill'
+      >
+      </bim-button>`;
+  })
+  const newProjectButton = BUI.Component.create<BUI.Button>(() => {
+    return BUI.html`
+      <bim-button 
+        @click=${onNewProjectButtonClick} 
+        id="new-project-button" 
+        icon="streamline:add-1-solid" 
+        label="New Project"
+      </bim-button>`;
+  })
+
+  React.useEffect(() => {
+    const projectPageAddBar = document.getElementById('project-page-addbar')
+    projectPageAddBar?.insertBefore(uploadButton, projectPageAddBar.firstChild)
+    projectPageAddBar?.insertBefore(downloadButton, projectPageAddBar.firstChild)
+    projectPageAddBar?.insertBefore(newProjectButton, projectPageAddBar.firstChild)
+  }, [])
+
   return(
     <div id="project-main-page" className="page" style={{ display: '""' }}>
       <dialog id="new-project-modal">
         <div id="new-project-dialog">
           <form id="new-project-form"> {/* new event for submit infos of new project form */}
-            <h2>New Project</h2>
+            <bim-label style={{
+              padding: '20px',
+              color: 'white',
+              fontSize: '25px',
+              borderBottom: '2px solid white',
+              }}
+              height='100px'>
+              New Project
+            </bim-label>
             <div className="input-list">
               <div className="field-container">
-                <label className="field-title">
-                  <span className="material-symbols-outlined">abc</span>
-                  Acronym
-                </label>
+                <bim-label class='bim-label-form' icon='ic:twotone-abc'>Acronym</bim-label>
                 <div
                   style={tipStyle}
                 >
-                  <input
+                  <bim-text-input
                     name="acronym"
-                    size={30}
+                    type='text'
                     style={{ resize: "none" }}
-                    maxLength={4}
                   />
                   <input
                     id="color"
@@ -166,14 +211,11 @@ export function ProjectsPage (props: Props) {
                       backgroundColor: "transparent",
                       padding: 0,
                       marginLeft: 10,
-                      height: 50
+                      height: 50,
                     }}
                   />
                 </div>
-                <div style={{ fontSize: 15, fontStyle: "italic", padding: 5 }}>
-                  Insert an abbreviation of project's name (max 4 characters, i.e.:
-                  SFH)
-                </div>
+                <bim-label style={{ fontSize: 15, fontStyle: "italic", padding: 5 }}>Insert an abbreviation of project's name (max 4 characters, i.e.: SFH)</bim-label>
               </div>
               <div className="field-container">
                 <label className="field-title">
@@ -210,17 +252,14 @@ export function ProjectsPage (props: Props) {
                 <input name="companyName" type="text" />
               </div>
               <div className="field-container">
-                <label className="field-title">
-                  <span className="material-icons-outlined form-icons">update</span>
-                  Status
-                </label>
-                <select name="status">
-                  <option>Active</option>
-                  <option>Not started</option>
-                  <option>Completed</option>
-                  <option>Stopped</option>
-                  <option>Dismissed</option>
-                </select>
+                <bim-label class='bim-label-form' icon='material-symbols:update-rounded'>Status</bim-label>
+                <bim-dropdown name="status">
+                  <bim-option label="Active" checked></bim-option>
+                  <bim-option label="Not started"></bim-option>
+                  <bim-option label="Completed"></bim-option>
+                  <bim-option label="Stopped"></bim-option>
+                  <bim-option label="Dismissed"></bim-option>
+                </bim-dropdown>
               </div>
               {ProgressBar(20)}
             </div>
@@ -248,72 +287,24 @@ export function ProjectsPage (props: Props) {
       </dialog>
       <dialog className="error-import" id="error-import-project"></dialog>
       <header id="header">
-        <div
-          style={{
-            gap: 10,
-            marginBottom: 0,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
+        <bim-label
+          class="bim-label-header"
+          icon="ic:outline-apartment"
         >
-          <span
-            className="material-icons-outlined"
-            style={{ color: "gray", fontSize: 40 }}
-          >
-            house
-          </span>
-          <h1 id="ProjectsTitle" style={{ fontFamily: "Roboto", color: "gray" }}>
-            Projects ({projects.length})
-          </h1>
-        </div>
+          Projects ({projects.length})
+        </bim-label>
         <div
-          id="project-page-addbar"
           style={{
             display: "flex",
-            flexDirection: "row",
             justifyContent: "space-between",
             marginTop: 10
-          }}
-        >
-          <button onClick={onNewProjectButtonClick} id="new-project-button"> {/*new event for showing new project modal*/}
-            <span
-              id="add"
-              className="material-icons-outlined generic-buttons"
-              style={{ backgroundColor: "transparent", padding: 0 }}
-            >
-              add
-            </span>
-            <h3>New Project</h3>
-          </button>
+          }}>
           <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5
-            }}
-          >
-            <span
-              onClick={onUploadProjectsButtonClick}
-              id="project-upload"
-              className="material-icons-outlined generic-buttons"
-            >
-              upload
-            </span>
-            <span
-              onClick={onDownloadProjectsButtonClick}
-              id="project-download"
-              className="material-icons-outlined generic-buttons"
-            >
-              download
-            </span>
-            <div style={{ width: 10 }} />
+            id="project-page-addbar"
+            style={{display:'flex', flexDirection:'row', columnGap:'20px'}}>
+          </div>
+          <div style={{marginLeft:'auto', width:'400px'}}>
             <SearchBar onChange={onProjectsSearch} searchBy='project name'/>
-            <span id="search" className="material-icons-outlined generic-buttons">
-              search
-            </span>
           </div>
         </div>
       </header>

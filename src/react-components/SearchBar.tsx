@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as BUI from '@thatopen/ui'
 
 interface Props {
     onChange: (value:string) => void
@@ -6,16 +7,25 @@ interface Props {
 }
 
 export function SearchBar (props:Props) {
+
+    const searchInput = document.getElementById('search-input') as BUI.TextInput
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            props.onChange(searchInput.value)
+        })
+    }
+
     return(
-        <textarea
-        onChange={(e) => {props.onChange(e.target.value)}}
-        style={{ margin: 0 }}
-        maxLength={20}
-        className="search-bar"
-        cols={40}
-        rows={1}
-        placeholder={`Search by ${props.searchBy}`}
-        defaultValue={""}
-      />
+        <bim-text-input
+            id = 'search-input'
+            style={{ 
+                margin: 0,
+                alignContent: 'center'                
+            }}
+            className="search-bar"
+            placeholder={`Search by ${props.searchBy}`}
+            defaultValue={""}
+            icon='ion:search'>
+        </bim-text-input>
     )
 }

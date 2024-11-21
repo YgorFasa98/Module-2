@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as P from '../classes/Project'
 import { toggleModal } from '../classes/Generic'
+import * as BUI from '@thatopen/ui'
 
 interface Props {
     project: P.Project
@@ -16,6 +17,29 @@ export function SingleProjectDetails (props:Props) {
         console.warn("Edit project modal was not found")
         }
     }
+
+    const editButton = BUI.Component.create<BUI.Button>(() => {
+        return BUI.html`
+        <bim-button 
+            style={{padding:'5px'}} 
+            icon='raphael:edit' 
+            @click=${onEditProjectButtonClick}>
+        </bim-button>`
+    })
+    const deleteButton = BUI.Component.create<BUI.Button>(() => {
+        return BUI.html`
+        <bim-button 
+            style={{padding:'5px'}} 
+            icon='weui:delete-on-filled' 
+            @click=${() => {props.deleteEvent(props.project.id)}}>
+        </bim-button>`
+    })
+
+    React.useEffect(() => {
+        const modifyButtons = document.getElementById('modify-buttons')
+        modifyButtons?.appendChild(editButton)
+        modifyButtons?.appendChild(deleteButton)
+    }, [])
 
     return(
         <div
@@ -40,10 +64,7 @@ export function SingleProjectDetails (props:Props) {
             >
                 {props.project.acronym}
             </p>
-            <div style={{display:'flex', flexDirection:'row'}}>
-            <button id="edit-button" onClick={onEditProjectButtonClick}>Edit</button>
-            <button id="delete-button" onClick={() => {props.deleteEvent(props.project.id)}}>Delete</button>
-            </div>
+            <div id='modify-buttons' style={{display:'flex', flexDirection:'row', columnGap:'10px'}}></div>
             </div>
             <div style={{ borderBottom: "1px solid white", paddingBottom: 5 }}>
             <h3 data-project-details-info="name">{props.project.name}</h3>

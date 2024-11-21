@@ -11,6 +11,24 @@ import { InfoPage } from './react-components/InfoPage'
 import { ProjectsManager } from './classes/ProjectsManager'
 import { UsersManager } from './classes/UsersManager'
 
+import * as BUI from '@thatopen/ui'
+
+//add components in the global interface to not complain typescript
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            'bim-grid': any
+            'bim-button': any
+            'bim-label': any
+            'bim-text-input': any
+            'bim-icon': any
+            'bim-input': any
+            'bim-dropdown': any
+            'bim-option': any
+        }
+    }
+}
+BUI.Manager.init()
 
 const projectsManager = new ProjectsManager()
 const usersManager = new UsersManager()
