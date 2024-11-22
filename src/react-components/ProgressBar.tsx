@@ -1,17 +1,25 @@
 import * as React from 'react'
 
-export function ProgressBar(startValue) {
-    
-    const [progress, setProgress] = React.useState(startValue) //progress-bar of new project form states update
+interface Props {
+    startValue: number
+    onProgressChange?: (value: number) => void; // Callback prop
+}
 
+export function ProgressBar(props:Props) {
+    
+    const [progress, setProgress] = React.useState(props.startValue) //progress-bar of new project form states update
+  
+    const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = Number(e.target.value);
+        setProgress(newValue);
+        if (props.onProgressChange) {
+          props.onProgressChange(newValue); // Notify parent of change
+        }
+      };
+    
     return(
         <div className="field-container">
-            <label className="field-title">
-            <span className="material-icons-outlined form-icons">
-                rotate_right
-            </span>
-            Progress
-            </label>
+            <bim-label class='bim-label-form' icon='ion:hourglass-outline'>Progress</bim-label>
             <div
             style={{
                 display: "flex",
@@ -27,19 +35,13 @@ export function ProgressBar(startValue) {
                 min={0}
                 max={100}
                 value={progress} //react value for update the progress value
-                onChange={(e) => setProgress(Number(e.target.value))} //function that update the progress value in live
+                onChange={handleProgressChange} //function that update the progress value in live
                 style={{ width: "85%", height: 18 }}
             />
-            <p style={{ marginRight: 10 }}>
-                <output
-                name="progress-output"
-                className="progress-value"
-                htmlFor="progress-bar"
-                >
+            <bim-label name='progress' value={progress} class='bim-label-form' style={{ marginRight: 10 }}>
                 {progress}
-                </output>{" "}
-                %
-            </p>
+            </bim-label>
+            %
             </div>
         </div>
     )
