@@ -38,11 +38,7 @@ export function ProgressBar(props:Props) {
                 onChange={handleProgressChange} //function that update the progress value in live
                 style={{ width: "85%", height: 18 }}
             />
-<<<<<<< HEAD
-            <bim-label name='progress' value={progress} class='bim-label-form' style={{marginBottom:'0'}}>
-=======
             <bim-label name='progress' value={progress} class='bim-label-form' style={{ marginRight: 10 }}>
->>>>>>> b8b2456452b0fc1cca6a836f8ebedd008538b0c1
                 {progress}
             </bim-label>
             %

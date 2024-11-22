@@ -226,37 +226,13 @@ export function ProjectsPage (props: Props) {
               <div className="field-container">
                 <bim-label class='bim-label-form' icon='ic:twotone-abc'>Acronym</bim-label>
                 <div style={{ display: "flex", columnGap:'10px', alignItems: "center"}}>
-<<<<<<< HEAD
-                  <bim-text-input name='acronym' type='text' value='' style={{fontSize:'30px'}}></bim-text-input>
-                  <bim-color-input name='color' value='#FB00FF' style={{maxWidth:'100px'}}></bim-color-input>
-=======
                   <bim-text-input name='acronym' type='text' value='' style={{marginTop: '10px'}}></bim-text-input>
                   <bim-color-input name='color' value='#FB00FF' style={{maxWidth:'100px', marginTop: '10px'}}></bim-color-input>
->>>>>>> b8b2456452b0fc1cca6a836f8ebedd008538b0c1
                 </div>
                 <bim-label style={{ fontSize: 15, fontStyle: "italic", padding: 5 }}>Insert an abbreviation of project's name (max 4 characters, i.e.: SFH)</bim-label>
               </div>
               <div className="field-container">
                 <bim-label class='bim-label-form' icon='qlementine-icons:rename-16'>Project name</bim-label>
-<<<<<<< HEAD
-                <bim-text-input name='name' type='text' value=''></bim-text-input>
-              </div>
-              <div className="field-container">
-                <bim-label class='bim-label-form' icon='ci:building-03'>Project type</bim-label>
-                <bim-text-input name='projectType' type='text' value=''></bim-text-input>
-              </div>
-              <div className="field-container">
-                <bim-label class='bim-label-form' icon='lsicon:location-outline'>Address</bim-label>
-                <bim-text-input name='address' type='text' value=''></bim-text-input>
-              </div>
-              <div className="field-container">
-                <bim-label class='bim-label-form' icon='bx:dollar'>Cost</bim-label>
-                <bim-text-input name='cost' type='text' value=''></bim-text-input>
-              </div>
-              <div className="field-container">
-                <bim-label class='bim-label-form' icon='mdi:company'>Company name</bim-label>
-                <bim-text-input name='companyName' type='text' value=''></bim-text-input>
-=======
                 <bim-text-input name='name' type='text' value='' style={{marginTop: '10px'}}></bim-text-input>
               </div>
               <div className="field-container">
@@ -274,7 +250,6 @@ export function ProjectsPage (props: Props) {
               <div className="field-container">
                 <bim-label class='bim-label-form' icon='mdi:company'>Company name</bim-label>
                 <bim-text-input name='companyName' type='text' value='' style={{marginTop: '10px'}}></bim-text-input>
->>>>>>> b8b2456452b0fc1cca6a836f8ebedd008538b0c1
               </div>
               <div className="field-container">
                 <bim-label class='bim-label-form' icon='material-symbols:update-rounded'>Status</bim-label>
