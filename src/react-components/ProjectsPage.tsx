@@ -66,6 +66,7 @@ export function ProjectsPage (props: Props) {
     return <ProjectCard project={projects} key={projects.id}/>
   })
 
+  const progressBar = <ProgressBar startValue={30}/>
   //#endregion
   
   //#region EVENTS
@@ -84,18 +85,35 @@ export function ProjectsPage (props: Props) {
     //form events
     if (newProjectForm && newProjectForm instanceof HTMLFormElement) { //check the existance of user form
         e.preventDefault()
-        const formData = new FormData(newProjectForm)
+        //bim components inputs
+        const formData = {}
+        const formBimInputs = newProjectForm.querySelectorAll('bim-text-input')
+        const formBimColor = newProjectForm.querySelector('bim-color-input')
+        const formBimDropdown = newProjectForm.querySelector('bim-dropdown')
+        const formBimProgress = newProjectForm.querySelectorAll('bim-label')
+        formBimInputs.forEach(input => {
+          const name = input.getAttribute('name') // Get the "name" attribute
+          if (name) { 
+            formData[name] = input.value || input.getAttribute('value') 
+          }})
+        formBimProgress.forEach(input => {
+          if (input.getAttribute('name') === 'progress') {
+            formData['progress'] = input.value || input.getAttribute('value') // Add to formData object
+          }})
+        formData['color'] = formBimColor?.value['color'] || formBimColor?.getAttribute('value')
+        formData['status'] = formBimDropdown?.value[0] || formBimDropdown?.getAttribute('value')
+
         const projectData: P.IProject = { //store data in this dictionary
             type: 'project',
-            color: formData.get('color') as string,
-            name: formData.get('name') as string,
-            address: formData.get('address') as string,
-            companyName: formData.get('companyName') as string,
-            acronym: formData.get('acronym') as string,
-            status: formData.get('status') as P.status,
-            cost: formData.get('cost') as unknown as number,
-            progress: formData.get('progress') as unknown as number,
-            projectType: formData.get('projectType') as string,
+            color: formData['color'] as string,
+            name: formData['name'] as string,
+            address: formData['address'] as string,
+            companyName: formData['companyName'] as string,
+            acronym: formData['acronym'] as string,
+            status: formData['status'] as P.status,
+            cost: formData['cost'] as unknown as number,
+            progress: formData['progress'] as unknown as number,
+            projectType: formData['projectType'] as string,
             todoList: []
         }
         try {
@@ -132,15 +150,6 @@ export function ProjectsPage (props: Props) {
   }
   //#endregion
 
-  //#region STYLES
-  //example of tipStyle CSS for React syntax
-  const tipStyle: React.CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "1fr 60px",
-    alignItems: "center"
-  }
-  //#endregion
-
   //BUI
   const downloadButton = BUI.Component.create<BUI.Button>(() => {
     return BUI.html`
@@ -169,12 +178,34 @@ export function ProjectsPage (props: Props) {
         label="New Project"
       </bim-button>`;
   })
+  const acceptButtonForm = BUI.Component.create<BUI.Button>(() => {
+    return BUI.html`
+      <bim-button
+        @click=${(e) => {onNewProjectFormAcceptButtonClick(e)}}
+        type="submit"
+        name="submit"
+        id="button-project-form-accept"
+        label='Accept'
+      ></bim-button>`
+  })
+  const cancelButtonForm = BUI.Component.create<BUI.Button>(() => {
+    return BUI.html`
+      <bim-button
+        @click=${(e) => {onFormCancelButtonClick(e)}}
+        type="cancel"
+        label='Cancel'
+      ></bim-button>`
+  })
 
   React.useEffect(() => {
     const projectPageAddBar = document.getElementById('project-page-addbar')
     projectPageAddBar?.insertBefore(uploadButton, projectPageAddBar.firstChild)
     projectPageAddBar?.insertBefore(downloadButton, projectPageAddBar.firstChild)
     projectPageAddBar?.insertBefore(newProjectButton, projectPageAddBar.firstChild)
+
+    const formButtons = document.getElementById('form-buttons')
+    formButtons?.appendChild(cancelButtonForm)
+    formButtons?.appendChild(acceptButtonForm)
   }, [])
 
   return(
@@ -194,92 +225,45 @@ export function ProjectsPage (props: Props) {
             <div className="input-list">
               <div className="field-container">
                 <bim-label class='bim-label-form' icon='ic:twotone-abc'>Acronym</bim-label>
-                <div
-                  style={tipStyle}
-                >
-                  <bim-text-input
-                    name="acronym"
-                    type='text'
-                    style={{ resize: "none" }}
-                  />
-                  <input
-                    id="color"
-                    name="color"
-                    type="color"
-                    defaultValue="#931f1f"
-                    style={{
-                      backgroundColor: "transparent",
-                      padding: 0,
-                      marginLeft: 10,
-                      height: 50,
-                    }}
-                  />
+                <div style={{ display: "flex", columnGap:'10px', alignItems: "center"}}>
+                  <bim-text-input name='acronym' type='text' value='' style={{fontSize:'30px'}}></bim-text-input>
+                  <bim-color-input name='color' value='#FB00FF' style={{maxWidth:'100px'}}></bim-color-input>
                 </div>
                 <bim-label style={{ fontSize: 15, fontStyle: "italic", padding: 5 }}>Insert an abbreviation of project's name (max 4 characters, i.e.: SFH)</bim-label>
               </div>
               <div className="field-container">
-                <label className="field-title">
-                  <span className="material-symbols-outlined form-icons">
-                    location_away
-                  </span>
-                  Project name
-                </label>
-                <input name="name" type="text" />
+                <bim-label class='bim-label-form' icon='qlementine-icons:rename-16'>Project name</bim-label>
+                <bim-text-input name='name' type='text' value=''></bim-text-input>
               </div>
               <div className="field-container">
-                <label className="field-title">
-                  <span className="material-icons-outlined form-icons">
-                    home_work
-                  </span>
-                  Project type
-                </label>
-                <input name="projectType" type="text" />
+                <bim-label class='bim-label-form' icon='ci:building-03'>Project type</bim-label>
+                <bim-text-input name='projectType' type='text' value=''></bim-text-input>
               </div>
               <div className="field-container">
-                <label className="field-title">
-                  <span className="material-icons-outlined form-icons">home</span>
-                  Address
-                </label>
-                <input name="address" type="address" />
+                <bim-label class='bim-label-form' icon='lsicon:location-outline'>Address</bim-label>
+                <bim-text-input name='address' type='text' value=''></bim-text-input>
               </div>
               <div className="field-container">
-                <label className="field-title">
-                  <span className="material-icons-outlined form-icons">
-                    business
-                  </span>
-                  Company name
-                </label>
-                <input name="companyName" type="text" />
+                <bim-label class='bim-label-form' icon='bx:dollar'>Cost</bim-label>
+                <bim-text-input name='cost' type='text' value=''></bim-text-input>
+              </div>
+              <div className="field-container">
+                <bim-label class='bim-label-form' icon='mdi:company'>Company name</bim-label>
+                <bim-text-input name='companyName' type='text' value=''></bim-text-input>
               </div>
               <div className="field-container">
                 <bim-label class='bim-label-form' icon='material-symbols:update-rounded'>Status</bim-label>
-                <bim-dropdown name="status">
-                  <bim-option label="Active" checked></bim-option>
-                  <bim-option label="Not started"></bim-option>
-                  <bim-option label="Completed"></bim-option>
-                  <bim-option label="Stopped"></bim-option>
-                  <bim-option label="Dismissed"></bim-option>
+                <bim-dropdown name="status" style={{marginTop:'10px'}}>
+                  <bim-option style={{padding:'10px', marginRight:'10px', marginLeft:'10px'}} label="Active" checked></bim-option>
+                  <bim-option style={{padding:'10px', marginRight:'10px', marginLeft:'10px'}} label="Not started"></bim-option>
+                  <bim-option style={{padding:'10px', marginRight:'10px', marginLeft:'10px'}} label="Completed"></bim-option>
+                  <bim-option style={{padding:'10px', marginRight:'10px', marginLeft:'10px'}} label="Stopped"></bim-option>
+                  <bim-option style={{padding:'10px', marginRight:'10px', marginLeft:'10px'}} label="Dismissed"></bim-option>
                 </bim-dropdown>
               </div>
-              {ProgressBar(20)}
+              {progressBar}
             </div>
-            <div className="buttons">
-              <button
-                onClick={(e) => {onFormCancelButtonClick(e)}}
-                type="button"
-                id="button-project-form-cancel"
-                className="generic-buttons"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={(e) => {onNewProjectFormAcceptButtonClick(e)}}
-                type="submit"
-                id="button-project-form-accept"
-                className="generic-buttons"
-              >
-                Accept
-              </button>
+            <div id='form-buttons' className="buttons" style={{columnGap:'5px'}}>
             </div>
           </form>
           <div id="new-project-error-tab" style={{ display: "none" }} />

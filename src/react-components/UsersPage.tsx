@@ -10,6 +10,8 @@ import { SearchBar } from './SearchBar'
 import * as Firestore from 'firebase/firestore'
 import { deleteDocument, getCollection } from '../firebase'
 
+import * as BUI from '@thatopen/ui'
+
 interface Props {
     usersManager: UsersManager
 }
@@ -229,7 +231,7 @@ export function UsersPage (props:Props) {
                         <span className="material-icons-outlined form-icons">event</span>
                         Birthday date
                         </label>
-                        <input name="birthday" type="date" className="date" />
+                        <bim-text-input name="birthday" type="date" className="date" />
                     </div>
                     <div className="field-container" style={{ marginLeft: 25 }}>
                         <label className="field-title">

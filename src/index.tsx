@@ -25,6 +25,8 @@ declare global {
             'bim-input': any
             'bim-dropdown': any
             'bim-option': any
+            'bim-color-input': any
+            'bim-number-input': any
         }
     }
 }

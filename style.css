@@ -274,7 +274,6 @@ form input, textarea, select, fieldset{
     border-radius: 10px;
     font-size: 18px;
     padding: 10px;
-    margin-top: 5px;
 }
 form input:hover, textarea:hover, select:hover, fieldset:hover{
     outline: 1px solid black;
@@ -519,4 +518,5 @@ bim-button{
     font-size: var(--bim-ui_size-xl);
     line-height: calc(1.1 * var(--bim-ui_size-xl));
     color: lightgray;
+    margin-bottom: 5px;
 }
