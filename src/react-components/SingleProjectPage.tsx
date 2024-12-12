@@ -8,7 +8,7 @@ import { SingleProjectDetails } from './SingleProjectDetails'
 import { EditProjectForm } from './EditProjectForm'
 import { ToDoCard } from './ToDoCard'
 import { SearchBar } from './SearchBar'
-import { ThreeViewer } from './ThreeViewer'
+import { BIMViewer } from './BIMViewer'
 import { deleteDocument, getCollection, updateDocument } from '../firebase'
 import * as Firestore from 'firebase/firestore'
 import * as BUI from '@thatopen/ui'
@@ -346,7 +346,7 @@ export function SingleProjectPage (props:Props) {
                     <h5>OBJ</h5>
                     </li>
                 </ul>
-                <ThreeViewer projectsManager={props.projectsManager}/>
+                <BIMViewer projectsManager={props.projectsManager}/>
                 </div>
             </div>
         </div>
