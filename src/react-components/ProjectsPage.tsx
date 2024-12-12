@@ -176,7 +176,7 @@ export function ProjectsPage (props: Props) {
         id="new-project-button" 
         icon="streamline:add-1-solid" 
         label="New Project"
-      </bim-button>`;
+      ></bim-button>`;
   })
   const acceptButtonForm = BUI.Component.create<BUI.Button>(() => {
     return BUI.html`

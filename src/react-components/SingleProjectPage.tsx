@@ -160,7 +160,7 @@ export function SingleProjectPage (props:Props) {
             <bim-button 
                 @click=${onNewTodoButtonClick} 
                 icon="streamline:add-1-solid" 
-            </bim-button>`;
+            ></bim-button>`;
         })
 
     React.useEffect(() => {
@@ -335,6 +335,15 @@ export function SingleProjectPage (props:Props) {
                     <span className="material-icons-outlined">upload</span>
                     <h5>OBJ</h5>
                     <h5>GLTF</h5>
+                    </li>
+                    <p>Bomarzo:</p>
+                    <li
+                    id="3D-file-upload-bomarzo"
+                    className="generic-buttons"
+                    style={{ textAlign: "center" }}
+                    >
+                    <span className="material-icons-outlined">upload</span>
+                    <h5>OBJ</h5>
                     </li>
                 </ul>
                 <ThreeViewer projectsManager={props.projectsManager}/>

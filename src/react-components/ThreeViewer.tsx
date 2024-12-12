@@ -104,14 +104,27 @@ export function ThreeViewer (props:Props) {
                 })
             })
         }
-        LoaderObjMtl()
-
+        //LoaderObjMtl()
+        
         const uploadGltfButton = document.getElementById("3D-file-upload")
         if (uploadGltfButton){
             uploadGltfButton.addEventListener('click', async () => {
                 if (!scene) return
                 const objectUploaded = await props.projectsManager.upload3DFile() as any
-                const meshUploaded = objectUploaded.mesh
+                let meshUploaded = objectUploaded.mesh
+                scene.add(meshUploaded)
+                mesh?.add(meshUploaded)
+            })
+        }
+
+        const bomarzoButton = document.getElementById("3D-file-upload-bomarzo")
+        if (bomarzoButton){
+            bomarzoButton.addEventListener('click', async () => {
+                if (!scene) return
+                const objectUploaded = await props.projectsManager.upload3DFile() as any
+                let meshUploaded = objectUploaded.mesh
+                //meshUploaded.position.set(-34.387421,-100.327,-130.047) //drago XYZ
+                meshUploaded.rotation.set(Math.PI / 2, Math.PI, 0)
                 scene.add(meshUploaded)
                 mesh?.add(meshUploaded)
             })
