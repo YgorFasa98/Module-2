@@ -27,6 +27,8 @@ declare global {
             'bim-option': any
             'bim-color-input': any
             'bim-number-input': any
+            'bim-viewport': any
+            'bim-toolbar': any
         }
     }
 }

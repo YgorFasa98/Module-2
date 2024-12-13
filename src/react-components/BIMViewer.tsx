@@ -1,6 +1,8 @@
 import * as React from 'react'
 import * as THREE from 'three'
 import * as OBC from '@thatopen/components'
+import * as BUI from '@thatopen/ui'
+import * as CUI from '@thatopen/ui-obc'
 
 import { ProjectsManager } from '../classes/ProjectsManager'
 
@@ -9,10 +11,11 @@ interface Props {
 }
 
 export function BIMViewer (props:Props) {
+
+    const components = new OBC.Components()
     
     const setViewer = () => {
-        const viewer = new OBC.Components()
-        const worlds = viewer.get(OBC.Worlds)
+        const worlds = components.get(OBC.Worlds)
 
         const world = worlds.create<
             OBC.SimpleScene,
@@ -20,42 +23,90 @@ export function BIMViewer (props:Props) {
             OBC.SimpleRenderer
         >()
 
-        const sceneComponent = new OBC.SimpleScene(viewer)
+        const sceneComponent = new OBC.SimpleScene(components)
         world.scene = sceneComponent
         world.scene.setup()
-        world.scene.three.background = null
 
         const viewerContainer = document.getElementById('viewer-container') as HTMLElement
-        const rendererComponent = new OBC.SimpleRenderer(viewer, viewerContainer)
+        const rendererComponent = new OBC.SimpleRenderer(components, viewerContainer)
         world.renderer = rendererComponent
 
-        const cameraComponent = new OBC.OrthoPerspectiveCamera(viewer)
+        const cameraComponent = new OBC.OrthoPerspectiveCamera(components)
         world.camera = cameraComponent
 
-        viewer.init()
+        components.init()
 
-        const material = new THREE.MeshLambertMaterial({color: 'yellow'})
-        const geometry = new THREE.BoxGeometry()
-        const cube = new THREE.Mesh(geometry, material)
-
-        world.scene.three.add(cube)
-
-        cameraComponent.controls.setLookAt(3,3,3, 0,0,0)
+        cameraComponent.controls.setLookAt(30,30,30, 0,0,0)
         cameraComponent.updateAspect()
+
+        const ifcLoader = components.get(OBC.IfcLoader)
+        ifcLoader.setup()
+
+        const fragmentsManager = components.get(OBC.FragmentsManager)
+        fragmentsManager.onFragmentsLoaded.add((model) => {
+            world.scene.three.add(model)
+        })
+
+        viewerContainer.addEventListener("resize", () => {
+            rendererComponent.resize()
+            cameraComponent.updateAspect()
+        })
+    }
+
+    const setupUI = () => {
+        const viewerContainer = document.getElementById('viewer-container') as HTMLElement
+        if (!viewerContainer) return
+
+        const toolbar = BUI.Component.create<BUI.Toolbar>(() => {
+            const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
+            return BUI.html`
+            <bim-toolbar style="justify-self: center">
+                <bim-toolbar-section>
+                    ${loadIfcButton}
+                </bim-toolbar-section>
+            </bim-toolbar>
+            `;
+        })
+
+        const floatingGrid = BUI.Component.create<BUI.Grid>(() => {
+            return BUI.html`
+                <bim-grid
+                floating
+                style="padding: 20px">
+                </bim-grid>
+            `;
+        })
+
+        floatingGrid.layouts = {
+            main: {
+                template: `
+                    "empty" 1fr
+                    "toolbar" auto
+                    /1fr
+                `,
+                elements: {
+                    toolbar
+                }
+            }
+        }
+        floatingGrid.layout = "main"
+
+        viewerContainer.appendChild(floatingGrid)
     }
 
     React.useEffect(() => {
         setViewer()
+        setupUI()
         return () => {
-
+            components.dispose()
         }
     }, [])
 
     return(
-        <div
+        <bim-viewport
         id="viewer-container"
         className="single-project-page-spaces viewer-container"
-        style={{ backgroundColor: "transparent", width: "100%", margin: 0 }}
-    />
+        style={{ width: "100%", margin: 0 }}
+        />
     )
 }
