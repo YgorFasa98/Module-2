@@ -299,7 +299,7 @@ fieldset input:focus, form #color:focus {
 }
 #single-project-page > .main-page-content{
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: clamp(400px, 30%, 600px) 1fr; /*min, preferred, max*/
 }
 .single-project-page-spaces{
     background-color: var(--background);
