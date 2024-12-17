@@ -63,8 +63,63 @@ export function BIMViewer (props:Props) {
         const highlighter = components.get(OBCF.Highlighter)
         highlighter.setup({ world })
         highlighter.zoomToSelection = true
-
     }
+
+    /*const onToggleVisibility = () => {
+        const highlighter = components.get(OBCF.Highlighter)
+        const fragments = components.get(OBC.FragmentsManager)
+        const selection = highlighter.selection.select
+        if (Object.keys(selection).length === 0) return
+        for (const fragmentID in selection) {
+            const fragment = fragments.list.get(fragmentID)
+            const expressID = selection[fragmentID]
+            for (const id of expressID){
+                if (!fragment) continue
+                const isHidden = fragment.hiddenItems.has(id)
+                if (isHidden) {
+                    fragment.setVisibility(true, [id])
+                } else {
+                    fragment.setVisibility(false, [id])
+                }
+            }
+        }
+    }
+    const onInvertVisibility = () => {
+        const highlighter = components.get(OBCF.Highlighter)
+        const fragments = components.get(OBC.FragmentsManager)
+        const hider = components.get(OBC.Hider)
+        for (const [key, fragment] of fragments.list) {
+            if (!fragment) continue
+            hider.set(true, fragment.hiddenItems.has(fragment.ids))
+        }
+    }*/
+
+    let visibility = true
+    const onToggleVisibility = () => {
+        const highlighter = components.get(OBCF.Highlighter)
+        const selection = highlighter.selection.select
+        const hider = components.get(OBC.Hider)
+        if (visibility) {
+            hider.set(false, selection)
+            visibility = false
+        } else {
+            hider.set(true, selection)
+            visibility = true
+        }
+    }
+
+    const onIsolate = () => {
+        const highlighter = components.get(OBCF.Highlighter)
+        const hider = components.get(OBC.Hider)
+        const selection = highlighter.selection.select
+        hider.isolate(selection)
+    }
+
+    const onShowAll = () => {
+        const hider = components.get(OBC.Hider)
+        hider.set(true)
+    }
+
     //METHOD TO SETUP THE UI OF LOAD IFC BUTTON
     const setupUI = () => {
         const viewerContainer = document.getElementById('viewer-container') as HTMLElement
@@ -74,8 +129,25 @@ export function BIMViewer (props:Props) {
             const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
             return BUI.html`
             <bim-toolbar style="justify-self: center">
-                <bim-toolbar-section>
+                <bim-toolbar-section label="Import">
                     ${loadIfcButton}
+                </bim-toolbar-section>
+                <bim-toolbar-section label="Selection">
+                    <bim-button
+                        label="Visibility"
+                        icon="material-symbols:visibility-outline"
+                        @click=${onToggleVisibility}
+                    ></bim-button>
+                    <bim-button
+                        label="Isolate"
+                        icon="mdi:filter"
+                        @click=${onIsolate}
+                    ></bim-button>
+                    <bim-button
+                        label="Show All"
+                        icon="tabler:eye-filled"
+                        @click=${onShowAll}
+                    ></bim-button>
                 </bim-toolbar-section>
             </bim-toolbar>
             `;
