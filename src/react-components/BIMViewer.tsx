@@ -16,6 +16,8 @@ export function BIMViewer (props:Props) {
 
     //ALL THE COMPONENTS
     const components = new OBC.Components()
+    let globalScene: OBC.SimpleScene | undefined
+    let globalWorld: OBC.World | undefined
     
     const setViewer = () => {
         //THE VIEWERS COMPONENT
@@ -52,8 +54,11 @@ export function BIMViewer (props:Props) {
         ifcLoader.setup()
         //FRAGMENTS TO MANAGE IFC FILES
         const fragmentsManager = components.get(OBC.FragmentsManager)
-        fragmentsManager.onFragmentsLoaded.add((model) => {
+        fragmentsManager.onFragmentsLoaded.add(async (model) => {
             world.scene.three.add(model)
+
+            const indexer = components.get(OBC.IfcRelationsIndexer)
+            await indexer.process(model)
         })
         //AUTOMATIC RESIZE VIEWER
         viewerContainer.addEventListener("resize", () => {
@@ -64,6 +69,10 @@ export function BIMViewer (props:Props) {
         const highlighter = components.get(OBCF.Highlighter)
         highlighter.setup({ world })
         highlighter.zoomToSelection = true
+
+        
+        globalScene = world.scene
+        globalWorld = world
     }
 
     const onToggleVisibility = () => {
@@ -104,7 +113,7 @@ export function BIMViewer (props:Props) {
         hider.set(true)
     }
 
-    const onUpload3DFile = async () => {        
+    /*const onUpload3DFile = async () => {        
         const worlds = components.get(OBC.Worlds)
         const [worldId] = worlds.list
         const world = worldId[1]
@@ -115,6 +124,31 @@ export function BIMViewer (props:Props) {
             world?.meshes.add(meshUploaded)
         } else {
             console.warn('world not found')
+        }
+    }*/
+
+    const onUpload3DFile = async () => {
+        if (!globalScene || !globalWorld) return
+        const object = await upload3DFile() as any
+        let meshUploaded = object.mesh
+        globalScene.three.add(meshUploaded)
+        globalWorld.meshes.add(meshUploaded)
+    }
+
+    const onShowProperties = () => {
+        const highlighter = components.get(OBCF.Highlighter)
+        const selection = highlighter.selection.select
+        const indexer = components.get(OBC.IfcRelationsIndexer)
+        const fragments = components.get(OBC.FragmentsManager)
+        for (const fragmentID in selection) {
+            const fragment = fragments.list.get(fragmentID)
+            const model = fragment?.group
+            const expressIDs = selection[fragmentID]
+            if (!model) continue
+            for (const id of expressIDs) {
+                const pset = indexer.getEntityRelations(model, id, 'IsDefinedBy')
+                console.log(pset)
+            }
         }
     }
 
@@ -158,6 +192,13 @@ export function BIMViewer (props:Props) {
                         @click=${onShowAll}
                     ></bim-button>
                 </bim-toolbar-section>
+                <bim-toolbar-section label="Property">
+                    <bim-button
+                        label="Show"
+                        icon="clarity:list-line"
+                        @click=${onShowProperties}
+                    ></bim-button>
+                </bim-toolbar-section>
             </bim-toolbar>
             `;
         })
@@ -192,7 +233,17 @@ export function BIMViewer (props:Props) {
         setViewer() //set the viewer
         setupUI() //set the toolbar ui
         return () => {
-            components.dispose()
+            if (components) {
+                components.dispose()
+            }
+            if (globalWorld) {
+                globalWorld.dispose()
+                globalWorld = undefined
+            }
+            if (globalScene) {
+                globalScene.dispose()
+                globalScene = undefined
+            }
         }
     }, [])
 
