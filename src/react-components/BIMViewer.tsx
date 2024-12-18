@@ -6,6 +6,7 @@ import * as CUI from '@thatopen/ui-obc'
 import * as FR from '@thatopen/fragments'
 
 import { ProjectsManager } from '../classes/ProjectsManager'
+import { upload3DFile } from '../classes/Generic'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -103,6 +104,20 @@ export function BIMViewer (props:Props) {
         hider.set(true)
     }
 
+    const onUpload3DFile = async () => {        
+        const worlds = components.get(OBC.Worlds)
+        const [worldId] = worlds.list
+        const world = worldId[1]
+        const object = await upload3DFile() as any
+        let meshUploaded = object.mesh
+        if (world) {
+            world?.scene.three.add(meshUploaded)
+            world?.meshes.add(meshUploaded)
+        } else {
+            console.warn('world not found')
+        }
+    }
+
     //METHOD TO SETUP THE UI OF LOAD IFC BUTTON
     const setupUI = () => {
         const viewerContainer = document.getElementById('viewer-container') as HTMLElement
@@ -110,10 +125,16 @@ export function BIMViewer (props:Props) {
         //TOOLBAR COMPONENT WITH LOAD BUTTON
         const toolbar = BUI.Component.create<BUI.Toolbar>(() => {
             const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
+            loadIfcButton.label = 'IFC'
             return BUI.html`
             <bim-toolbar style="justify-self: center">
                 <bim-toolbar-section label="Import">
                     ${loadIfcButton}
+                    <bim-button
+                        label="GLTF/OBJ"
+                        icon="uis:object-group"
+                        @click=${onUpload3DFile}
+                    ></bim-button>
                 </bim-toolbar-section>
                 <bim-toolbar-section label="Visibility">
                     <bim-button
