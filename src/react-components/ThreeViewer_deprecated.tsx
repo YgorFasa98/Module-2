@@ -7,6 +7,7 @@ import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js"
 import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader.js"
 
 import { ProjectsManager } from '../classes/ProjectsManager'
+import { upload3DFile } from '../classes/Generic'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -110,7 +111,7 @@ export function ThreeViewer (props:Props) {
         if (uploadGltfButton){
             uploadGltfButton.addEventListener('click', async () => {
                 if (!scene) return
-                const objectUploaded = await props.projectsManager.upload3DFile() as any
+                const objectUploaded = await upload3DFile() as any
                 let meshUploaded = objectUploaded.mesh
                 scene.add(meshUploaded)
                 mesh?.add(meshUploaded)
@@ -121,7 +122,7 @@ export function ThreeViewer (props:Props) {
         if (bomarzoButton){
             bomarzoButton.addEventListener('click', async () => {
                 if (!scene) return
-                const objectUploaded = await props.projectsManager.upload3DFile() as any
+                const objectUploaded = await upload3DFile() as any
                 let meshUploaded = objectUploaded.mesh
                 //meshUploaded.position.set(-34.387421,-100.327,-130.047) //drago XYZ
                 meshUploaded.rotation.set(Math.PI / 2, Math.PI, 0)

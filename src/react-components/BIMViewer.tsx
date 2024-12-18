@@ -115,9 +115,9 @@ export function BIMViewer (props:Props) {
                 <bim-toolbar-section label="Import">
                     ${loadIfcButton}
                 </bim-toolbar-section>
-                <bim-toolbar-section label="Hide/Show">
+                <bim-toolbar-section label="Visibility">
                     <bim-button
-                        label="Visibility"
+                        label="Hide/Show"
                         icon="material-symbols:visibility-outline"
                         @click=${onToggleVisibility}
                     ></bim-button>
@@ -127,14 +127,14 @@ export function BIMViewer (props:Props) {
                         @click=${onIsolate}
                     ></bim-button>
                     <bim-button
-                        label="Show All"
-                        icon="tabler:eye-filled"
-                        @click=${onShowAll}
-                    ></bim-button>
-                    <bim-button
                         label="Invert"
                         icon="icon-park-outline:invert-camera"
                         @click=${onInvertVisibility}
+                    ></bim-button>
+                    <bim-button
+                        label="Show All"
+                        icon="tabler:eye-filled"
+                        @click=${onShowAll}
                     ></bim-button>
                 </bim-toolbar-section>
             </bim-toolbar>
