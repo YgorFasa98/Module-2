@@ -1,9 +1,9 @@
 import * as React from 'react'
-import * as THREE from 'three'
 import * as OBC from '@thatopen/components'
 import * as OBCF from '@thatopen/components-front'
 import * as BUI from '@thatopen/ui'
 import * as CUI from '@thatopen/ui-obc'
+import * as FR from '@thatopen/fragments'
 
 import { ProjectsManager } from '../classes/ProjectsManager'
 
@@ -65,47 +65,30 @@ export function BIMViewer (props:Props) {
         highlighter.zoomToSelection = true
     }
 
-    /*const onToggleVisibility = () => {
-        const highlighter = components.get(OBCF.Highlighter)
-        const fragments = components.get(OBC.FragmentsManager)
-        const selection = highlighter.selection.select
-        if (Object.keys(selection).length === 0) return
-        for (const fragmentID in selection) {
-            const fragment = fragments.list.get(fragmentID)
-            const expressID = selection[fragmentID]
-            for (const id of expressID){
-                if (!fragment) continue
-                const isHidden = fragment.hiddenItems.has(id)
-                if (isHidden) {
-                    fragment.setVisibility(true, [id])
-                } else {
-                    fragment.setVisibility(false, [id])
-                }
-            }
-        }
-    }
-    const onInvertVisibility = () => {
-        const highlighter = components.get(OBCF.Highlighter)
-        const fragments = components.get(OBC.FragmentsManager)
-        const hider = components.get(OBC.Hider)
-        for (const [key, fragment] of fragments.list) {
-            if (!fragment) continue
-            hider.set(true, fragment.hiddenItems.has(fragment.ids))
-        }
-    }*/
-
-    let visibility = true
     const onToggleVisibility = () => {
         const highlighter = components.get(OBCF.Highlighter)
         const selection = highlighter.selection.select
         const hider = components.get(OBC.Hider)
-        if (visibility) {
+        const fragments = components.get(OBC.FragmentsManager)
+        const OneOfSelectedFragments = fragments.list.get(Object.keys(selection)[0])
+        if (!OneOfSelectedFragments) return
+        if (OneOfSelectedFragments.hiddenItems.size === 0) {
             hider.set(false, selection)
-            visibility = false
         } else {
             hider.set(true, selection)
-            visibility = true
         }
+    }
+
+    const onInvertVisibility = () => {
+        const fragments = components.get(OBC.FragmentsManager)
+        const hider = components.get(OBC.Hider)
+        const fragmentIdMap : FR.FragmentIdMap = {}
+        for (const [key, fragment] of fragments.list) {
+            if (!fragment) continue
+            if (fragment.hiddenItems.size === 0) continue
+            fragmentIdMap[key] = fragment.hiddenItems
+        }
+        hider.isolate(fragmentIdMap)
     }
 
     const onIsolate = () => {
@@ -132,7 +115,7 @@ export function BIMViewer (props:Props) {
                 <bim-toolbar-section label="Import">
                     ${loadIfcButton}
                 </bim-toolbar-section>
-                <bim-toolbar-section label="Selection">
+                <bim-toolbar-section label="Hide/Show">
                     <bim-button
                         label="Visibility"
                         icon="material-symbols:visibility-outline"
@@ -147,6 +130,11 @@ export function BIMViewer (props:Props) {
                         label="Show All"
                         icon="tabler:eye-filled"
                         @click=${onShowAll}
+                    ></bim-button>
+                    <bim-button
+                        label="Invert"
+                        icon="icon-park-outline:invert-camera"
+                        @click=${onInvertVisibility}
                     ></bim-button>
                 </bim-toolbar-section>
             </bim-toolbar>
