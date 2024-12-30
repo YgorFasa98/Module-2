@@ -42,10 +42,12 @@ export function BIMViewer (props:Props) {
         world.camera = cameraComponent
         //INITIALIZE ALL THE COMPONENTS
         components.init()
+        
+        world.renderer.postproduction.enabled = true
         //GRID BACKGROUND
         const grids = components.get(OBC.Grids);
         const grid = grids.create(world);
-        grids.config.color.set('darkgray');
+        grid.config.color.set('#1C1C1C');
         //CAMERA LOOK AT TARGET
         cameraComponent.controls.setLookAt(30,30,30, 0,0,0)
         cameraComponent.updateAspect()
@@ -135,7 +137,7 @@ export function BIMViewer (props:Props) {
         globalWorld.meshes.add(meshUploaded)
     }
 
-    const onShowProperties = () => {
+    const onShowProperties = async () => {
         const highlighter = components.get(OBCF.Highlighter)
         const selection = highlighter.selection.select
         const indexer = components.get(OBC.IfcRelationsIndexer)
@@ -146,8 +148,13 @@ export function BIMViewer (props:Props) {
             const expressIDs = selection[fragmentID]
             if (!model) continue
             for (const id of expressIDs) {
-                const pset = indexer.getEntityRelations(model, id, 'IsDefinedBy')
-                console.log(pset)
+                const psets = indexer.getEntityRelations(model, id, 'IsDefinedBy')
+                if(psets){
+                    for (const expressID of psets) {
+                        const prop = await model.getProperties(expressID)
+                        console.log(prop)
+                    }
+                }
             }
         }
     }
@@ -156,12 +163,105 @@ export function BIMViewer (props:Props) {
     const setupUI = () => {
         const viewerContainer = document.getElementById('viewer-container') as HTMLElement
         if (!viewerContainer) return
+        
+        //FLOATING GRID TO HOST THE TOOLBAR
+        const floatingGrid = BUI.Component.create<BUI.Grid>(() => {
+            return BUI.html`
+                <bim-grid
+                floating
+                style="padding: 20px">
+                </bim-grid>
+            `;
+        })
+
+        const elementPropertyPanel = BUI.Component.create<BUI.Panel>(() => {
+            const [propsTable, updatePropsTable] = CUI.tables.elementProperties({
+                components,
+                fragmentIdMap: {}
+            })
+
+            const highlighter = components.get(OBCF.Highlighter)
+
+            highlighter.events.select.onHighlight.add((fragmentIdMap) => {
+                if (!floatingGrid) return
+                floatingGrid.layout = "second"
+                updatePropsTable({ fragmentIdMap })
+                propsTable.expanded = false
+            }) // event to open the properties panel
+
+            highlighter.events.select.onClear.add(() => {
+                updatePropsTable({ fragmentIdMap: {} })
+                if (!floatingGrid) return
+                floatingGrid.layout = "main"
+            }) // event to close the property panel and clear it
+
+            const onSearch = (e: Event) => {
+                const input = e.target as BUI.TextInput
+                propsTable.queryString = input.value
+            }
+
+            return BUI.html`
+                <bim-panel>
+                    <bim-panel-section
+                        name="property"
+                        label="Property Information"
+                        icon="solar:document-bold"
+                    >
+                        <bim-text-input 
+                            placeholder="Search..." 
+                            @input=${onSearch}
+                        >
+                        </bim-text-input>
+                        ${propsTable}
+                    </bim-panel-section>
+                </bim-panel>
+            `
+        })
+
+        const viewerSettingsPanel = BUI.Component.create<BUI.Panel>(() => {
+            const [worldTable] = CUI.tables.worldsConfiguration({ components })
+            
+            const onSearch = (e: Event) => {
+                const input = e.target as BUI.TextInput
+                worldTable.queryString = input.value
+            }
+
+            return BUI.html`
+                <bim-panel>
+                    <bim-panel-section
+                        name="viewer"
+                        label="Viewer Settings"
+                        icon="ic:baseline-settings"
+                    >
+                        <bim-text-input 
+                            placeholder="Search..." 
+                            @input=${onSearch}
+                        >
+                        </bim-text-input>
+                        ${worldTable}
+                    </bim-panel-section>
+                </bim-panel>
+            `
+        })
+
+        const onViewerSettingsButtonClick = () => {
+            if (!floatingGrid) return           
+            floatingGrid.layout = 'third'
+        }
+
         //TOOLBAR COMPONENT WITH LOAD BUTTON
         const toolbar = BUI.Component.create<BUI.Toolbar>(() => {
             const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
             loadIfcButton.label = 'IFC'
             return BUI.html`
             <bim-toolbar style="justify-self: center">
+                <bim-toolbar-section label="Viewer">
+                    <bim-button
+                        label="Settings"
+                        icon="ic:baseline-settings"
+                        @click=${onViewerSettingsButtonClick}
+                    ></bim-button>
+                </bim-toolbar-section>
                 <bim-toolbar-section label="Import">
                     ${loadIfcButton}
                     <bim-button
@@ -202,15 +302,6 @@ export function BIMViewer (props:Props) {
             </bim-toolbar>
             `;
         })
-        //FLOATING GRID TO HOST THE TOOLBAR
-        const floatingGrid = BUI.Component.create<BUI.Grid>(() => {
-            return BUI.html`
-                <bim-grid
-                floating
-                style="padding: 20px">
-                </bim-grid>
-            `;
-        })
         //GRID LAYOUT
         floatingGrid.layouts = {
             main: {
@@ -221,6 +312,28 @@ export function BIMViewer (props:Props) {
                 `,
                 elements: {
                     toolbar
+                }
+            },
+            second: {
+                template: `
+                    "empty elementPropertyPanel" 1fr
+                    "toolbar toolbar" auto
+                    /1fr 30rem
+                `,
+                elements: {
+                    toolbar,
+                    elementPropertyPanel
+                }
+            },
+            third: {
+                template: `
+                    "empty viewerSettingsPanel" 1fr
+                    "toolbar toolbar" auto
+                    /1fr 30rem
+                `,
+                elements: {
+                    toolbar,
+                    viewerSettingsPanel
                 }
             }
         }
@@ -235,14 +348,6 @@ export function BIMViewer (props:Props) {
         return () => {
             if (components) {
                 components.dispose()
-            }
-            if (globalWorld) {
-                globalWorld.dispose()
-                globalWorld = undefined
-            }
-            if (globalScene) {
-                globalScene.dispose()
-                globalScene = undefined
             }
         }
     }, [])
