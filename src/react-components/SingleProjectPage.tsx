@@ -271,53 +271,54 @@ export function SingleProjectPage (props:Props) {
                 <div
                 id="sx-bar"
                 className="single-project-page-spaces"
-                style={{ padding: 0, backgroundColor: "transparent", gap: 10 }}
+                style={{ padding: 0, backgroundColor: "transparent", gap: 10, overflowY: 'auto' }}
                 >
-                {SingleProjectDetailsComp}
-                <div
-                    className="single-project-page-spaces todo-list"
-                    style={{ flexGrow: 1, margin: 0, rowGap: 20 }}
-                >
+                    {SingleProjectDetailsComp}
                     <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between"
-                    }}
+                        id = "sx-bar-todos"
+                        className="single-project-page-spaces todo-list"
+                        style={{ flexGrow: 1, margin: 0, rowGap: 20 }}
                     >
-                        <bim-label class='bim-label-section-title'>To-Do</bim-label>
                         <div
-                            style={{
+                        style={{
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center",
-                            gap: 5
-                            }}
-                            id='todo-bar'
+                            justifyContent: "space-between"
+                        }}
                         >
-                            <SearchBar onChange={onTodoSearch} searchBy='todo title'/>
+                            <bim-label class='bim-label-section-title'>To-Do</bim-label>
+                            <div
+                                style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 5
+                                }}
+                                id='todo-bar'
+                            >
+                                <SearchBar onChange={onTodoSearch} searchBy='todo title'/>
+                            </div>
                         </div>
+                        {
+                        todos.length > 0 ? 
+                        <div
+                        id="todo-card-list"
+                        className="card-list"
+                        style={{
+                            margin: 0,
+                            overflowY: "auto",
+                            height: 100,
+                            display: "flex",
+                            flexDirection: "column",
+                            rowGap: 20,
+                            flexGrow: 1
+                        }}
+                        >
+                            {ToDoCardsList}
+                        </div> : <p style={{display:'flex', flexDirection:'column', fontSize:'20px', alignItems:'center'}}>Any todo found!</p>
+                        }
                     </div>
-                    {
-                    todos.length > 0 ? 
-                    <div
-                    id="todo-card-list"
-                    className="card-list"
-                    style={{
-                        margin: 0,
-                        overflowY: "auto",
-                        height: 100,
-                        display: "flex",
-                        flexDirection: "column",
-                        rowGap: 20,
-                        flexGrow: 1
-                    }}
-                    >
-                        {ToDoCardsList}
-                    </div> : <p style={{display:'flex', flexDirection:'column', fontSize:'20px', alignItems:'center'}}>Any todo found!</p>
-                    }
-                </div>
                 </div>
                 <div
                 id="bow-viewer"

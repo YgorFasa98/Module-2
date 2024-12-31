@@ -1,7 +1,7 @@
-import * as React from 'react'
-import * as P from '../classes/Project'
-import { toggleModal } from '../classes/Generic'
-import * as BUI from '@thatopen/ui'
+import * as React from "react"
+import * as P from "../classes/Project"
+import { toggleModal } from "../classes/Generic"
+import * as BUI from "@thatopen/ui"
 
 interface Props {
     project: P.Project
@@ -10,7 +10,7 @@ interface Props {
 
 export function SingleProjectDetails (props:Props) {
     const onEditProjectButtonClick = () => { //little different fron lessons because I implemented the showModal in an external class
-        const editProjectModal = new toggleModal('edit-project-modal')
+        const editProjectModal = new toggleModal("edit-project-modal")
         if (editProjectModal) {
             editProjectModal.showModal()
         } else {
@@ -21,28 +21,29 @@ export function SingleProjectDetails (props:Props) {
     const editButton = BUI.Component.create<BUI.Button>(() => {
         return BUI.html`
         <bim-button 
-            style={{padding:'5px'}} 
-            icon='raphael:edit' 
+            style={{padding:"5px"}} 
+            icon="raphael:edit" 
             @click=${onEditProjectButtonClick}>
         </bim-button>`
     })
     const deleteButton = BUI.Component.create<BUI.Button>(() => {
         return BUI.html`
         <bim-button 
-            style={{padding:'5px'}} 
-            icon='weui:delete-on-filled' 
+            style={{padding:"5px"}} 
+            icon="weui:delete-on-filled" 
             @click=${() => {props.deleteEvent(props.project.id)}}>
         </bim-button>`
     })
 
     React.useEffect(() => {
-        const modifyButtons = document.getElementById('modify-buttons')
+        const modifyButtons = document.getElementById("modify-buttons")
         modifyButtons?.appendChild(editButton)
         modifyButtons?.appendChild(deleteButton)
     }, [])
 
     return(
         <div
+            id = "sx-bar-project-details"
             className="single-project-page-spaces dash-card"
             style={{ margin: 0 }}
         >
@@ -64,7 +65,7 @@ export function SingleProjectDetails (props:Props) {
             >
                 {props.project.acronym}
             </p>
-            <div id='modify-buttons' style={{display:'flex', flexDirection:'row', columnGap:'10px'}}></div>
+            <div id="modify-buttons" style={{display:"flex", flexDirection:"row", columnGap:"10px"}}></div>
             </div>
             <div style={{ borderBottom: "1px solid white", paddingBottom: 5 }}>
             <h3 data-project-details-info="name">{props.project.name}</h3>

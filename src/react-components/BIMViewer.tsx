@@ -7,6 +7,8 @@ import * as FR from '@thatopen/fragments'
 
 import { ProjectsManager } from '../classes/ProjectsManager'
 import { upload3DFile } from '../classes/Generic'
+import { classificationTreeTemplate } from '@thatopen/ui-obc/dist/components/tables/ClassificationsTree/src/template'
+import { SpatialStructure } from '@thatopen/components/dist/fragments/IfcLoader/src'
 
 interface Props {
     projectsManager: ProjectsManager
@@ -18,7 +20,7 @@ export function BIMViewer (props:Props) {
     const components = new OBC.Components()
     let globalScene: OBC.SimpleScene | undefined
     let globalWorld: OBC.World | undefined
-    
+        
     const setViewer = () => {
         //THE VIEWERS COMPONENT
         const worlds = components.get(OBC.Worlds)
@@ -183,16 +185,17 @@ export function BIMViewer (props:Props) {
             const highlighter = components.get(OBCF.Highlighter)
 
             highlighter.events.select.onHighlight.add((fragmentIdMap) => {
-                if (!floatingGrid) return
-                floatingGrid.layout = "second"
+                //if (!floatingGrid) return
+                //floatingGrid.layout = "second"
                 updatePropsTable({ fragmentIdMap })
                 propsTable.expanded = false
+                onOpenPanel()
             }) // event to open the properties panel
 
             highlighter.events.select.onClear.add(() => {
                 updatePropsTable({ fragmentIdMap: {} })
-                if (!floatingGrid) return
-                floatingGrid.layout = "main"
+                //if (!floatingGrid) return
+                //floatingGrid.layout = "main"
             }) // event to close the property panel and clear it
 
             const onSearch = (e: Event) => {
@@ -201,19 +204,79 @@ export function BIMViewer (props:Props) {
             }
 
             return BUI.html`
-                <bim-panel>
-                    <bim-panel-section
-                        name="property"
-                        label="Property Information"
-                        icon="solar:document-bold"
+                <bim-panel-section
+                    name="property"
+                    label="Property Information"
+                    icon="hugeicons:property-new"
+                >
+                    <bim-text-input 
+                        placeholder="Search..." 
+                        @input=${onSearch}
                     >
-                        <bim-text-input 
-                            placeholder="Search..." 
-                            @input=${onSearch}
-                        >
-                        </bim-text-input>
-                        ${propsTable}
+                    </bim-text-input>
+                    ${propsTable}
+                </bim-panel-section>
+            `
+        })
+
+        const BIMPanel = BUI.Component.create<BUI.Panel>(() => {
+            const [spatialStructureTable] = CUI.tables.relationsTree({
+                components,
+                models: []
+            })
+            const [modelsList] = CUI.tables.modelsList({
+                components,
+                tags: { schema: true, viewDefinition: false },
+                actions: { download: false }
+            })    
+            const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
+                components,
+                classifications: []
+            })
+
+            const fragmentsManager = components.get(OBC.FragmentsManager);
+            const classifier = components.get(OBC.Classifier)
+            fragmentsManager.onFragmentsLoaded.add(async (model) => {
+                classifier.byEntity(model)
+                await classifier.byPredefinedType(model)
+                const classifications = [
+                    { system: "entities", label: "Entities" },
+                    { system: "predefinedTypes", label: "Predefined Types" },
+                ]
+                console.log("pre update manager", classificationsTree)
+                updateClassificationsTree({ classifications: classifications });
+                console.log("post update manager", classificationsTree)
+            })
+
+            return BUI.html`
+                <bim-panel
+                id = 'bim-panel'
+                name="bim-panel"
+                label="BIM Panel"
+                style = "background-color: transparent"
+                >
+                    <bim-panel-section
+                        name="models"
+                        label="Loaded Models"
+                        icon="material-symbols:upload-rounded"
+                    >
+                        ${modelsList}
                     </bim-panel-section>
+                    <bim-panel-section
+                        name="classifications"
+                        label="Classifications Tree"
+                        icon="carbon:classification"
+                    >
+                        ${classificationsTree}
+                    </bim-panel-section>
+                    <bim-panel-section
+                        name="spatialStructure"
+                        label="Spatial Structure"
+                        icon="ri:node-tree"
+                    >
+                        ${spatialStructureTable}
+                    </bim-panel-section>
+                    ${elementPropertyPanel}
                 </bim-panel>
             `
         })
@@ -249,7 +312,28 @@ export function BIMViewer (props:Props) {
             floatingGrid.layout = 'third'
         }
 
-        //TOOLBAR COMPONENT WITH LOAD BUTTON
+        const onOpenPanel = () => {
+            const sxBar = document.getElementById('sx-bar')
+            const projectDetails = document.getElementById('sx-bar-project-details')
+            const todos = document.getElementById('sx-bar-todos')
+            if (!projectDetails || !sxBar || !todos) return
+            projectDetails.style.display = "none"
+            todos.style.display = "none"
+            sxBar.appendChild(BIMPanel)
+            sxBar.style.backgroundColor = "var(--background)"
+        }
+        const onClosePanel = () => {
+            const sxBar = document.getElementById('sx-bar')
+            const projectDetails = document.getElementById('sx-bar-project-details')
+            const todos = document.getElementById('sx-bar-todos')
+            if (!projectDetails || !sxBar || !todos) return
+            projectDetails.style.display = ""
+            todos.style.display = ""
+            sxBar.removeChild(BIMPanel)
+            sxBar.style.backgroundColor = "transparent"
+        }
+
+        //TOOLBAR COMPONENT
         const toolbar = BUI.Component.create<BUI.Toolbar>(() => {
             const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
             loadIfcButton.label = 'IFC'
@@ -292,11 +376,16 @@ export function BIMViewer (props:Props) {
                         @click=${onShowAll}
                     ></bim-button>
                 </bim-toolbar-section>
-                <bim-toolbar-section label="Property">
+                <bim-toolbar-section label="BIM Panel">
                     <bim-button
-                        label="Show"
-                        icon="clarity:list-line"
-                        @click=${onShowProperties}
+                        label="Open"
+                        icon="fluent:open-32-filled"
+                        @click=${onOpenPanel}
+                    ></bim-button>
+                    <bim-button
+                        label="Close"
+                        icon="gg:close-r"
+                        @click=${onClosePanel}
                     ></bim-button>
                 </bim-toolbar-section>
             </bim-toolbar>
