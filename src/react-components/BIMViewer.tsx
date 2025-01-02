@@ -20,7 +20,7 @@ export function BIMViewer (props:Props) {
     const components = new OBC.Components()
     let globalScene: OBC.SimpleScene | undefined
     let globalWorld: OBC.World | undefined
-        
+
     const setViewer = () => {
         //THE VIEWERS COMPONENT
         const worlds = components.get(OBC.Worlds)
@@ -234,18 +234,16 @@ export function BIMViewer (props:Props) {
                 classifications: []
             })
 
-            const fragmentsManager = components.get(OBC.FragmentsManager);
+            const fragmentsManager = components.get(OBC.FragmentsManager)
             const classifier = components.get(OBC.Classifier)
             fragmentsManager.onFragmentsLoaded.add(async (model) => {
                 classifier.byEntity(model)
                 await classifier.byPredefinedType(model)
                 const classifications = [
                     { system: "entities", label: "Entities" },
-                    { system: "predefinedTypes", label: "Predefined Types" },
+                    { system: "predefinedTypes", label: "Predefined Types" }
                 ]
-                console.log("pre update manager", classificationsTree)
-                updateClassificationsTree({ classifications: classifications });
-                console.log("post update manager", classificationsTree)
+                updateClassificationsTree({ classifications: classifications })
             })
 
             return BUI.html`
@@ -309,7 +307,11 @@ export function BIMViewer (props:Props) {
 
         const onViewerSettingsButtonClick = () => {
             if (!floatingGrid) return           
-            floatingGrid.layout = 'third'
+            if ( floatingGrid.layout !== "third"){
+                floatingGrid.layout = 'third'
+            } else if ( floatingGrid.layout == "third") {
+                floatingGrid.layout = 'main'
+            }
         }
 
         const onOpenPanel = () => {
