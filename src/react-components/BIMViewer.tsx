@@ -5,10 +5,7 @@ import * as BUI from '@thatopen/ui'
 import * as CUI from '@thatopen/ui-obc'
 import * as FR from '@thatopen/fragments'
 
-import { ProjectsManager } from '../classes/ProjectsManager'
 import { upload3DFile } from '../classes/Generic'
-import { classificationTreeTemplate } from '@thatopen/ui-obc/dist/components/tables/ClassificationsTree/src/template'
-import { SpatialStructure } from '@thatopen/components/dist/fragments/IfcLoader/src'
 
 export function BIMViewer () {
 
@@ -18,16 +15,17 @@ export function BIMViewer () {
     let globalWorld: OBC.World | undefined
     let fragmentsModel: FR.FragmentsGroup | undefined
 
-    const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
-        components,
-        classifications: []
-    })
+    /*const [classificationsTree, updateClassificationsTree] = 
+        CUI.tables.classificationTree({
+            components,
+            classifications: []
+    })*/
    
     const processModel = async (model:FR.FragmentsGroup) => {
         const indexer = components.get(OBC.IfcRelationsIndexer)
         await indexer.process(model)
         
-        const classifier = components.get(OBC.Classifier)
+        /*const classifier = components.get(OBC.Classifier)
         classifier.byEntity(model)
         await classifier.byPredefinedType(model)
         const classifications = [
@@ -36,7 +34,7 @@ export function BIMViewer () {
         ]
         if (updateClassificationsTree) {
             updateClassificationsTree({ classifications })
-        }
+        }*/
     }
 
     const setViewer = () => {
@@ -249,7 +247,7 @@ export function BIMViewer () {
                 tags: { schema: true, viewDefinition: false },
                 actions: { download: false }
             })
-            /*const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
+            const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
                 components,
                 classifications: []
             })
@@ -259,17 +257,14 @@ export function BIMViewer () {
                 const classifier = components.get(OBC.Classifier)
                 classifier.byEntity(model)
                 await classifier.byPredefinedType(model)
+                await classifier.bySpatialStructure(model)
                 const classifications = [
                     { system: "entities", label: "Entities" },
-                    { system: "predefinedTypes", label: "Predefined Types" }
+                    { system: "predefinedTypes", label: "Predefined Types" },
+                    { system: "spatialStructures", label: "Spatial Containers" }
                 ]
                 updateClassificationsTree({ classifications: classifications })
-            })*/
-            const classifications = [
-                { system: "entities", label: "Entities" },
-                { system: "predefinedTypes", label: "Predefined Types" }
-            ]
-            updateClassificationsTree({ classifications: classifications })
+            })
 
             return BUI.html`
                 <bim-panel
@@ -286,18 +281,18 @@ export function BIMViewer () {
                         ${modelsList}
                     </bim-panel-section>
                     <bim-panel-section
-                        name="classifications"
-                        label="Classifications Tree"
-                        icon="carbon:classification"
-                    >
-                        ${classificationsTree}
-                    </bim-panel-section>
-                    <bim-panel-section
                         name="spatialStructure"
                         label="Spatial Structure"
                         icon="ri:node-tree"
                     >
                         ${spatialStructureTable}
+                    </bim-panel-section>
+                    <bim-panel-section
+                        name="classifications"
+                        label="Classifications Tree"
+                        icon="carbon:classification"
+                    >
+                        ${classificationsTree}
                     </bim-panel-section>
                     ${elementPropertyPanel}
                 </bim-panel>
@@ -362,74 +357,67 @@ export function BIMViewer () {
 
         const onFragmentsExport = () => {
             const fragmentsManager = components.get(OBC.FragmentsManager)
-            if (!fragmentsModel) return
-            const fragmentBinary = fragmentsManager.export(fragmentsModel)
-            const blob = new Blob([fragmentBinary])
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `${fragmentsModel.name}.frag`
-            a.click()
-            URL.revokeObjectURL(url)
+            console.log(fragmentsManager.groups)
+            if (!fragmentsManager.groups.size) return
+            for (const m of fragmentsManager.groups.values()) {
+                const fragmentBinary = fragmentsManager.export(m)
+                const blob = new Blob([fragmentBinary])
+                const url = URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.href = url
+                a.download = `${m.name}.frag`
+                a.click()
+                URL.revokeObjectURL(url)
+                onPropertyExport(m)
+            }
         }
         const onFragmentsImport = async () => {
             const input = document.createElement('input')
             input.type = 'file'
-            input.accept = '.frag'
-            const reader = new FileReader()
-            reader.addEventListener("load", () => {
-                const binary = reader.result
-                if(!(binary instanceof ArrayBuffer)) return
-                const fragmentsBinary = new Uint8Array(binary)
-                const fragmentsManager = components.get(OBC.FragmentsManager)
-                fragmentsManager.load(fragmentsBinary)
-            })
-            input.addEventListener('change', () => {
+            input.multiple = true
+            input.accept = '.frag, .json'            
+
+            const models: {[file: string]: FR.FragmentsGroup} = {}
+            const properties: {[file: string]: FR.IfcProperties} = {}
+
+            input.addEventListener('change', async () => {
                 const fileList = input.files
                 if (!fileList) {return}
-                reader.readAsArrayBuffer(fileList[0])
+
+                //read files
+                const fragmentsManager = components.get(OBC.FragmentsManager)
+                for (const file of fileList) {
+                    const split = file.name.split('.')
+                    if (split[split.length-1] == 'frag'){
+                        const binary = await file.arrayBuffer()
+                        models[split[0]] = fragmentsManager.load(new Uint8Array(binary))
+                    } else if (split[split.length-1] == 'json') {
+                        const json = await file.text()
+                        properties[split[0].replace('_properties','')] = JSON.parse(json as string)
+                    }
+                }
+
+                //associate model-property
+                for (const file in models) {
+                    models[file].setLocalProperties(properties[file])
+                    await processModel(models[file])
+                }
             })
             input.click()
         }
 
-        const onPropertyExport = () => {
-            if (!fragmentsModel) return
-            const properties = fragmentsModel.getLocalProperties()
+        const onPropertyExport = (m: FR.FragmentsGroup) => {
+            if (!m) return
+            const properties = m.getLocalProperties()
             const json = JSON.stringify(properties)
             const blob = new Blob([json], {type: 'application/json'})
             const url = URL.createObjectURL(blob)
             const a = document.createElement('a')
             a.href = url
-            a.download = `${fragmentsModel.name}_properties.json`
+            a.download = `${m.name}_properties.json`
             a.click()
             URL.revokeObjectURL(url)
         }
-        const onPropertyImport = () => {
-            const input = document.createElement('input')
-            input.type = 'file'
-            input.accept = 'application/json'
-            const reader = new FileReader()
-            input.addEventListener('change', () => {
-                const fileList = input.files
-                if (!fileList) {return}
-                reader.readAsText(fileList[0])
-            })    
-            reader.addEventListener("load", async () => {
-                const json = reader.result
-                if (!json) {return}
-                const properties: FR.IfcProperties = JSON.parse(json as string)
-                if (!fragmentsModel) {
-                    console.warn('Any fragment model loaded to associate properties')
-                    return
-                }
-                fragmentsModel.setLocalProperties(properties)
-                processModel(fragmentsModel)
-                /*const indexer = components.get(OBC.IfcRelationsIndexer)
-                await indexer.process(fragmentsModel)*/
-            })
-            input.click()
-        }
-
         //TOOLBAR COMPONENT
         const toolbar = BUI.Component.create<BUI.Toolbar>(() => {
             const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
@@ -453,26 +441,14 @@ export function BIMViewer () {
                 </bim-toolbar-section>
                 <bim-toolbar-section label="Fragments">
                     <bim-button
-                        label="Upload"
+                        label="Import"
                         icon="lucide:upload"
                         @click=${onFragmentsImport}
                     ></bim-button>
                     <bim-button
-                        label="Download"
-                        icon="lucide:download"
-                        @click=${onFragmentsExport}
-                    ></bim-button>
-                </bim-toolbar-section>
-                <bim-toolbar-section label="Properties">
-                    <bim-button
-                        label="Import"
-                        icon="lucide:upload"
-                        @click=${onPropertyImport}
-                    ></bim-button>
-                    <bim-button
                         label="Export"
                         icon="lucide:download"
-                        @click=${onPropertyExport}
+                        @click=${onFragmentsExport}
                     ></bim-button>
                 </bim-toolbar-section>
                 <bim-toolbar-section label="Visibility">
@@ -558,6 +534,10 @@ export function BIMViewer () {
         return () => {
             if (components) {
                 components.dispose()
+            }
+            if (fragmentsModel) {
+                fragmentsModel.dispose()
+                fragmentsModel = undefined
             }
         }
     }, [])
