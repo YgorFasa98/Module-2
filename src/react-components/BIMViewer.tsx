@@ -10,16 +10,34 @@ import { upload3DFile } from '../classes/Generic'
 import { classificationTreeTemplate } from '@thatopen/ui-obc/dist/components/tables/ClassificationsTree/src/template'
 import { SpatialStructure } from '@thatopen/components/dist/fragments/IfcLoader/src'
 
-interface Props {
-    projectsManager: ProjectsManager
-}
-
-export function BIMViewer (props:Props) {
+export function BIMViewer () {
 
     //ALL THE COMPONENTS
     const components = new OBC.Components()
     let globalScene: OBC.SimpleScene | undefined
     let globalWorld: OBC.World | undefined
+    let fragmentsModel: FR.FragmentsGroup | undefined
+
+    const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
+        components,
+        classifications: []
+    })
+   
+    const processModel = async (model:FR.FragmentsGroup) => {
+        const indexer = components.get(OBC.IfcRelationsIndexer)
+        await indexer.process(model)
+        
+        const classifier = components.get(OBC.Classifier)
+        classifier.byEntity(model)
+        await classifier.byPredefinedType(model)
+        const classifications = [
+            { system: "entities", label: "Entities" },
+            { system: "predefinedTypes", label: "Predefined Types" }
+        ]
+        if (updateClassificationsTree) {
+            updateClassificationsTree({ classifications })
+        }
+    }
 
     const setViewer = () => {
         //THE VIEWERS COMPONENT
@@ -61,8 +79,11 @@ export function BIMViewer (props:Props) {
         fragmentsManager.onFragmentsLoaded.add(async (model) => {
             world.scene.three.add(model)
 
-            const indexer = components.get(OBC.IfcRelationsIndexer)
-            await indexer.process(model)
+            if (model.hasProperties) {
+                await processModel(model)
+            }
+
+            fragmentsModel = model
         })
         //AUTOMATIC RESIZE VIEWER
         viewerContainer.addEventListener("resize", () => {
@@ -73,7 +94,6 @@ export function BIMViewer (props:Props) {
         const highlighter = components.get(OBCF.Highlighter)
         highlighter.setup({ world })
         highlighter.zoomToSelection = true
-
         
         globalScene = world.scene
         globalWorld = world
@@ -228,15 +248,15 @@ export function BIMViewer (props:Props) {
                 components,
                 tags: { schema: true, viewDefinition: false },
                 actions: { download: false }
-            })    
-            const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
+            })
+            /*const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
                 components,
                 classifications: []
             })
 
             const fragmentsManager = components.get(OBC.FragmentsManager)
-            const classifier = components.get(OBC.Classifier)
             fragmentsManager.onFragmentsLoaded.add(async (model) => {
+                const classifier = components.get(OBC.Classifier)
                 classifier.byEntity(model)
                 await classifier.byPredefinedType(model)
                 const classifications = [
@@ -244,7 +264,12 @@ export function BIMViewer (props:Props) {
                     { system: "predefinedTypes", label: "Predefined Types" }
                 ]
                 updateClassificationsTree({ classifications: classifications })
-            })
+            })*/
+            const classifications = [
+                { system: "entities", label: "Entities" },
+                { system: "predefinedTypes", label: "Predefined Types" }
+            ]
+            updateClassificationsTree({ classifications: classifications })
 
             return BUI.html`
                 <bim-panel
@@ -335,6 +360,76 @@ export function BIMViewer (props:Props) {
             sxBar.style.backgroundColor = "transparent"
         }
 
+        const onFragmentsExport = () => {
+            const fragmentsManager = components.get(OBC.FragmentsManager)
+            if (!fragmentsModel) return
+            const fragmentBinary = fragmentsManager.export(fragmentsModel)
+            const blob = new Blob([fragmentBinary])
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `${fragmentsModel.name}.frag`
+            a.click()
+            URL.revokeObjectURL(url)
+        }
+        const onFragmentsImport = async () => {
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = '.frag'
+            const reader = new FileReader()
+            reader.addEventListener("load", () => {
+                const binary = reader.result
+                if(!(binary instanceof ArrayBuffer)) return
+                const fragmentsBinary = new Uint8Array(binary)
+                const fragmentsManager = components.get(OBC.FragmentsManager)
+                fragmentsManager.load(fragmentsBinary)
+            })
+            input.addEventListener('change', () => {
+                const fileList = input.files
+                if (!fileList) {return}
+                reader.readAsArrayBuffer(fileList[0])
+            })
+            input.click()
+        }
+
+        const onPropertyExport = () => {
+            if (!fragmentsModel) return
+            const properties = fragmentsModel.getLocalProperties()
+            const json = JSON.stringify(properties)
+            const blob = new Blob([json], {type: 'application/json'})
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `${fragmentsModel.name}_properties.json`
+            a.click()
+            URL.revokeObjectURL(url)
+        }
+        const onPropertyImport = () => {
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = 'application/json'
+            const reader = new FileReader()
+            input.addEventListener('change', () => {
+                const fileList = input.files
+                if (!fileList) {return}
+                reader.readAsText(fileList[0])
+            })    
+            reader.addEventListener("load", async () => {
+                const json = reader.result
+                if (!json) {return}
+                const properties: FR.IfcProperties = JSON.parse(json as string)
+                if (!fragmentsModel) {
+                    console.warn('Any fragment model loaded to associate properties')
+                    return
+                }
+                fragmentsModel.setLocalProperties(properties)
+                processModel(fragmentsModel)
+                /*const indexer = components.get(OBC.IfcRelationsIndexer)
+                await indexer.process(fragmentsModel)*/
+            })
+            input.click()
+        }
+
         //TOOLBAR COMPONENT
         const toolbar = BUI.Component.create<BUI.Toolbar>(() => {
             const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
@@ -354,6 +449,30 @@ export function BIMViewer (props:Props) {
                         label="GLTF/OBJ"
                         icon="uis:object-group"
                         @click=${onUpload3DFile}
+                    ></bim-button>
+                </bim-toolbar-section>
+                <bim-toolbar-section label="Fragments">
+                    <bim-button
+                        label="Upload"
+                        icon="lucide:upload"
+                        @click=${onFragmentsImport}
+                    ></bim-button>
+                    <bim-button
+                        label="Download"
+                        icon="lucide:download"
+                        @click=${onFragmentsExport}
+                    ></bim-button>
+                </bim-toolbar-section>
+                <bim-toolbar-section label="Properties">
+                    <bim-button
+                        label="Import"
+                        icon="lucide:upload"
+                        @click=${onPropertyImport}
+                    ></bim-button>
+                    <bim-button
+                        label="Export"
+                        icon="lucide:download"
+                        @click=${onPropertyExport}
                     ></bim-button>
                 </bim-toolbar-section>
                 <bim-toolbar-section label="Visibility">

@@ -347,7 +347,7 @@ export function SingleProjectPage (props:Props) {
                     <h5>OBJ</h5>
                     </li>
                 </ul>
-                <BIMViewer projectsManager={props.projectsManager}/>
+                <BIMViewer/>
                 </div>
             </div>
         </div>
