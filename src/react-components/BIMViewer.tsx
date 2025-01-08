@@ -37,6 +37,15 @@ export function BIMViewer () {
         updateClassificationsTree({ classifications: classifications })*/
     }
 
+    //DISPOSE
+    const onFragmentsDispose = () => {
+        const fragmentsManager = components.get(OBC.FragmentsManager)
+        for (const [, group] of fragmentsManager.groups){
+            fragmentsManager.disposeGroup(group)
+        }
+        fragmentsModel = undefined
+    }
+
     const setViewer = () => {
         //THE VIEWERS COMPONENT
         const worlds = components.get(OBC.Worlds)
@@ -72,6 +81,12 @@ export function BIMViewer () {
         //IFC LOADER
         const ifcLoader = components.get(OBC.IfcLoader)
         ifcLoader.setup()
+        //CULLING
+        const cullers = components.get(OBC.Cullers)
+        const culler = cullers.create(world)
+        world.camera.controls.addEventListener('controlend', () => {
+            culler.needsUpdate = true
+        })
         //FRAGMENTS TO MANAGE IFC FILES
         const fragmentsManager = components.get(OBC.FragmentsManager)
         fragmentsManager.onFragmentsLoaded.add(async (model) => {
@@ -80,6 +95,12 @@ export function BIMViewer () {
             if (model.hasProperties) {
                 await processModel(model)
             }
+
+            for (const fragment of model.items) {
+                culler.add(fragment.mesh)
+            }
+            culler.needsUpdate = true
+
 
             fragmentsModel = model
         })
@@ -179,7 +200,7 @@ export function BIMViewer () {
         }
     }
 
-    //METHOD TO SETUP THE UI OF LOAD IFC BUTTON
+    //METHOD TO SETUP THE UI OF THE VIEWER
     const setupUI = () => {
         const viewerContainer = document.getElementById('viewer-container') as HTMLElement
         if (!viewerContainer) return
@@ -194,6 +215,7 @@ export function BIMViewer () {
             `;
         })
 
+        //BIM PANEL ELEMENTS
         const elementPropertyPanel = BUI.Component.create<BUI.Panel>(() => {
             const [propsTable, updatePropsTable] = CUI.tables.elementProperties({
                 components,
@@ -355,6 +377,7 @@ export function BIMViewer () {
             sxBar.style.backgroundColor = "transparent"
         }
 
+        //EXPORT AND IMPORT FRAGMENTS AND PROPERTIES
         const onFragmentsExport = () => {
             const fragmentsManager = components.get(OBC.FragmentsManager)
             console.log(fragmentsManager.groups)
@@ -429,6 +452,7 @@ export function BIMViewer () {
             a.click()
             URL.revokeObjectURL(url)
         }
+
         //TOOLBAR COMPONENT
         const toolbar = BUI.Component.create<BUI.Toolbar>(() => {
             const [loadIfcButton] = CUI.buttons.loadIfc({components : components})
@@ -437,7 +461,7 @@ export function BIMViewer () {
             <bim-toolbar style="justify-self: center">
                 <bim-toolbar-section label="Viewer">
                     <bim-button
-                        label="Settings"
+                        tooltip-title="Settings"
                         icon="ic:baseline-settings"
                         @click=${onViewerSettingsButtonClick}
                     ></bim-button>
@@ -450,48 +474,53 @@ export function BIMViewer () {
                         @click=${onUpload3DFile}
                     ></bim-button>
                 </bim-toolbar-section>
-                <bim-toolbar-section label="Fragments and Properties">
+                <bim-toolbar-section label="Fragments">
                     <bim-button
-                        label="Import"
+                        tooltip-title="Import"
                         icon="lucide:upload"
                         @click=${onFragmentsImport}
                     ></bim-button>
                     <bim-button
-                        label="Export"
+                        tooltip-title="Export"
                         icon="lucide:download"
                         @click=${onFragmentsExport}
+                    ></bim-button>
+                    <bim-button
+                        tooltip-title="Dispose all models"
+                        icon="tabler:trash"
+                        @click=${onFragmentsDispose}
                     ></bim-button>
                 </bim-toolbar-section>
                 <bim-toolbar-section label="Visibility">
                     <bim-button
-                        label="Hide/Show"
+                        tooltip-title="Hide/Show"
                         icon="material-symbols:visibility-outline"
                         @click=${onToggleVisibility}
                     ></bim-button>
                     <bim-button
-                        label="Isolate"
+                        tooltip-title="Isolate"
                         icon="mdi:filter"
                         @click=${onIsolate}
                     ></bim-button>
                     <bim-button
-                        label="Invert"
+                        tooltip-title="Invert"
                         icon="icon-park-outline:invert-camera"
                         @click=${onInvertVisibility}
                     ></bim-button>
                     <bim-button
-                        label="Show All"
+                        tooltip-title="Show All"
                         icon="tabler:eye-filled"
                         @click=${onShowAll}
                     ></bim-button>
                 </bim-toolbar-section>
                 <bim-toolbar-section label="BIM Panel">
                     <bim-button
-                        label="Open"
+                        tooltip-title="Open"
                         icon="fluent:open-32-filled"
                         @click=${onOpenPanel}
                     ></bim-button>
                     <bim-button
-                        label="Close"
+                        tooltip-title="Close"
                         icon="gg:close-r"
                         @click=${onClosePanel}
                     ></bim-button>
@@ -546,10 +575,7 @@ export function BIMViewer () {
             if (components) {
                 components.dispose()
             }
-            if (fragmentsModel) {
-                fragmentsModel.dispose()
-                fragmentsModel = undefined
-            }
+            //onFragmentsDispose()
         }
     }, [])
 
