@@ -12,6 +12,7 @@ import { BIMViewer } from './BIMViewer'
 import { deleteDocument, getCollection, updateDocument } from '../firebase'
 import * as Firestore from 'firebase/firestore'
 import * as BUI from '@thatopen/ui'
+import { BIMViewer_v2 } from './BIMViewer_v2'
 
 interface Props {
     projectsManager: ProjectsManager

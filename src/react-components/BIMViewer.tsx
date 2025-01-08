@@ -28,13 +28,13 @@ export function BIMViewer () {
         /*const classifier = components.get(OBC.Classifier)
         classifier.byEntity(model)
         await classifier.byPredefinedType(model)
+        await classifier.bySpatialStructure(model)
         const classifications = [
             { system: "entities", label: "Entities" },
-            { system: "predefinedTypes", label: "Predefined Types" }
+            { system: "predefinedTypes", label: "Predefined Types" },
+            { system: "spatialStructures", label: "Spatial Containers" }
         ]
-        if (updateClassificationsTree) {
-            updateClassificationsTree({ classifications })
-        }*/
+        updateClassificationsTree({ classifications: classifications })*/
     }
 
     const setViewer = () => {
@@ -390,7 +390,7 @@ export function BIMViewer () {
                     const split = file.name.split('.')
                     if (split[split.length-1] == 'frag'){
                         const binary = await file.arrayBuffer()
-                        models[split[0]] = fragmentsManager.load(new Uint8Array(binary))
+                        models[split[0]] = fragmentsManager.load(new Uint8Array(binary)) //import geometries here
                     } else if (split[split.length-1] == 'json') {
                         const json = await file.text()
                         properties[split[0].replace('_properties','')] = JSON.parse(json as string)
@@ -398,9 +398,20 @@ export function BIMViewer () {
                 }
 
                 //associate model-property
-                for (const file in models) {
-                    models[file].setLocalProperties(properties[file])
-                    await processModel(models[file])
+                if (Object.keys(models).length != 0){
+                    for (const name in properties) {
+                        models[name].setLocalProperties(properties[name])
+                        await processModel(models[name])
+                    }
+                } else if (Object.keys(models).length == 0) {
+                    for (const name in properties) {
+                        for (const m of fragmentsManager.groups.values()) {
+                            if (name == m.name) {
+                                m.setLocalProperties(properties[name])
+                                await processModel(m)
+                            }
+                        }
+                    }
                 }
             })
             input.click()
@@ -439,7 +450,7 @@ export function BIMViewer () {
                         @click=${onUpload3DFile}
                     ></bim-button>
                 </bim-toolbar-section>
-                <bim-toolbar-section label="Fragments">
+                <bim-toolbar-section label="Fragments and Properties">
                     <bim-button
                         label="Import"
                         icon="lucide:upload"
