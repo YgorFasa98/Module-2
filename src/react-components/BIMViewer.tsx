@@ -9,10 +9,11 @@ import { upload3DFile } from '../classes/Generic'
 
 export function BIMViewer () {
 
-    //ALL THE COMPONENTS
+    //COMPONENTS and GLOBAL VARIABLES
     const components = new OBC.Components()
     let globalScene: OBC.SimpleScene | undefined
     let globalWorld: OBC.World | undefined
+    let globalCuller: OBC.MeshCullerRenderer | undefined
     let fragmentsModel: FR.FragmentsGroup | undefined
 
     /*const [classificationsTree, updateClassificationsTree] = 
@@ -20,7 +21,7 @@ export function BIMViewer () {
             components,
             classifications: []
     })*/
-   
+
     const processModel = async (model:FR.FragmentsGroup) => {
         const indexer = components.get(OBC.IfcRelationsIndexer)
         await indexer.process(model)
@@ -36,8 +37,6 @@ export function BIMViewer () {
         ]
         updateClassificationsTree({ classifications: classifications })*/
     }
-
-    //DISPOSE
     const onFragmentsDispose = () => {
         const fragmentsManager = components.get(OBC.FragmentsManager)
         for (const [, group] of fragmentsManager.groups){
@@ -46,6 +45,7 @@ export function BIMViewer () {
         fragmentsModel = undefined
     }
 
+    // METHOD TO CREATE AND SET THE VIEWER
     const setViewer = () => {
         //THE VIEWERS COMPONENT
         const worlds = components.get(OBC.Worlds)
@@ -101,7 +101,6 @@ export function BIMViewer () {
             }
             culler.needsUpdate = true
 
-
             fragmentsModel = model
         })
         //AUTOMATIC RESIZE VIEWER
@@ -116,8 +115,11 @@ export function BIMViewer () {
         
         globalScene = world.scene
         globalWorld = world
+        globalCuller = culler
     }
 
+    //EVENTS
+    //Visibility
     const onToggleVisibility = () => {
         const highlighter = components.get(OBCF.Highlighter)
         const selection = highlighter.selection.select
@@ -131,7 +133,6 @@ export function BIMViewer () {
             hider.set(true, selection)
         }
     }
-
     const onInvertVisibility = () => {
         const fragments = components.get(OBC.FragmentsManager)
         const hider = components.get(OBC.Hider)
@@ -143,33 +144,32 @@ export function BIMViewer () {
         }
         hider.isolate(fragmentIdMap)
     }
-
     const onIsolate = () => {
         const highlighter = components.get(OBCF.Highlighter)
         const hider = components.get(OBC.Hider)
         const selection = highlighter.selection.select
         hider.isolate(selection)
     }
-
     const onShowAll = () => {
         const hider = components.get(OBC.Hider)
         hider.set(true)
     }
-
-    /*const onUpload3DFile = async () => {        
-        const worlds = components.get(OBC.Worlds)
-        const [worldId] = worlds.list
-        const world = worldId[1]
-        const object = await upload3DFile() as any
-        let meshUploaded = object.mesh
-        if (world) {
-            world?.scene.three.add(meshUploaded)
-            world?.meshes.add(meshUploaded)
-        } else {
-            console.warn('world not found')
+    //Culler
+    const onNotUseCuller = () => {
+        if (!globalCuller) return
+        globalCuller.enabled = false
+        // this is used to make visible the hidden meshes by the culler until then
+        if (!fragmentsModel) return
+        for (const fragment of fragmentsModel.items) {
+            fragment.mesh.visible = true
         }
-    }*/
+    }
+    const onUseCuller = () => {
+        if (!globalCuller) return
+        globalCuller.enabled = true
+    }
 
+    //TESTS
     const onUpload3DFile = async () => {
         if (!globalScene || !globalWorld) return
         const object = await upload3DFile() as any
@@ -177,7 +177,6 @@ export function BIMViewer () {
         globalScene.three.add(meshUploaded)
         globalWorld.meshes.add(meshUploaded)
     }
-
     const onShowProperties = async () => {
         const highlighter = components.get(OBCF.Highlighter)
         const selection = highlighter.selection.select
@@ -189,10 +188,14 @@ export function BIMViewer () {
             const expressIDs = selection[fragmentID]
             if (!model) continue
             for (const id of expressIDs) {
-                const psets = indexer.getEntityRelations(model, id, 'IsDefinedBy')
-                if(psets){
-                    for (const expressID of psets) {
+                // 'Decomposes' inverse of IfcRelAggregates
+                // 'IsDefinedBy' is for Psets
+                const relation = 'Decomposes'
+                const rels = indexer.getEntityRelations(model, id, relation)
+                if(rels){
+                    for (const expressID of rels) {
                         const prop = await model.getProperties(expressID)
+                        console.log('These properties comes from the inverse relation: ', relation)
                         console.log(prop)
                     }
                 }
@@ -513,6 +516,18 @@ export function BIMViewer () {
                         @click=${onShowAll}
                     ></bim-button>
                 </bim-toolbar-section>
+                <bim-toolbar-section label="Culler">
+                    <bim-button
+                        tooltip-title="Enable culler"
+                        icon="mdi:set-right"
+                        @click=${onUseCuller}
+                    ></bim-button>
+                    <bim-button
+                        tooltip-title="Disable culler"
+                        icon="mdi:set-all"
+                        @click=${onNotUseCuller}
+                    ></bim-button>
+                </bim-toolbar-section>
                 <bim-toolbar-section label="BIM Panel">
                     <bim-button
                         tooltip-title="Open"
@@ -523,6 +538,13 @@ export function BIMViewer () {
                         tooltip-title="Close"
                         icon="gg:close-r"
                         @click=${onClosePanel}
+                    ></bim-button>
+                </bim-toolbar-section>
+                    <bim-toolbar-section label="TESTS">
+                    <bim-button
+                        label="Print Properties"
+                        icon="ri:question-line"
+                        @click=${onShowProperties}
                     ></bim-button>
                 </bim-toolbar-section>
             </bim-toolbar>
