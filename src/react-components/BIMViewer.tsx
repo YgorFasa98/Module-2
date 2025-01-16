@@ -16,27 +16,6 @@ export function BIMViewer () {
     let globalCuller: OBC.MeshCullerRenderer | undefined
     let fragmentsModel: FR.FragmentsGroup | undefined
 
-    /*const [classificationsTree, updateClassificationsTree] = 
-        CUI.tables.classificationTree({
-            components,
-            classifications: []
-    })*/
-
-    const processModel = async (model:FR.FragmentsGroup) => {
-        const indexer = components.get(OBC.IfcRelationsIndexer)
-        await indexer.process(model)
-        
-        /*const classifier = components.get(OBC.Classifier)
-        classifier.byEntity(model)
-        await classifier.byPredefinedType(model)
-        await classifier.bySpatialStructure(model)
-        const classifications = [
-            { system: "entities", label: "Entities" },
-            { system: "predefinedTypes", label: "Predefined Types" },
-            { system: "spatialStructures", label: "Spatial Containers" }
-        ]
-        updateClassificationsTree({ classifications: classifications })*/
-    }
     const onFragmentsDispose = () => {
         const fragmentsManager = components.get(OBC.FragmentsManager)
         for (const [, group] of fragmentsManager.groups){
@@ -45,8 +24,30 @@ export function BIMViewer () {
         fragmentsModel = undefined
     }
 
+    const [classificationsTree, updateClassificationsTree] = 
+        CUI.tables.classificationTree({
+            components,
+            classifications: []
+    })
+    const processModel = async (model:FR.FragmentsGroup) => {
+        const indexer = components.get(OBC.IfcRelationsIndexer)
+        await indexer.process(model)
+        
+        const classifier = components.get(OBC.Classifier)
+        classifier.byEntity(model)
+        await classifier.byPredefinedType(model)
+        await classifier.bySpatialStructure(model)
+        const classifications = [
+            { system: "entities", label: "Entities" },
+            { system: "predefinedTypes", label: "Predefined Types" },
+            { system: "spatialStructures", label: "Spatial Containers" }
+        ]
+        updateClassificationsTree({ classifications: classifications })
+    }
+    
     // METHOD TO CREATE AND SET THE VIEWER
     const setViewer = () => {
+    
         //THE VIEWERS COMPONENT
         const worlds = components.get(OBC.Worlds)
         //THE SINGLE VIEWER
@@ -158,6 +159,7 @@ export function BIMViewer () {
     const onNotUseCuller = () => {
         if (!globalCuller) return
         globalCuller.enabled = false
+        globalCuller.needsUpdate = false
         // this is used to make visible the hidden meshes by the culler until then
         if (!fragmentsModel) return
         for (const fragment of fragmentsModel.items) {
@@ -167,6 +169,7 @@ export function BIMViewer () {
     const onUseCuller = () => {
         if (!globalCuller) return
         globalCuller.enabled = true
+        globalCuller.needsUpdate = true
     }
 
     //TESTS
@@ -191,7 +194,7 @@ export function BIMViewer () {
                 // 'Decomposes' inverse of IfcRelAggregates
                 // 'IsDefinedBy' is for Psets
                 const relation = 'Decomposes'
-                const rels = indexer.getEntityRelations(model, id, relation)
+                const rels = indexer.getEntityRelations(model, id, 'Decomposes')
                 if(rels){
                     for (const expressID of rels) {
                         const prop = await model.getProperties(expressID)
@@ -262,6 +265,15 @@ export function BIMViewer () {
             `
         })
 
+        /*const classTreePanel = BUI.Component.create<HTMLDivElement>(() => {
+            return BUI.html`
+            <div>
+                ClassificationTree with containers
+                ${classificationsTree}
+            </div>
+            `
+        })*/
+
         const BIMPanel = BUI.Component.create<BUI.Panel>(() => {
             const [spatialStructureTable] = CUI.tables.relationsTree({
                 components,
@@ -272,7 +284,7 @@ export function BIMViewer () {
                 tags: { schema: true, viewDefinition: false },
                 actions: { download: false }
             })
-            const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
+            /*const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
                 components,
                 classifications: []
             })
@@ -289,14 +301,14 @@ export function BIMViewer () {
                     { system: "spatialStructures", label: "Spatial Containers" }
                 ]
                 updateClassificationsTree({ classifications: classifications })
-            })
+            })*/
 
             return BUI.html`
                 <bim-panel
                 id = 'bim-panel'
                 name="bim-panel"
                 label="BIM Panel"
-                style = "background-color: transparent"
+                style = "background-color: transparent"                
                 >
                     <bim-panel-section
                         name="models"
@@ -402,14 +414,14 @@ export function BIMViewer () {
             input.type = 'file'
             input.multiple = true
             input.accept = '.frag, .json'            
-
+    
             const models: {[file: string]: FR.FragmentsGroup} = {}
             const properties: {[file: string]: FR.IfcProperties} = {}
-
+    
             input.addEventListener('change', async () => {
                 const fileList = input.files
                 if (!fileList) {return}
-
+    
                 //read files
                 const fragmentsManager = components.get(OBC.FragmentsManager)
                 for (const file of fileList) {
@@ -422,7 +434,7 @@ export function BIMViewer () {
                         properties[split[0].replace('_properties','')] = JSON.parse(json as string)
                     }
                 }
-
+    
                 //associate model-property
                 if (Object.keys(models).length != 0){
                     for (const name in properties) {
@@ -442,7 +454,7 @@ export function BIMViewer () {
             })
             input.click()
         }
-
+    
         const onPropertyExport = (m: FR.FragmentsGroup) => {
             if (!m) return
             const properties = m.getLocalProperties()

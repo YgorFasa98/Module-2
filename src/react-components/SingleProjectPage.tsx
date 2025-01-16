@@ -8,11 +8,14 @@ import { SingleProjectDetails } from './SingleProjectDetails'
 import { EditProjectForm } from './EditProjectForm'
 import { ToDoCard } from './ToDoCard'
 import { SearchBar } from './SearchBar'
-import { BIMViewer } from './BIMViewer'
 import { deleteDocument, getCollection, updateDocument } from '../firebase'
 import * as Firestore from 'firebase/firestore'
 import * as BUI from '@thatopen/ui'
+
+import { BIMViewer } from './BIMViewer'
 import { BIMViewer_v2 } from './BIMViewer_v2'
+import { BIMViewer_v3 } from './BIMViewer_v3'
+import { BIMViewer_v4 } from './BIMViewer_v4'
 
 interface Props {
     projectsManager: ProjectsManager

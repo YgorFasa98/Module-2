@@ -80,6 +80,11 @@ export function Sidebar(props:Props) {
                     <bim-label style={buttonStyle} icon="octicon:info-16">Info</bim-label>
                 </li>
                 </Router.Link>
+                <Router.Link to={'/viewer'}>
+                <li id="viewer-button">
+                    <bim-label style={buttonStyle} icon="fluent:warning-24-regular">BIMViewer_TEST</bim-label>
+                </li>
+                </Router.Link>
             </ul>
             <ul className="nav-buttons" id="nav-buttons-projects" style={{display:'none', borderTop: '2px solid gray', paddingTop: '15px'}}>
                 <li onClick={onShowProjectsButtons} id="list-projects-button" style={{marginLeft: '5px', justifyContent: 'space-between'}} value='expanded'>
