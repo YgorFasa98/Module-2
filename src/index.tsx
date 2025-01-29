@@ -7,7 +7,6 @@ import { ProjectsPage } from './react-components/ProjectsPage'
 import { SingleProjectPage } from './react-components/SingleProjectPage'
 import { UsersPage } from './react-components/UsersPage'
 import { InfoPage } from './react-components/InfoPage'
-import { TestViewer } from './react-components/TestViewer'
 
 import { ProjectsManager } from './classes/ProjectsManager'
 import { UsersManager } from './classes/UsersManager'
@@ -52,7 +51,6 @@ appRoot.render(
             <Router.Route path='/single-project/:id' element={ <SingleProjectPage projectsManager={projectsManager} /> } />
             <Router.Route path='/users' element={ <UsersPage usersManager={usersManager}/> } />
             <Router.Route path='/info' element={ <InfoPage /> } />
-            <Router.Route path='/viewer' element={ <TestViewer /> } />
         </Router.Routes>
     </Router.BrowserRouter>
     </>
