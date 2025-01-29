@@ -106,7 +106,7 @@ export function EditProjectForm (props:Props) {
                     </label>
                     <input name="cost" type="number" defaultValue={props.project.cost} />
                 </div>
-                {ProgressBar(props.project.progress)}
+                {ProgressBar({startValue: props.project.progress})}
                 </div>
                 <div className="buttons">
                     <button

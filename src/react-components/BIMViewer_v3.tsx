@@ -5,7 +5,7 @@ import * as BUI from '@thatopen/ui'
 import * as CUI from '@thatopen/ui-obc'
 import * as FR from '@thatopen/fragments'
 
-export function BIMViewer_v2 () {
+export function BIMViewer_v3 () {
 
     //ALL THE COMPONENTS
     const components = new OBC.Components()
@@ -18,7 +18,7 @@ export function BIMViewer_v2 () {
             components,
             classifications: []
     })
-   
+    
     const processModel = async (model:FR.FragmentsGroup) => {
         const indexer = components.get(OBC.IfcRelationsIndexer)
         await indexer.process(model)
@@ -106,21 +106,13 @@ export function BIMViewer_v2 () {
                 </bim-grid>
             `;
         })
-
         const BIMPanel = BUI.Component.create<BUI.Panel>(() => {
             return BUI.html`
-                <bim-panel
-                name="bim-panel"
-                label="BIM Panel"
-                >
-                    <bim-panel-section
-                        name="classifications"
-                        label="Classifications Tree"
-                        icon="carbon:classification"
-                    >
-                        ${classificationsTree}
-                    </bim-panel-section>
-                </bim-panel>
+                <div>
+                    <p>This is the 'p' tag before the classificationTree</p>
+                    ${classificationsTree}
+                    <p>This is the 'p' tag after the classificationTree</p>
+                </div>
             `
         })
 
@@ -201,6 +193,6 @@ export function BIMViewer_v2 () {
         id="viewer-container"
         className="single-project-page-spaces viewer-container"
         style={{ width: "100%", margin: 0 }}
-        />
+        />        
     )
 }

@@ -23,9 +23,26 @@ export function BIMViewer () {
         }
         fragmentsModel = undefined
     }
+
+    const [classificationsTree, updateClassificationsTree] = 
+        CUI.tables.classificationTree({
+            components,
+            classifications: []
+    })
     const processModel = async (model:FR.FragmentsGroup) => {
         const indexer = components.get(OBC.IfcRelationsIndexer)
         await indexer.process(model)
+        
+        const classifier = components.get(OBC.Classifier)
+        classifier.byEntity(model)
+        await classifier.byPredefinedType(model)
+        await classifier.bySpatialStructure(model)
+        const classifications = [
+            { system: "entities", label: "Entities" },
+            { system: "predefinedTypes", label: "Predefined Types" },
+            { system: "spatialStructures", label: "Spatial Containers" }
+        ]
+        updateClassificationsTree({ classifications: classifications })
     }
     
     // METHOD TO CREATE AND SET THE VIEWER
@@ -214,6 +231,8 @@ export function BIMViewer () {
             const highlighter = components.get(OBCF.Highlighter)
 
             highlighter.events.select.onHighlight.add((fragmentIdMap) => {
+                //if (!floatingGrid) return
+                //floatingGrid.layout = "second"
                 updatePropsTable({ fragmentIdMap })
                 propsTable.expanded = false
                 onOpenPanel()
@@ -221,6 +240,8 @@ export function BIMViewer () {
 
             highlighter.events.select.onClear.add(() => {
                 updatePropsTable({ fragmentIdMap: {} })
+                //if (!floatingGrid) return
+                //floatingGrid.layout = "main"
             }) // event to close the property panel and clear it
 
             const onSearch = (e: Event) => {
@@ -244,6 +265,15 @@ export function BIMViewer () {
             `
         })
 
+        /*const classTreePanel = BUI.Component.create<HTMLDivElement>(() => {
+            return BUI.html`
+            <div>
+                ClassificationTree with containers
+                ${classificationsTree}
+            </div>
+            `
+        })*/
+
         const BIMPanel = BUI.Component.create<BUI.Panel>(() => {
             const [spatialStructureTable] = CUI.tables.relationsTree({
                 components,
@@ -254,6 +284,24 @@ export function BIMViewer () {
                 tags: { schema: true, viewDefinition: false },
                 actions: { download: false }
             })
+            /*const [classificationsTree, updateClassificationsTree] = CUI.tables.classificationTree({
+                components,
+                classifications: []
+            })
+
+            const fragmentsManager = components.get(OBC.FragmentsManager)
+            fragmentsManager.onFragmentsLoaded.add(async (model) => {
+                const classifier = components.get(OBC.Classifier)
+                classifier.byEntity(model)
+                await classifier.byPredefinedType(model)
+                await classifier.bySpatialStructure(model)
+                const classifications = [
+                    { system: "entities", label: "Entities" },
+                    { system: "predefinedTypes", label: "Predefined Types" },
+                    { system: "spatialStructures", label: "Spatial Containers" }
+                ]
+                updateClassificationsTree({ classifications: classifications })
+            })*/
 
             return BUI.html`
                 <bim-panel
@@ -281,7 +329,7 @@ export function BIMViewer () {
                         label="Classifications Tree"
                         icon="carbon:classification"
                     >
-                        Coming soon ...
+                        ${classificationsTree}
                     </bim-panel-section>
                     ${elementPropertyPanel}
                 </bim-panel>

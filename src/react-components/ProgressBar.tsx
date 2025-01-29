@@ -6,7 +6,6 @@ interface Props {
 }
 
 export function ProgressBar(props:Props) {
-    
     const [progress, setProgress] = React.useState(props.startValue) //progress-bar of new project form states update
   
     const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -5,37 +5,36 @@ import * as BUI from '@thatopen/ui'
 import * as CUI from '@thatopen/ui-obc'
 import * as FR from '@thatopen/fragments'
 
-export function BIMViewer_v2 () {
+export function BIMViewer_v4 () {
 
     //ALL THE COMPONENTS
     const components = new OBC.Components()
     let globalScene: OBC.SimpleScene | undefined
     let globalWorld: OBC.World | undefined
     let fragmentsModel: FR.FragmentsGroup | undefined
-
-    const [classificationsTree, updateClassificationsTree] = 
-        CUI.tables.classificationTree({
-            components,
-            classifications: []
-    })
-   
-    const processModel = async (model:FR.FragmentsGroup) => {
-        const indexer = components.get(OBC.IfcRelationsIndexer)
-        await indexer.process(model)
-        
-        const classifier = components.get(OBC.Classifier)
-        classifier.byEntity(model)
-        await classifier.byPredefinedType(model)
-        await classifier.bySpatialStructure(model)
-        const classifications = [
-            { system: "entities", label: "Entities" },
-            { system: "predefinedTypes", label: "Predefined Types" },
-            { system: "spatialStructures", label: "Spatial Containers" }
-        ]
-        updateClassificationsTree({ classifications: classifications })
-    }
-
     const setViewer = () => {
+        const [classificationsTree, updateClassificationsTree] = 
+            CUI.tables.classificationTree({
+                components,
+                classifications: []
+        })
+    
+        const processModel = async (model:FR.FragmentsGroup) => {
+            const indexer = components.get(OBC.IfcRelationsIndexer)
+            await indexer.process(model)
+            
+            const classifier = components.get(OBC.Classifier)
+            classifier.byEntity(model)
+            await classifier.byPredefinedType(model)
+            await classifier.bySpatialStructure(model)
+            const classifications = [
+                { system: "entities", label: "Entities" },
+                { system: "predefinedTypes", label: "Predefined Types" },
+                { system: "spatialStructures", label: "Spatial Containers" }
+            ]
+            updateClassificationsTree({ classifications: classifications })
+        }
+
         //THE VIEWERS COMPONENT
         const worlds = components.get(OBC.Worlds)
         //THE SINGLE VIEWER
@@ -90,10 +89,12 @@ export function BIMViewer_v2 () {
         
         globalScene = world.scene
         globalWorld = world
+
+        return classificationsTree
     }
 
     //METHOD TO SETUP THE UI OF LOAD IFC BUTTON
-    const setupUI = () => {
+    const setupUI = (c) => {
         const viewerContainer = document.getElementById('viewer-container') as HTMLElement
         if (!viewerContainer) return
         
@@ -106,21 +107,17 @@ export function BIMViewer_v2 () {
                 </bim-grid>
             `;
         })
-
-        const BIMPanel = BUI.Component.create<BUI.Panel>(() => {
+        const BIMPanel_2 = BUI.Component.create<BUI.Panel>(() => {
             return BUI.html`
-                <bim-panel
-                name="bim-panel"
-                label="BIM Panel"
-                >
-                    <bim-panel-section
-                        name="classifications"
-                        label="Classifications Tree"
-                        icon="carbon:classification"
-                    >
-                        ${classificationsTree}
-                    </bim-panel-section>
-                </bim-panel>
+                ClassificationTree without containers
+            `
+        })
+        const BIMPanel = BUI.Component.create<HTMLDivElement>(() => {
+            return BUI.html`
+            <div>
+                ClassificationTree with containers
+                ${c}
+            </div>
             `
         })
 
@@ -129,6 +126,14 @@ export function BIMViewer_v2 () {
             floatingGrid.layout = 'first'
         }
         const onClosePanel = () => {
+            if (!floatingGrid) return
+            floatingGrid.layout = 'main'
+        }
+        const onOpenPanel_2 = () => {
+            if (!floatingGrid) return
+            floatingGrid.layout = 'second'
+        }
+        const onClosePanel_2 = () => {
             if (!floatingGrid) return
             floatingGrid.layout = 'main'
         }
@@ -152,6 +157,18 @@ export function BIMViewer_v2 () {
                         label="Close"
                         icon="gg:close-r"
                         @click=${onClosePanel}
+                    ></bim-button>
+                </bim-toolbar-section>
+                <bim-toolbar-section label="BIM Panel_2">
+                    <bim-button
+                        label="Open"
+                        icon="fluent:open-32-filled"
+                        @click=${onOpenPanel_2}
+                    ></bim-button>
+                    <bim-button
+                        label="Close"
+                        icon="gg:close-r"
+                        @click=${onClosePanel_2}
                     ></bim-button>
                 </bim-toolbar-section>
             </bim-toolbar>
@@ -179,6 +196,17 @@ export function BIMViewer_v2 () {
                     toolbar,
                     BIMPanel
                 }
+            },
+            second: {
+                template: `
+                    "empty BIMPanel_2" 1fr
+                    "toolbar toolbar" auto
+                    /1fr 20rem
+                `,
+                elements: {
+                    toolbar,
+                    BIMPanel_2
+                }
             }
         }
         floatingGrid.layout = "main" //set active layout
@@ -187,8 +215,8 @@ export function BIMViewer_v2 () {
     }
 
     React.useEffect(() => {
-        setViewer() //set the viewer
-        setupUI() //set the toolbar ui
+        let c = setViewer() //set the viewer
+        setupUI(c) //set the toolbar ui
         return () => {
             if (components) {
                 components.dispose()
@@ -201,6 +229,6 @@ export function BIMViewer_v2 () {
         id="viewer-container"
         className="single-project-page-spaces viewer-container"
         style={{ width: "100%", margin: 0 }}
-        />
+        />        
     )
 }
